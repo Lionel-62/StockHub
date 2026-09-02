@@ -271,8 +271,8 @@ export default function EquipePage() {
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleDelete}
-        title="Supprimer cet employé ?"
-        description="Cette action est irréversible. L'employé ne pourra plus se connecter au système."
+        title="Supprimer l'employé"
+        message="Êtes-vous sûr de vouloir supprimer cet employé ? Son accès au système sera révoqué immédiatement."
         confirmText="Supprimer"
         cancelText="Annuler"
       />

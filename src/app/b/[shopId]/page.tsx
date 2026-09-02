@@ -367,7 +367,7 @@ export default function PublicShopPage({ params }: { params: { shopId: string } 
         phone: "",
         address: customerAddress || "",
         status: "Actif",
-        type: "Particulier",
+        type: "Client",
         source: "En ligne",
         totalAmount: cartTotal,
         lastOrderDate: new Date().toISOString(),
@@ -446,9 +446,10 @@ export default function PublicShopPage({ params }: { params: { shopId: string } 
         phone: authForm.phone,
         address: "",
         status: "Actif",
-        type: "Particulier",
+        type: "Client",
         source: "En ligne",
         totalAmount: 0,
+        lastOrderDate: new Date().toISOString(),
         createdAt: new Date().toISOString()
       };
       addClient(newClient);

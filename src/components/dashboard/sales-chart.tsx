@@ -49,7 +49,7 @@ export function SalesChart() {
               margin={{ top: 10, right: 10, bottom: 0, left: -20 }}
               onMouseMove={(state) => {
                 if (state.activeTooltipIndex !== undefined) {
-                  setActiveIndex(state.activeTooltipIndex);
+                  setActiveIndex(state.activeTooltipIndex as number);
                 }
               }}
               onMouseLeave={() => setActiveIndex(5)} // Reset to Saturday

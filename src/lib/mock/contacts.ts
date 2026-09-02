@@ -9,6 +9,7 @@ export interface Contact {
   lastOrderDate: string;
   address?: string;
   source?: "En ligne" | "Sur place";
+  createdAt?: string;
 }
 
 export const mockClients: Contact[] = Array.from({ length: 25 }).map((_, i) => ({

@@ -22,6 +22,7 @@ import { ConfirmModal } from "@/components/ui/confirm-modal";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ClientsPage() {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("Tous");
   const { clients: allClients, addClient, updateClient, deleteClient, isLoaded } = useClients();

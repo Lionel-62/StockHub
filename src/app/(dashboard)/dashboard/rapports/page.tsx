@@ -351,7 +351,7 @@ export default function RapportsPage() {
                     <Tooltip 
                       cursor={{ fill: '#f8fafc' }}
                       contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                      formatter={(value: number) => [`${formatCurrency(value)}`, "CA"]}
+                      formatter={(value: any) => [`${formatCurrency(Number(value))}`, "CA"]}
                       labelStyle={{ color: '#0f172a', fontWeight: 'bold', marginBottom: '4px' }}
                     />
                     <Bar dataKey="total" fill="#0b213f" radius={[4, 4, 0, 0]} maxBarSize={40} />

@@ -95,7 +95,7 @@ export default function SalesPage() {
         `"${order.clientName}"`,
         order.status,
         order.paymentMethod,
-        order.total
+        order.totalAmount
       ].join(","))
     ].join("\n");
 
