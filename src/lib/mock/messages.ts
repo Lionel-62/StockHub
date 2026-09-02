@@ -17,47 +17,9 @@ export interface Conversation {
   unreadCount: number;
 }
 
-const mockMessages: Message[] = [
-  {
-    id: "msg-1",
-    conversationId: "conv-1",
-    senderId: "client-1",
-    content: "Bonjour, avez-vous le Riz parfumé en stock ?",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-    isRead: true,
-  },
-  {
-    id: "msg-2",
-    conversationId: "conv-1",
-    senderId: "me",
-    content: "Bonjour ! Oui, nous l'avons. Combien de sacs vous faut-il ?",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 1).toISOString(),
-    isRead: true,
-  },
-  {
-    id: "msg-3",
-    conversationId: "conv-2",
-    senderId: "client-2",
-    content: "Ma commande est-elle prête ?",
-    timestamp: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
-    isRead: false,
-  }
-];
+const mockMessages: Message[] = [];
 
-const mockConversations: Conversation[] = [
-  {
-    id: "conv-1",
-    clientId: "1", // Assuming client 1 exists
-    lastMessageAt: new Date(Date.now() - 1000 * 60 * 60 * 1).toISOString(),
-    unreadCount: 0,
-  },
-  {
-    id: "conv-2",
-    clientId: "2", // Assuming client 2 exists
-    lastMessageAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
-    unreadCount: 1,
-  }
-];
+const mockConversations: Conversation[] = [];
 
 export function useMessages() {
   const [messages, setMessages] = useState<Message[]>(mockMessages);
@@ -65,21 +27,21 @@ export function useMessages() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const storedMessages = localStorage.getItem("stockhub_messages");
-    const storedConversations = localStorage.getItem("stockhub_conversations");
+    const storedMessages = localStorage.getItem("stockhub_messages_v2");
+    const storedConversations = localStorage.getItem("stockhub_conversations_v2");
     
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
     } else {
       setMessages(mockMessages);
-      localStorage.setItem("stockhub_messages", JSON.stringify(mockMessages));
+      localStorage.setItem("stockhub_messages_v2", JSON.stringify(mockMessages));
     }
     
     if (storedConversations) {
       setConversations(JSON.parse(storedConversations));
     } else {
       setConversations(mockConversations);
-      localStorage.setItem("stockhub_conversations", JSON.stringify(mockConversations));
+      localStorage.setItem("stockhub_conversations_v2", JSON.stringify(mockConversations));
     }
     
     setIsLoaded(true);
@@ -87,12 +49,12 @@ export function useMessages() {
 
   const saveMessages = (newMessages: Message[]) => {
     setMessages(newMessages);
-    localStorage.setItem("stockhub_messages", JSON.stringify(newMessages));
+    localStorage.setItem("stockhub_messages_v2", JSON.stringify(newMessages));
   };
 
   const saveConversations = (newConversations: Conversation[]) => {
     setConversations(newConversations);
-    localStorage.setItem("stockhub_conversations", JSON.stringify(newConversations));
+    localStorage.setItem("stockhub_conversations_v2", JSON.stringify(newConversations));
   };
 
   const sendMessage = (clientId: string, content: string, senderId: "me" | string = "me") => {

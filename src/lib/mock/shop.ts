@@ -13,10 +13,10 @@ export interface ShopSettings {
 }
 
 const defaultShopSettings: ShopSettings = {
-  name: "Ma Super Boutique",
-  slug: "ma-super-boutique",
-  description: "Découvrez nos meilleurs produits au meilleur prix.",
-  whatsappNumber: "+22900000000",
+  name: "",
+  slug: "",
+  description: "",
+  whatsappNumber: "",
   isActive: true,
   themeColor: "blue",
   metaApiEnabled: false,
@@ -29,12 +29,12 @@ export function useShopSettings() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const loadFromStorage = () => {
-    const stored = localStorage.getItem("stockhub_shop_settings");
+    const stored = localStorage.getItem("stockhub_shop_settings_v2");
     if (stored) {
       setShopSettings(JSON.parse(stored));
     } else {
       setShopSettings(defaultShopSettings);
-      localStorage.setItem("stockhub_shop_settings", JSON.stringify(defaultShopSettings));
+      localStorage.setItem("stockhub_shop_settings_v2", JSON.stringify(defaultShopSettings));
     }
   };
 
@@ -43,7 +43,7 @@ export function useShopSettings() {
     setIsLoaded(true);
 
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "stockhub_shop_settings") {
+      if (e.key === "stockhub_shop_settings_v2") {
         loadFromStorage();
       }
     };
@@ -61,7 +61,7 @@ export function useShopSettings() {
 
   const saveShopSettings = (newSettings: ShopSettings) => {
     setShopSettings(newSettings);
-    localStorage.setItem("stockhub_shop_settings", JSON.stringify(newSettings));
+    localStorage.setItem("stockhub_shop_settings_v2", JSON.stringify(newSettings));
     window.dispatchEvent(new Event("shopSettingsUpdated"));
   };
 

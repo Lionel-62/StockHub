@@ -6,30 +6,14 @@ export interface FAQ {
   answer: string;
 }
 
-const defaultFAQs: FAQ[] = [
-  {
-    id: "faq-1",
-    question: "Quels sont les délais de livraison ?",
-    answer: "Nous expédions généralement vos commandes dans un délai de 24 à 48 heures. La livraison prend ensuite 1 à 3 jours ouvrés selon votre localisation."
-  },
-  {
-    id: "faq-2",
-    question: "Quels sont les moyens de paiement acceptés ?",
-    answer: "Nous acceptons les paiements via Mobile Money (MoMo, Celtiis, etc.), ainsi que le paiement à la livraison pour certaines zones."
-  },
-  {
-    id: "faq-3",
-    question: "Puis-je retourner ou échanger un produit ?",
-    answer: "Oui, vous disposez de 14 jours après réception pour retourner un article non utilisé et dans son emballage d'origine. Les frais de retour peuvent s'appliquer."
-  }
-];
+const defaultFAQs: FAQ[] = [];
 
 export function useFAQ() {
   const [faqs, setFaqs] = useState<FAQ[]>(defaultFAQs);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const loadFromStorage = () => {
-    const stored = localStorage.getItem("stockhub_faqs");
+    const stored = localStorage.getItem("stockhub_faqs_v2");
     if (stored) {
       try {
         setFaqs(JSON.parse(stored));
@@ -38,7 +22,7 @@ export function useFAQ() {
       }
     } else {
       setFaqs(defaultFAQs);
-      localStorage.setItem("stockhub_faqs", JSON.stringify(defaultFAQs));
+      localStorage.setItem("stockhub_faqs_v2", JSON.stringify(defaultFAQs));
     }
   };
 
@@ -47,7 +31,7 @@ export function useFAQ() {
     setIsLoaded(true);
 
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "stockhub_faqs") {
+      if (e.key === "stockhub_faqs_v2") {
         loadFromStorage();
       }
     };
@@ -65,7 +49,7 @@ export function useFAQ() {
 
   const saveFaqs = (newFaqs: FAQ[]) => {
     setFaqs(newFaqs);
-    localStorage.setItem("stockhub_faqs", JSON.stringify(newFaqs));
+    localStorage.setItem("stockhub_faqs_v2", JSON.stringify(newFaqs));
     window.dispatchEvent(new Event("faqsUpdated"));
   };
 
