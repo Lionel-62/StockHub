@@ -574,8 +574,17 @@ export default function PublicShopPage({ params }: { params: { shopId: string } 
         {displayedProducts.length === 0 && (
           <div className="text-center py-20">
             <ShoppingCart className="h-16 w-16 text-slate-200 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-slate-700">Aucun produit trouvé</h3>
-            <p className="text-slate-500">Essayez une autre recherche.</p>
+            {availableProducts.length === 0 ? (
+              <>
+                <h3 className="text-xl font-bold text-slate-700">La boutique est vide</h3>
+                <p className="text-slate-500">Aucun produit n'est actuellement disponible dans cette boutique. Revenez plus tard !</p>
+              </>
+            ) : (
+              <>
+                <h3 className="text-xl font-bold text-slate-700">Aucun produit trouvé</h3>
+                <p className="text-slate-500">Essayez une autre recherche.</p>
+              </>
+            )}
           </div>
         )}
       </main>
