@@ -3,16 +3,31 @@
 import { useParams, useRouter } from "next/navigation";
 import { ChevronLeft, Edit, Trash2, Printer, Send, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { mockInvoices } from "@/lib/mock/invoices";
+import { useInvoices } from "@/lib/mock/invoices";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function InvoiceDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { id } = params;
+  const { invoices, isLoaded } = useInvoices();
 
-  const invoice = mockInvoices.find(inv => inv.id === id);
+  if (!isLoaded) {
+    return (
+      <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6">
+        <div className="bg-white p-4 rounded-xl border border-slate-200 h-16 flex items-center">
+          <Skeleton className="h-8 w-1/3" />
+        </div>
+        <div className="bg-white p-8 md:p-12 rounded-sm border border-slate-200 h-[600px]">
+          <Skeleton className="h-full w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  const invoice = invoices.find(inv => inv.id === id);
 
   if (!invoice) {
     return (
