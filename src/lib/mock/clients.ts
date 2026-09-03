@@ -4,11 +4,12 @@ import { supabase } from "@/lib/supabase/client";
 
 export type Client = Contact;
 
-export function useClients() {
+export function useClients(publicShopId?: string) {
   const [clients, setClients] = useState<Client[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const getShopId = () => {
+    if (publicShopId) return publicShopId;
     const session = localStorage.getItem("stockhub_session");
     if (session) {
       const user = JSON.parse(session);

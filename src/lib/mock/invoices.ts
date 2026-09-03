@@ -24,11 +24,12 @@ export interface Invoice {
   status: "Brouillon" | "Envoyée" | "Payée" | "En retard";
 }
 
-export function useInvoices() {
+export function useInvoices(publicShopId?: string) {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const getShopId = () => {
+    if (publicShopId) return publicShopId;
     const session = localStorage.getItem("stockhub_session");
     if (session) {
       const user = JSON.parse(session);

@@ -20,11 +20,12 @@ export interface Order {
   source?: "En ligne" | "Sur place";
 }
 
-export function useOrders() {
+export function useOrders(publicShopId?: string) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const getShopId = () => {
+    if (publicShopId) return publicShopId;
     const session = localStorage.getItem("stockhub_session");
     if (session) {
       const user = JSON.parse(session);
