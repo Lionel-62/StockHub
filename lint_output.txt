@@ -1,0 +1,709 @@
+
+> stockhub@0.1.0 lint
+> eslint
+
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\aide\page.tsx
+  15:103  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  33:72   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  59:63   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  60:146  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\boutique\page.tsx
+    4:28   warning  'Smartphone' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   39:7    error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\boutique\page.tsx:39:7
+  37 |   useEffect(() => {
+  38 |     if (isLoaded) {
+> 39 |       setFormData(shopSettings);
+     |       ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  40 |     }
+  41 |   }, [isLoaded, shopSettings]);
+  42 |                                                           react-hooks/set-state-in-effect
+   70:5    error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\boutique\page.tsx:70:5
+  68 |
+  69 |   useEffect(() => {
+> 70 |     setOrigin(window.location.origin);
+     |     ^^^^^^^^^ Avoid calling setState() directly within an effect
+  71 |   }, []);
+  72 |
+  73 |   const shopUrl = origin ? `${origin}/b/${formData.slug}` : `https://stockhub.com/b/${formData.slug}`;  react-hooks/set-state-in-effect
+  269:49   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+  275:79   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+  276:86   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+  276:111  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+  289:230  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+  304:110  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+  326:70   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+  368:40   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\clients\page.tsx
+   5:24  warning  'Filter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  49:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\clients\page.tsx:49:5
+  47 |
+  48 |   useEffect(() => {
+> 49 |     setIsMounted(true);
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  50 |     const handleClickOutside = (e: MouseEvent) => {
+  51 |       const target = e.target as HTMLElement;
+  52 |       if (!target.closest('.action-menu-btn') && !target.closest('.action-menu-content')) {  react-hooks/set-state-in-effect
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\equipe\page.tsx
+    5:42  warning  'ShieldAlert' is defined but never used                          @typescript-eslint/no-unused-vars
+    7:16  warning  'CardContent' is defined but never used                          @typescript-eslint/no-unused-vars
+   94:14  warning  'err' is defined but never used                                  @typescript-eslint/no-unused-vars
+  226:56  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  254:82  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  255:76  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\factures\[id]\page.tsx
+   36:45   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  128:103  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\factures\nouvelle\page.tsx
+    4:29   warning  'Send' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+    4:61   warning  'CalendarIcon' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+    4:75   warning  'PackageOpen' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+    4:88   warning  'ChevronDown' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+    4:101  warning  'Search' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+    8:10   warning  'Card' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+    8:16   warning  'CardContent' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   10:23   warning  'Product' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+   42:30   warning  'isClientsLoaded' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   49:5    error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\factures\nouvelle\page.tsx:49:5
+  47 |   // Fix hydration mismatch en initialisant les valeurs aléatoires et temporelles au montage côté client
+  48 |   useEffect(() => {
+> 49 |     setIssueDate(new Date().toISOString().split('T')[0]);
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  50 |     setInvoiceNumber(`#INV-${Math.floor(Math.random() * 100000).toString().padStart(5, '0')}`);
+  51 |   }, []);
+  52 |  react-hooks/set-state-in-effect
+   62:9    error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\factures\nouvelle\page.tsx:62:9
+  60 |
+  61 |       if (urlClientId) {
+> 62 |         setClientId(urlClientId);
+     |         ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  63 |       }
+  64 |       
+  65 |       if (editInvoiceId && invoices.length > 0) {                                                                                                                                                                    react-hooks/set-state-in-effect
+  122:6    warning  React Hook useEffect has a missing dependency: 'clients'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/exhaustive-deps
+  196:11   error    'updatedProducts' is never reassigned. Use 'const' instead                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   prefer-const
+  205:97   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+  293:79   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+  301:79   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+  445:107  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\factures\page.tsx
+    4:24  warning  'Filter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+   38:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\factures\page.tsx:38:5
+  36 |
+  37 |   useEffect(() => {
+> 38 |     setIsMounted(true);
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  39 |     const handleClickOutside = (e: MouseEvent) => {
+  40 |       const target = e.target as HTMLElement;
+  41 |       if (!target.closest('.action-menu-btn') && !target.closest('.action-menu-content')) {  react-hooks/set-state-in-effect
+  123:36  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\fournisseurs\page.tsx
+   4:10   warning  'useRouter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   5:24   warning  'Filter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+   5:111  warning  'Receipt' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  26:59   warning  'isLoaded' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  47:5    error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\fournisseurs\page.tsx:47:5
+  45 |
+  46 |   useEffect(() => {
+> 47 |     setIsMounted(true);
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  48 |     const handleClickOutside = (e: MouseEvent) => {
+  49 |       const target = e.target as HTMLElement;
+  50 |       if (!target.closest('.action-menu-btn') && !target.closest('.action-menu-content')) {  react-hooks/set-state-in-effect
+  60:9    warning  'formatCurrency' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\parametres\page.tsx
+    5:34   warning  'Wallet' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+    6:18   warning  'CreditCard' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   37:7    error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\parametres\page.tsx:37:7
+  35 |   useEffect(() => {
+  36 |     if (isLoaded) {
+> 37 |       setFormData(settings);
+     |       ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  38 |     }
+  39 |   }, [isLoaded, settings]);
+  40 |  react-hooks/set-state-in-effect
+  123:86   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+  141:25   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @next/next/no-img-element
+  150:87   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+  278:90   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+  372:124  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+  390:93   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\produits\page.tsx
+    4:24   warning  'Filter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+    4:32   warning  'MoreHorizontal' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+   25:63   warning  'isLoaded' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+  122:10   warning  'activeDropdown' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  130:35   error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `currentProduct.category`, but the source dependencies were [products, currentProduct?.category]. Inferred different dependency than source.
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\produits\page.tsx:130:35
+  128 |   }, []);
+  129 |
+> 130 |   const categoryOptions = useMemo(() => {
+      |                                   ^^^^^^^
+> 131 |     const baseCategories = [
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 132 |       "Alimentation", "Électronique", "Mode & Vêtements", "Maison & Décoration",
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 149 |     })).sort((a, b) => a.label.localeCompare(b.label));
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 150 |   }, [products, currentProduct?.category]);
+      | ^^^^ Could not preserve existing manual memoization
+  151 |
+  152 |   const formatCurrency = (amount: number) => {
+  153 |     return new Intl.NumberFormat("fr-FR", {  react-hooks/preserve-manual-memoization
+  237:69   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react/no-unescaped-entities
+  281:59   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react/no-unescaped-entities
+  548:104  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react/no-unescaped-entities
+  658:79   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react/no-unescaped-entities
+  830:116  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\rapports\page.tsx
+   84:9   error  'salesCount' is never reassigned. Use 'const' instead            prefer-const
+  151:9   error  'result' is never reassigned. Use 'const' instead                prefer-const
+  213:74  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  354:42  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\stock\page.tsx
+   4:18  warning  'Filter' is defined but never used                               @typescript-eslint/no-unused-vars
+  17:23  warning  'Product' is defined but never used                              @typescript-eslint/no-unused-vars
+  80:62  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  93:66  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\ventes\nouvelle\page.tsx
+    4:50   warning  'Save' is defined but never used                                 @typescript-eslint/no-unused-vars
+    4:66   warning  'CreditCard' is defined but never used                           @typescript-eslint/no-unused-vars
+    4:78   warning  'ChevronRight' is defined but never used                         @typescript-eslint/no-unused-vars
+    4:92   warning  'Calculator' is defined but never used                           @typescript-eslint/no-unused-vars
+    4:104  warning  'User' is defined but never used                                 @typescript-eslint/no-unused-vars
+    4:159  warning  'Building' is defined but never used                             @typescript-eslint/no-unused-vars
+   26:44   warning  'productsLoaded' is assigned a value but never used              @typescript-eslint/no-unused-vars
+   27:11   warning  'orders' is assigned a value but never used                      @typescript-eslint/no-unused-vars
+   28:30   warning  'clientsLoaded' is assigned a value but never used               @typescript-eslint/no-unused-vars
+   86:9    warning  'getCategoryColor' is assigned a value but never used            @typescript-eslint/no-unused-vars
+  116:39   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  125:68   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  322:106  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\ventes\page.tsx
+   5:24  warning  'Filter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+   5:32  warning  'MoreHorizontal' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+   5:93  warning  'Calendar' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  31:10  warning  'todayStr' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  33:10  warning  'activeDropdown' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+  52:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\app\(dashboard)\dashboard\ventes\page.tsx:52:5
+  50 |     // Déterminer la date d'aujourd'hui en toute sécurité (hydratation)
+  51 |     const today = new Date().toISOString().split('T')[0];
+> 52 |     setTodayStr(today);
+     |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  53 |
+  54 |     // Vérifier si le paramètre filter=today est présent
+  55 |     if (typeof window !== "undefined") {  react-hooks/set-state-in-effect
+
+C:\Users\HP\StockHub\src\app\(employe)\employe\login\page.tsx
+   53:68  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  116:26  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\api\whatsapp\send\route.ts
+  20:9   error  'payload' is never reassigned. Use 'const' instead  prefer-const
+  20:18  error  Unexpected any. Specify a different type            @typescript-eslint/no-explicit-any
+
+C:\Users\HP\StockHub\src\app\b\[shopId]\page.tsx
+     4:48   warning  'ArrowRight' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+    22:99   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+    37:6    warning  React Hook useEffect has a missing dependency: 'isFullscreen'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react-hooks/exhaustive-deps
+   101:48   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+   101:115  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+   107:52   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+   120:52   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+   191:11   warning  'invoices' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   194:11   warning  'orders' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   204:27   warning  'setCustomerCountry' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   205:29   warning  'setCustomerPhoneCode' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+   212:60   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+   225:62   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react/no-unescaped-entities
+   307:18   error    Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\HP\StockHub\src\app\b\[shopId]\page.tsx:307:18
+  305 |     
+  306 |     const newInvoice: Invoice = {
+> 307 |       id: `inv-${Date.now()}`,
+      |                  ^^^^^^^^^^ Cannot call impure function
+  308 |       invoiceNumber: `CMD-${Math.floor(Math.random() * 10000)}`,
+  309 |       clientId: "client-online",
+  310 |       clientName: customerName,                                                                      react-hooks/purity
+   308:40   error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\HP\StockHub\src\app\b\[shopId]\page.tsx:308:40
+  306 |     const newInvoice: Invoice = {
+  307 |       id: `inv-${Date.now()}`,
+> 308 |       invoiceNumber: `CMD-${Math.floor(Math.random() * 10000)}`,
+      |                                        ^^^^^^^^^^^^^ Cannot call impure function
+  309 |       clientId: "client-online",
+  310 |       clientName: customerName,
+  311 |       clientEmail: customerAddress || "N/A",  react-hooks/purity
+   332:18   error    Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\HP\StockHub\src\app\b\[shopId]\page.tsx:332:18
+  330 |     // Create Order for Ventes Dashboard
+  331 |     const newOrder: Order = {
+> 332 |       id: `ord-${Date.now()}`,
+      |                  ^^^^^^^^^^ Cannot call impure function
+  333 |       orderNumber: newInvoice.invoiceNumber, // Match invoice number
+  334 |       clientName: customerName,
+  335 |       totalAmount: cartTotal,                                     react-hooks/purity
+   363:28   error    Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\HP\StockHub\src\app\b\[shopId]\page.tsx:363:28
+  361 |       updateClient(updatedClient);
+  362 |     } else {
+> 363 |       clientId = `client-${Date.now()}`;
+      |                            ^^^^^^^^^^ Cannot call impure function
+  364 |       const newClient: Client = {
+  365 |         id: clientId,
+  366 |         name: customerName,                                                                                       react-hooks/purity
+   581:62   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react/no-unescaped-entities
+  1051:47   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\app\login\page.tsx
+   62:15  warning  'data' is assigned a value but never used                        @typescript-eslint/no-unused-vars
+   69:14  warning  'err' is defined but never used                                  @typescript-eslint/no-unused-vars
+   69:19  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  134:14  warning  'err' is defined but never used                                  @typescript-eslint/no-unused-vars
+  134:19  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  335:68  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\components\dashboard\sidebar.tsx
+  16:3  warning  'Hexagon' is defined but never used        @typescript-eslint/no-unused-vars
+  19:3  warning  'CalendarClock' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\HP\StockHub\src\components\dashboard\topbar.tsx
+  46:83  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\components\landing\features.tsx
+   20:24   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+   96:113  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  101:54   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  101:189  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  117:134  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  117:169  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\components\landing\final-cta.tsx
+  69:67  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\components\landing\footer.tsx
+  21:141  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  55:93   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  69:80   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\components\landing\header.tsx
+  7:8  warning  'Image' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\HP\StockHub\src\components\landing\hero.tsx
+    5:28  warning  'CheckCircle2' is defined but never used                         @typescript-eslint/no-unused-vars
+    5:69  warning  'AlertTriangle' is defined but never used                        @typescript-eslint/no-unused-vars
+    5:84  warning  'ShieldCheck' is defined but never used                          @typescript-eslint/no-unused-vars
+   69:64  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  151:63  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  204:30  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\components\landing\how-it-works.tsx
+  18:25  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  18:44  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\components\landing\pricing.tsx
+   19:61  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+   42:69  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+   83:69  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  103:41  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  124:92  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  141:26  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\components\landing\problem.tsx
+  17:57  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  20:34  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  39:81  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  77:41  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  77:50  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\components\landing\testimonials.tsx
+  36:17   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  36:202  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  36:227  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  65:17   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  65:44   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  65:203  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  73:75   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  91:17   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  91:22   error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  91:151  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  91:184  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\components\ui\confirm-modal.tsx
+  4:25  warning  'X' is defined but never used   @typescript-eslint/no-unused-vars
+  5:10  warning  'cn' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\HP\StockHub\src\components\ui\custom-select.tsx
+  142:29  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  142:49  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\HP\StockHub\src\lib\mock\auth.ts
+  28:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\lib\mock\auth.ts:28:7
+  26 |     const storedSession = localStorage.getItem("stockhub_session");
+  27 |     if (storedSession) {
+> 28 |       setCurrentUser(JSON.parse(storedSession));
+     |       ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  29 |     }
+  30 |     
+  31 |     // Check Supabase Auth (for Google OAuth)                                                                                                                                                                                                                                                                 react-hooks/set-state-in-effect
+  52:5  error  Error: Cannot access variable before it is declared
+
+`fetchUsers` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\HP\StockHub\src\lib\mock\auth.ts:52:5
+  50 |
+  51 |     // Fetch all profiles from Supabase
+> 52 |     fetchUsers();
+     |     ^^^^^^^^^^ `fetchUsers` accessed before it is declared
+  53 |
+  54 |     // Listen to Auth changes
+  55 |     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+
+C:\Users\HP\StockHub\src\lib\mock\auth.ts:79:3
+  77 |   }, []);
+  78 |
+> 79 |   const fetchUsers = async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 80 |     const { data, error } = await supabase.from('profiles').select('*');
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 81 |     if (!error && data) {
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 94 |     setIsLoaded(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 95 |   };
+     | ^^^^^ `fetchUsers` is declared here
+  96 |
+  97 |   const login = async (identifier: string, pinCode: string, allowedRole?: "owner" | "employee") => {
+  98 |     // We use a custom RPC function to bypass RLS securely for PIN login  react-hooks/immutability
+
+C:\Users\HP\StockHub\src\lib\mock\clients.ts
+  22:5   error    Error: Cannot access variable before it is declared
+
+`fetchClients` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\HP\StockHub\src\lib\mock\clients.ts:22:5
+  20 |
+  21 |   useEffect(() => {
+> 22 |     fetchClients();
+     |     ^^^^^^^^^^^^ `fetchClients` accessed before it is declared
+  23 |   }, []);
+  24 |
+  25 |   const fetchClients = async () => {
+
+C:\Users\HP\StockHub\src\lib\mock\clients.ts:25:3
+  23 |   }, []);
+  24 |
+> 25 |   const fetchClients = async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 26 |     const shopId = getShopId();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 27 |     if (!shopId) {
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 54 |     setIsLoaded(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 55 |   };
+     | ^^^^^ `fetchClients` is declared here
+  56 |
+  57 |   const addClient = async (client: Client) => {
+  58 |     const shopId = getShopId();  react-hooks/immutability
+  23:6   warning  React Hook useEffect has a missing dependency: 'fetchClients'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/exhaustive-deps
+  45:25  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  46:29  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+  47:29  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+
+C:\Users\HP\StockHub\src\lib\mock\faq.ts
+  31:16  warning  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+  41:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\lib\mock\faq.ts:41:5
+  39 |
+  40 |   useEffect(() => {
+> 41 |     loadFromStorage();
+     |     ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  42 |     setIsLoaded(true);
+  43 |
+  44 |     const handleStorageChange = (e: StorageEvent) => {  react-hooks/set-state-in-effect
+  59:6   warning  React Hook useEffect has a missing dependency: 'loadFromStorage'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/exhaustive-deps
+
+C:\Users\HP\StockHub\src\lib\mock\invoices.ts
+  42:5   error    Error: Cannot access variable before it is declared
+
+`fetchInvoices` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\HP\StockHub\src\lib\mock\invoices.ts:42:5
+  40 |
+  41 |   useEffect(() => {
+> 42 |     fetchInvoices();
+     |     ^^^^^^^^^^^^^ `fetchInvoices` accessed before it is declared
+  43 |   }, []);
+  44 |
+  45 |   const fetchInvoices = async () => {
+
+C:\Users\HP\StockHub\src\lib\mock\invoices.ts:45:3
+  43 |   }, []);
+  44 |
+> 45 |   const fetchInvoices = async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 46 |     const shopId = getShopId();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |     if (!shopId) {
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 75 |     setIsLoaded(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 76 |   };
+     | ^^^^^ `fetchInvoices` is declared here
+  77 |
+  78 |   const addInvoice = async (invoice: Invoice) => {
+  79 |     const shopId = getShopId();  react-hooks/immutability
+  43:6   warning  React Hook useEffect has a missing dependency: 'fetchInvoices'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/exhaustive-deps
+  68:29  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-explicit-any
+
+C:\Users\HP\StockHub\src\lib\mock\messages.ts
+   2:10  warning  'useClients' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  45:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\lib\mock\messages.ts:45:7
+  43 |     
+  44 |     if (storedMessages) {
+> 45 |       setMessages(JSON.parse(storedMessages));
+     |       ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  46 |     } else {
+  47 |       setMessages(mockMessages);
+  48 |       localStorage.setItem(`stockhub_messages_v2_${shopId}`, JSON.stringify(mockMessages));  react-hooks/set-state-in-effect
+  59:6   warning  React Hook useEffect has a missing dependency: 'getShopId'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/exhaustive-deps
+
+C:\Users\HP\StockHub\src\lib\mock\orders.ts
+  38:5   error    Error: Cannot access variable before it is declared
+
+`fetchOrders` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\HP\StockHub\src\lib\mock\orders.ts:38:5
+  36 |
+  37 |   useEffect(() => {
+> 38 |     fetchOrders();
+     |     ^^^^^^^^^^^ `fetchOrders` accessed before it is declared
+  39 |   }, []);
+  40 |
+  41 |   const fetchOrders = async () => {
+
+C:\Users\HP\StockHub\src\lib\mock\orders.ts:41:3
+  39 |   }, []);
+  40 |
+> 41 |   const fetchOrders = async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |     const shopId = getShopId();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |     if (!shopId) {
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 70 |     setIsLoaded(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 71 |   };
+     | ^^^^^ `fetchOrders` is declared here
+  72 |
+  73 |   const addOrder = async (order: Order) => {
+  74 |     const shopId = getShopId();  react-hooks/immutability
+  39:6   warning  React Hook useEffect has a missing dependency: 'fetchOrders'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/exhaustive-deps
+  61:29  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  62:44  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  63:29  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+
+C:\Users\HP\StockHub\src\lib\mock\products.ts
+  38:5   error    Error: Cannot access variable before it is declared
+
+`fetchProducts` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+C:\Users\HP\StockHub\src\lib\mock\products.ts:38:5
+  36 |
+  37 |   useEffect(() => {
+> 38 |     fetchProducts();
+     |     ^^^^^^^^^^^^^ `fetchProducts` accessed before it is declared
+  39 |   }, [publicShopId]);
+  40 |
+  41 |   const fetchProducts = async () => {
+
+C:\Users\HP\StockHub\src\lib\mock\products.ts:41:3
+  39 |   }, [publicShopId]);
+  40 |
+> 41 |   const fetchProducts = async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |     const shopId = getShopId();
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |     if (!shopId) {
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 72 |     setIsLoaded(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 73 |   };
+     | ^^^^^ `fetchProducts` is declared here
+  74 |
+  75 |   const addProduct = async (product: Product) => {
+  76 |     const shopId = getShopId();  react-hooks/immutability
+  39:6   warning  React Hook useEffect has a missing dependency: 'fetchProducts'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/exhaustive-deps
+  65:29  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+
+C:\Users\HP\StockHub\src\lib\mock\settings.ts
+  46:5  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\lib\mock\settings.ts:46:5
+  44 |
+  45 |   useEffect(() => {
+> 46 |     loadFromStorage();
+     |     ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  47 |     setIsLoaded(true);
+  48 |
+  49 |     const handleStorageChange = (e: StorageEvent) => {  react-hooks/set-state-in-effect
+  64:6  warning  React Hook useEffect has a missing dependency: 'loadFromStorage'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      react-hooks/exhaustive-deps
+
+C:\Users\HP\StockHub\src\lib\mock\shop.ts
+  80:5  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\HP\StockHub\src\lib\mock\shop.ts:80:5
+  78 |
+  79 |   useEffect(() => {
+> 80 |     loadFromSupabase();
+     |     ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  81 |   }, [publicShopId]);
+  82 |
+  83 |   const saveShopSettings = async (newSettings: ShopSettings) => {  react-hooks/set-state-in-effect
+  81:6  warning  React Hook useEffect has a missing dependency: 'loadFromSupabase'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-hooks/exhaustive-deps
+
+✖ 202 problems (130 errors, 72 warnings)
+  4 errors and 0 warnings potentially fixable with the `--fix` option.
+

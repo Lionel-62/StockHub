@@ -1,0 +1,63 @@
+/* CSS spécifique à la Landing Page StockHub */
+
+@theme inline {
+  /* Redéfinition des couleurs brand pour StockHub (Bleu foncé) */
+  --color-brand-50: #f1f5fa;
+  --color-brand-100: #e0ebf5;
+  --color-brand-200: #c2d6eb;
+  --color-brand-300: #93bade;
+  --color-brand-400: #5f9bcd;
+  --color-brand-500: #3b7fba;
+  --color-brand-600: #29639a;
+  --color-brand-700: #214f7d;
+  --color-brand-800: #1e4469;
+  --color-brand-900: #1c3958;
+  --color-brand-950: #0b213f; /* La couleur principale */
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(0.5deg); }
+}
+
+@keyframes floatMedium {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-float-med {
+  animation: floatMedium 4.5s ease-in-out infinite;
+}
+
+.animate-pulse-subtle {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 45px -10px rgba(11, 33, 63, 0.3);
+}
+
+.shadow-card-lift {
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
+}
