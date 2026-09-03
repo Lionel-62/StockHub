@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { ShoppingCart, Search, Plus, Minus, X, ArrowRight, Store as StoreIcon, ChevronLeft, ChevronRight, ChevronDown, UserCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useShopSettings } from "@/lib/mock/shop";
@@ -990,7 +990,10 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
   );
 }
 
-export default function PublicShopPage({ params }: { params: { shopId: string } }) {
+export default function PublicShopPage({ params }: { params: Promise<{ shopId: string }> }) {
+  const resolvedParams = use(params);
+  const { shopId } = resolvedParams;
+
   const [shopUuid, setShopUuid] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -1000,7 +1003,7 @@ export default function PublicShopPage({ params }: { params: { shopId: string } 
       const { data, error } = await supabase
         .from('shops')
         .select('id')
-        .eq('slug', params.shopId)
+        .eq('slug', shopId)
         .single();
         
       if (data && !error) {
@@ -1017,7 +1020,7 @@ export default function PublicShopPage({ params }: { params: { shopId: string } 
         const localShop = localStorage.getItem("stockhub_settings_shop");
         if (localShop) {
           const shopSettings = JSON.parse(localShop);
-          if (shopSettings.slug === params.shopId) {
+          if (shopSettings.slug === shopId) {
              setShopUuid(user.shopId);
              setLoading(false);
              return;
@@ -1028,7 +1031,7 @@ export default function PublicShopPage({ params }: { params: { shopId: string } 
       setLoading(false);
     }
     fetchShopId();
-  }, [params.shopId]);
+  }, [shopId]);
 
   if (loading) {
     return (
