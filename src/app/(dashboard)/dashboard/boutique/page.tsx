@@ -93,12 +93,19 @@ export default function ShopConfigPage() {
             <p className="text-slate-500 mt-1">Configurez votre vitrine publique pour recevoir des commandes.</p>
           </div>
           <div className="flex items-center gap-3">
-            <Link href={`/b/${formData.slug}`} target="_blank">
-              <Button variant="outline" className="text-[#0b213f] border-slate-200 hover:bg-slate-50">
+            {shopSettings.slug ? (
+              <Link href={`/b/${shopSettings.slug}`} target="_blank">
+                <Button variant="outline" className="text-[#0b213f] border-slate-200 hover:bg-slate-50">
+                  <Eye className="mr-2 h-4 w-4" />
+                  Voir ma boutique
+                </Button>
+              </Link>
+            ) : (
+              <Button disabled variant="outline" className="text-slate-400 border-slate-200 cursor-not-allowed">
                 <Eye className="mr-2 h-4 w-4" />
                 Voir ma boutique
               </Button>
-            </Link>
+            )}
             <Button 
               onClick={handleSave}
               className="bg-[#0b213f] hover:bg-[#18355c] text-white shadow-sm"

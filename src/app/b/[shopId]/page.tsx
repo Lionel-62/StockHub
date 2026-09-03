@@ -1013,18 +1013,14 @@ export default function PublicShopPage({ params }: { params: Promise<{ shopId: s
       }
       
       // 2. Fallback to localStorage (utile si la bdd n'est pas encore peuplée)
-      const session = localStorage.getItem("stockhub_session");
-      if (session) {
-        const user = JSON.parse(session);
-        // On vérifie si la boutique locale a ce slug
-        const localShop = localStorage.getItem("stockhub_settings_shop");
-        if (localShop) {
-          const shopSettings = JSON.parse(localShop);
-          if (shopSettings.slug === shopId) {
-             setShopUuid(user.shopId);
-             setLoading(false);
-             return;
-          }
+      const localShop = localStorage.getItem("stockhub_settings_shop");
+      if (localShop) {
+        const shopSettings = JSON.parse(localShop);
+        if (shopSettings.slug === shopId) {
+            // We use a dummy shopUuid for local mock viewing
+            setShopUuid("local-fallback");
+            setLoading(false);
+            return;
         }
       }
       
