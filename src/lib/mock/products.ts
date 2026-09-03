@@ -19,18 +19,36 @@ export interface Product {
   options?: { name: string; values: string[] }[];
 }
 
-export function useProducts() {
+export function useProducts(publicShopId?: string) {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // Get shopId either from props (public store) or from session (dashboard)
+  const getShopId = () => {
+    if (publicShopId) return publicShopId;
+    const session = localStorage.getItem("stockhub_session");
+    if (session) {
+      const user = JSON.parse(session);
+      return user.shopId;
+    }
+    return null;
+  };
+
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [publicShopId]);
 
   const fetchProducts = async () => {
+    const shopId = getShopId();
+    if (!shopId) {
+      setIsLoaded(true);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('products')
       .select('*')
+      .eq('shop_id', shopId)
       .order('created_at', { ascending: false });
 
     if (!error && data) {
@@ -55,9 +73,13 @@ export function useProducts() {
   };
 
   const addProduct = async (product: Product) => {
+    const shopId = getShopId();
+    if (!shopId) return;
+
     setProducts([product, ...products]);
     await supabase.from('products').insert({
       id: product.id,
+      shop_id: shopId,
       name: product.name,
       category: product.category,
       stock: product.stock,

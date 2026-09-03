@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
   Save, Building2, Bell, Shield, Wallet, 
   Upload, Check, CreditCard, Lock, Mail, 
@@ -43,6 +43,19 @@ export default function SettingsPage() {
     setIsSaved(true);
     setShowModal(true);
     setTimeout(() => setIsSaved(false), 3000);
+  };
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, logo: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -113,9 +126,25 @@ export default function SettingsPage() {
                 <CardContent className="p-6 space-y-6">
                   
                   <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
-                    <div className="h-24 w-24 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 flex flex-col items-center justify-center text-slate-400 hover:bg-slate-100 hover:border-blue-400 hover:text-blue-500 cursor-pointer transition-colors group">
-                      <Upload size={24} className="mb-2 group-hover:-translate-y-1 transition-transform" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider">Logo</span>
+                    <input 
+                      type="file" 
+                      ref={fileInputRef} 
+                      onChange={handleLogoUpload} 
+                      accept="image/*" 
+                      className="hidden" 
+                    />
+                    <div 
+                      onClick={() => fileInputRef.current?.click()}
+                      className="h-24 w-24 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 flex flex-col items-center justify-center text-slate-400 hover:bg-slate-100 hover:border-blue-400 hover:text-blue-500 cursor-pointer transition-colors group overflow-hidden relative"
+                    >
+                      {formData.logo ? (
+                        <img src={formData.logo} alt="Logo" className="w-full h-full object-contain p-2" />
+                      ) : (
+                        <>
+                          <Upload size={24} className="mb-2 group-hover:-translate-y-1 transition-transform" />
+                          <span className="text-[10px] font-bold uppercase tracking-wider">Logo</span>
+                        </>
+                      )}
                     </div>
                     <div className="flex-1 space-y-1.5 w-full">
                       <label className="text-sm font-semibold text-slate-700">Nom de l'entreprise *</label>

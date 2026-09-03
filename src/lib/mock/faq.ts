@@ -8,12 +8,23 @@ export interface FAQ {
 
 const defaultFAQs: FAQ[] = [];
 
-export function useFAQ() {
+export function useFAQ(publicShopId?: string) {
   const [faqs, setFaqs] = useState<FAQ[]>(defaultFAQs);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const getShopId = () => {
+    if (publicShopId) return publicShopId;
+    const session = localStorage.getItem("stockhub_session");
+    if (session) {
+      const user = JSON.parse(session);
+      return user.shopId;
+    }
+    return "default";
+  };
+
   const loadFromStorage = () => {
-    const stored = localStorage.getItem("stockhub_faqs_v2");
+    const shopId = getShopId();
+    const stored = localStorage.getItem(`stockhub_faqs_v2_${shopId}`);
     if (stored) {
       try {
         setFaqs(JSON.parse(stored));
@@ -22,7 +33,7 @@ export function useFAQ() {
       }
     } else {
       setFaqs(defaultFAQs);
-      localStorage.setItem("stockhub_faqs_v2", JSON.stringify(defaultFAQs));
+      localStorage.setItem(`stockhub_faqs_v2_${shopId}`, JSON.stringify(defaultFAQs));
     }
   };
 
@@ -48,8 +59,9 @@ export function useFAQ() {
   }, []);
 
   const saveFaqs = (newFaqs: FAQ[]) => {
+    const shopId = getShopId();
     setFaqs(newFaqs);
-    localStorage.setItem("stockhub_faqs_v2", JSON.stringify(newFaqs));
+    localStorage.setItem(`stockhub_faqs_v2_${shopId}`, JSON.stringify(newFaqs));
     window.dispatchEvent(new Event("faqsUpdated"));
   };
 

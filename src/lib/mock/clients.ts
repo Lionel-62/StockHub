@@ -8,14 +8,30 @@ export function useClients() {
   const [clients, setClients] = useState<Client[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const getShopId = () => {
+    const session = localStorage.getItem("stockhub_session");
+    if (session) {
+      const user = JSON.parse(session);
+      return user.shopId;
+    }
+    return null;
+  };
+
   useEffect(() => {
     fetchClients();
   }, []);
 
   const fetchClients = async () => {
+    const shopId = getShopId();
+    if (!shopId) {
+      setIsLoaded(true);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('clients')
       .select('*')
+      .eq('shop_id', shopId)
       .order('created_at', { ascending: false });
 
     if (!error && data) {
@@ -38,10 +54,14 @@ export function useClients() {
   };
 
   const addClient = async (client: Client) => {
+    const shopId = getShopId();
+    if (!shopId) return;
+
     setClients([client, ...clients]);
     
     await supabase.from('clients').insert({
       id: client.id,
+      shop_id: shopId,
       name: client.name,
       email: client.email,
       phone: client.phone,

@@ -6,6 +6,7 @@ export interface CompanySettings {
   phone: string;
   address: string;
   website: string;
+  logo?: string;
 }
 
 export const defaultSettings: CompanySettings = {
@@ -16,17 +17,28 @@ export const defaultSettings: CompanySettings = {
   website: ""
 };
 
-export function useSettings() {
+export function useSettings(publicShopId?: string) {
   const [settings, setSettings] = useState<CompanySettings>(defaultSettings);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const getShopId = () => {
+    if (publicShopId) return publicShopId;
+    const session = localStorage.getItem("stockhub_session");
+    if (session) {
+      const user = JSON.parse(session);
+      return user.shopId;
+    }
+    return "default";
+  };
+
   const loadFromStorage = () => {
-    const stored = localStorage.getItem("stockhub_settings_v2");
+    const shopId = getShopId();
+    const stored = localStorage.getItem(`stockhub_settings_v2_${shopId}`);
     if (stored) {
       setSettings(JSON.parse(stored));
     } else {
       setSettings(defaultSettings);
-      localStorage.setItem("stockhub_settings_v2", JSON.stringify(defaultSettings));
+      localStorage.setItem(`stockhub_settings_v2_${shopId}`, JSON.stringify(defaultSettings));
     }
   };
 
@@ -52,8 +64,9 @@ export function useSettings() {
   }, []);
 
   const saveSettings = (newSettings: CompanySettings) => {
+    const shopId = getShopId();
     setSettings(newSettings);
-    localStorage.setItem("stockhub_settings_v2", JSON.stringify(newSettings));
+    localStorage.setItem(`stockhub_settings_v2_${shopId}`, JSON.stringify(newSettings));
     window.dispatchEvent(new Event("settingsUpdated"));
   };
 

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase/client";
 
 export interface ShopSettings {
+  id?: string;
   name: string;
   slug: string;
   description: string;
@@ -24,44 +26,73 @@ const defaultShopSettings: ShopSettings = {
   metaAccessToken: "",
 };
 
-export function useShopSettings() {
+export function useShopSettings(publicShopId?: string) {
   const [shopSettings, setShopSettings] = useState<ShopSettings>(defaultShopSettings);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const loadFromStorage = () => {
-    const stored = localStorage.getItem("stockhub_shop_settings_v2");
-    if (stored) {
-      setShopSettings(JSON.parse(stored));
-    } else {
-      setShopSettings(defaultShopSettings);
-      localStorage.setItem("stockhub_shop_settings_v2", JSON.stringify(defaultShopSettings));
+  const getShopId = () => {
+    if (publicShopId) return publicShopId;
+    const session = localStorage.getItem("stockhub_session");
+    if (session) {
+      const user = JSON.parse(session);
+      return user.shopId;
     }
+    return null;
+  };
+
+  const loadFromSupabase = async () => {
+    const shopId = getShopId();
+    if (!shopId) {
+      setIsLoaded(true);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('shops')
+      .select('*')
+      .eq('id', shopId)
+      .single();
+
+    if (!error && data) {
+      setShopSettings({
+        id: data.id,
+        name: data.name,
+        slug: data.slug,
+        description: data.description || "",
+        whatsappNumber: data.whatsapp_number || "",
+        isActive: data.is_active,
+        themeColor: data.theme_color || "blue",
+        metaApiEnabled: data.meta_api_enabled,
+        metaPhoneNumberId: data.meta_phone_number_id || "",
+        metaAccessToken: data.meta_access_token || ""
+      });
+    }
+    setIsLoaded(true);
   };
 
   useEffect(() => {
-    loadFromStorage();
-    setIsLoaded(true);
+    loadFromSupabase();
+  }, [publicShopId]);
 
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "stockhub_shop_settings_v2") {
-        loadFromStorage();
-      }
-    };
-    
-    const handleCustomEvent = () => loadFromStorage();
+  const saveShopSettings = async (newSettings: ShopSettings) => {
+    const shopId = getShopId();
+    if (!shopId) return;
 
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("shopSettingsUpdated", handleCustomEvent);
-    
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("shopSettingsUpdated", handleCustomEvent);
-    };
-  }, []);
-
-  const saveShopSettings = (newSettings: ShopSettings) => {
     setShopSettings(newSettings);
-    localStorage.setItem("stockhub_shop_settings_v2", JSON.stringify(newSettings));
+    
+    await supabase.from('shops').update({
+      name: newSettings.name,
+      slug: newSettings.slug,
+      description: newSettings.description,
+      whatsapp_number: newSettings.whatsappNumber,
+      is_active: newSettings.isActive,
+      theme_color: newSettings.themeColor,
+      meta_api_enabled: newSettings.metaApiEnabled,
+      meta_phone_number_id: newSettings.metaPhoneNumberId,
+      meta_access_token: newSettings.metaAccessToken
+    }).eq('id', shopId);
+    
+    // Dispatch event for other tabs just in case, though they should really listen to Supabase realtime
     window.dispatchEvent(new Event("shopSettingsUpdated"));
   };
 

@@ -21,40 +21,53 @@ const mockMessages: Message[] = [];
 
 const mockConversations: Conversation[] = [];
 
-export function useMessages() {
+export function useMessages(publicShopId?: string) {
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [conversations, setConversations] = useState<Conversation[]>(mockConversations);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const getShopId = () => {
+    if (publicShopId) return publicShopId;
+    const session = localStorage.getItem("stockhub_session");
+    if (session) {
+      const user = JSON.parse(session);
+      return user.shopId;
+    }
+    return "default";
+  };
+
   useEffect(() => {
-    const storedMessages = localStorage.getItem("stockhub_messages_v2");
-    const storedConversations = localStorage.getItem("stockhub_conversations_v2");
+    const shopId = getShopId();
+    const storedMessages = localStorage.getItem(`stockhub_messages_v2_${shopId}`);
+    const storedConversations = localStorage.getItem(`stockhub_conversations_v2_${shopId}`);
     
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
     } else {
       setMessages(mockMessages);
-      localStorage.setItem("stockhub_messages_v2", JSON.stringify(mockMessages));
+      localStorage.setItem(`stockhub_messages_v2_${shopId}`, JSON.stringify(mockMessages));
     }
     
     if (storedConversations) {
       setConversations(JSON.parse(storedConversations));
     } else {
       setConversations(mockConversations);
-      localStorage.setItem("stockhub_conversations_v2", JSON.stringify(mockConversations));
+      localStorage.setItem(`stockhub_conversations_v2_${shopId}`, JSON.stringify(mockConversations));
     }
     
     setIsLoaded(true);
   }, []);
 
   const saveMessages = (newMessages: Message[]) => {
+    const shopId = getShopId();
     setMessages(newMessages);
-    localStorage.setItem("stockhub_messages_v2", JSON.stringify(newMessages));
+    localStorage.setItem(`stockhub_messages_v2_${shopId}`, JSON.stringify(newMessages));
   };
 
   const saveConversations = (newConversations: Conversation[]) => {
+    const shopId = getShopId();
     setConversations(newConversations);
-    localStorage.setItem("stockhub_conversations_v2", JSON.stringify(newConversations));
+    localStorage.setItem(`stockhub_conversations_v2_${shopId}`, JSON.stringify(newConversations));
   };
 
   const sendMessage = (clientId: string, content: string, senderId: "me" | string = "me") => {

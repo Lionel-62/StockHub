@@ -28,14 +28,30 @@ export function useInvoices() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const getShopId = () => {
+    const session = localStorage.getItem("stockhub_session");
+    if (session) {
+      const user = JSON.parse(session);
+      return user.shopId;
+    }
+    return null;
+  };
+
   useEffect(() => {
     fetchInvoices();
   }, []);
 
   const fetchInvoices = async () => {
+    const shopId = getShopId();
+    if (!shopId) {
+      setIsLoaded(true);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('invoices')
       .select('*')
+      .eq('shop_id', shopId)
       .order('issue_date', { ascending: false });
 
     if (!error && data) {
@@ -59,9 +75,13 @@ export function useInvoices() {
   };
 
   const addInvoice = async (invoice: Invoice) => {
+    const shopId = getShopId();
+    if (!shopId) return;
+
     setInvoices([invoice, ...invoices]);
     await supabase.from('invoices').insert({
       id: invoice.id,
+      shop_id: shopId,
       invoice_number: invoice.invoiceNumber,
       client_id: invoice.clientId,
       client_name: invoice.clientName,

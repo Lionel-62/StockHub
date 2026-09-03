@@ -12,6 +12,7 @@ import { useMessages } from "@/lib/mock/messages";
 import { useOrders, Order } from "@/lib/mock/orders";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase/client";
 
 // Helper to format currency
 const formatCurrency = (amount: number) => {
@@ -183,14 +184,14 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
   );
 }
 
-export default function PublicShopPage({ params }: { params: { shopId: string } }) {
-  const { shopSettings, isLoaded: shopLoaded } = useShopSettings();
-  const { faqs, isLoaded: faqLoaded } = useFAQ();
-  const { products, isLoaded: productsLoaded } = useProducts();
-  const { invoices, addInvoice } = useInvoices();
-  const { clients, addClient, updateClient } = useClients();
-  const { sendMessage } = useMessages();
-  const { orders, addOrder } = useOrders();
+function ShopContent({ shopUuid }: { shopUuid: string }) {
+  const { shopSettings, isLoaded: shopLoaded } = useShopSettings(shopUuid);
+  const { faqs, isLoaded: faqLoaded } = useFAQ(shopUuid);
+  const { products, isLoaded: productsLoaded } = useProducts(shopUuid);
+  const { invoices, addInvoice } = useInvoices(shopUuid);
+  const { clients, addClient, updateClient } = useClients(shopUuid);
+  const { sendMessage } = useMessages(shopUuid);
+  const { orders, addOrder } = useOrders(shopUuid);
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState<{id: string, product: Product, quantity: number, selectedOptions?: Record<string, string>}[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -988,3 +989,52 @@ export default function PublicShopPage({ params }: { params: { shopId: string } 
     </div>
   );
 }
+
+export default function PublicShopPage({ params }: { params: { shopId: string } }) {
+  const [shopUuid, setShopUuid] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchShopId() {
+      const { data, error } = await supabase
+        .from('shops')
+        .select('id')
+        .eq('slug', params.shopId)
+        .single();
+        
+      if (data && !error) {
+        setShopUuid(data.id);
+      }
+      setLoading(false);
+    }
+    fetchShopId();
+  }, [params.shopId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="h-16 w-16 bg-slate-200 rounded-full mb-4"></div>
+          <div className="h-4 w-32 bg-slate-200 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!shopUuid) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 text-center">
+        <div>
+          <div className="h-16 w-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
+             <span className="text-2xl">🏪</span>
+          </div>
+          <h1 className="text-2xl font-bold text-slate-800">Boutique introuvable</h1>
+          <p className="text-slate-500 mt-2">L'adresse que vous avez saisie ne correspond à aucune boutique active.</p>
+        </div>
+      </div>
+    );
+  }
+
+  return <ShopContent shopUuid={shopUuid} />;
+}
+

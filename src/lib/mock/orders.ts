@@ -24,14 +24,30 @@ export function useOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const getShopId = () => {
+    const session = localStorage.getItem("stockhub_session");
+    if (session) {
+      const user = JSON.parse(session);
+      return user.shopId;
+    }
+    return null;
+  };
+
   useEffect(() => {
     fetchOrders();
   }, []);
 
   const fetchOrders = async () => {
+    const shopId = getShopId();
+    if (!shopId) {
+      setIsLoaded(true);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('orders')
       .select('*')
+      .eq('shop_id', shopId)
       .order('date', { ascending: false });
 
     if (!error && data) {
@@ -54,9 +70,13 @@ export function useOrders() {
   };
 
   const addOrder = async (order: Order) => {
+    const shopId = getShopId();
+    if (!shopId) return;
+
     setOrders([order, ...orders]);
     await supabase.from('orders').insert({
       id: order.id,
+      shop_id: shopId,
       order_number: order.orderNumber,
       client_name: order.clientName,
       total_amount: order.totalAmount,
@@ -93,8 +113,12 @@ export function useOrders() {
     // Usually used when status changes or a new order is added
     // For full compatibility, we'd need to sync changes, but for now we rely on explicit methods where possible
     for (const order of newOrders) {
+      const shopId = getShopId();
+      if (!shopId) continue;
+      
       await supabase.from('orders').upsert({
         id: order.id,
+        shop_id: shopId,
         order_number: order.orderNumber,
         client_name: order.clientName,
         total_amount: order.totalAmount,

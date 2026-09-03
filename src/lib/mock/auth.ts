@@ -7,6 +7,9 @@ export interface User {
   identifier: string; // The login identifier (e.g. "patron" or "employe1")
   pinCode: string; // 4-digit code (e.g. "1234")
   role: "owner" | "employee";
+  shopId?: string;
+  shopSlug?: string;
+  shopName?: string;
   permissions: {
     canViewDashboard: boolean;
   };
@@ -92,26 +95,31 @@ export function useAuth() {
   };
 
   const login = async (identifier: string, pinCode: string, allowedRole?: "owner" | "employee") => {
+    // We use a custom RPC function to bypass RLS securely for PIN login
     const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('identifier', identifier)
-      .eq('pin_code', pinCode)
-      .single();
+      .rpc('verify_pin_login', {
+        p_identifier: identifier,
+        p_pin_code: pinCode
+      });
 
-    if (!error && data) {
-      if (allowedRole && data.role !== allowedRole) {
+    const userRecord = data?.[0]; // The RPC returns a table/array
+
+    if (!error && userRecord) {
+      if (allowedRole && userRecord.role !== allowedRole) {
         return { success: false, error: allowedRole === "owner" ? "Veuillez utiliser l'espace employé." : "Veuillez utiliser l'espace propriétaire." };
       }
 
       const user: User = {
-        id: data.id,
-        name: data.name,
-        identifier: data.identifier,
-        pinCode: data.pin_code,
-        role: data.role,
-        permissions: typeof data.permissions === 'string' ? JSON.parse(data.permissions) : data.permissions,
-        createdAt: data.created_at
+        id: userRecord.id,
+        name: userRecord.name,
+        identifier: userRecord.identifier,
+        pinCode: pinCode, // Not returned securely, we use the input
+        role: userRecord.role,
+        shopId: userRecord.shop_id,
+        shopSlug: userRecord.shop_slug,
+        shopName: userRecord.shop_name,
+        permissions: typeof userRecord.permissions === 'string' ? JSON.parse(userRecord.permissions) : userRecord.permissions,
+        createdAt: new Date().toISOString() // Or return from RPC if needed
       };
       setCurrentUser(user);
       localStorage.setItem("stockhub_session", JSON.stringify(user));
@@ -127,15 +135,32 @@ export function useAuth() {
   };
 
   const addUser = async (user: User) => {
+    // Generate a unique slug for the shop based on the name
+    const shopSlug = user.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Math.floor(Math.random() * 1000);
+    
+    // Create the shop first
+    const { data: shopData, error: shopError } = await supabase.from('shops').insert({
+      name: user.name,
+      slug: shopSlug,
+    }).select().single();
+
+    if (shopError || !shopData) {
+      console.error("Error creating shop", shopError);
+      throw new Error("Impossible de créer la boutique.");
+    }
+
+    const newUserWithShop = { ...user, shopId: shopData.id, shopSlug: shopData.slug, shopName: shopData.name };
+    
     // Optimistic update
-    setUsers([...users, user]);
+    setUsers([...users, newUserWithShop]);
     
     await supabase.from('profiles').insert({
       id: user.id,
-      name: user.name,
+      name: "Gérant", // Owner's default name
       identifier: user.identifier,
       pin_code: user.pinCode,
       role: user.role,
+      shop_id: shopData.id,
       permissions: user.permissions, // JSONB
       created_at: user.createdAt
     });
