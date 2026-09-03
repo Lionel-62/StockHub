@@ -66,6 +66,12 @@ export function useShopSettings(publicShopId?: string) {
         metaPhoneNumberId: data.meta_phone_number_id || "",
         metaAccessToken: data.meta_access_token || ""
       });
+    } else {
+      // Fallback local if DB not configured yet
+      const localShop = localStorage.getItem("stockhub_settings_shop");
+      if (localShop) {
+        setShopSettings(JSON.parse(localShop));
+      }
     }
     setIsLoaded(true);
   };

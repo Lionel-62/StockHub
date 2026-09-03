@@ -996,6 +996,7 @@ export default function PublicShopPage({ params }: { params: { shopId: string } 
 
   useEffect(() => {
     async function fetchShopId() {
+      // 1. Try Supabase first
       const { data, error } = await supabase
         .from('shops')
         .select('id')
@@ -1004,7 +1005,26 @@ export default function PublicShopPage({ params }: { params: { shopId: string } 
         
       if (data && !error) {
         setShopUuid(data.id);
+        setLoading(false);
+        return;
       }
+      
+      // 2. Fallback to localStorage (utile si la bdd n'est pas encore peuplée)
+      const session = localStorage.getItem("stockhub_session");
+      if (session) {
+        const user = JSON.parse(session);
+        // On vérifie si la boutique locale a ce slug
+        const localShop = localStorage.getItem("stockhub_settings_shop");
+        if (localShop) {
+          const shopSettings = JSON.parse(localShop);
+          if (shopSettings.slug === params.shopId) {
+             setShopUuid(user.shopId);
+             setLoading(false);
+             return;
+          }
+        }
+      }
+      
       setLoading(false);
     }
     fetchShopId();
