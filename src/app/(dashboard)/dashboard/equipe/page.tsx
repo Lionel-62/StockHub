@@ -38,7 +38,9 @@ export default function EquipePage() {
     u.identifier.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.identifier || form.pinCode.length !== 4) {
       alert("Veuillez remplir tous les champs correctement (Code PIN à 4 chiffres).");
@@ -63,8 +65,15 @@ export default function EquipePage() {
       createdAt: new Date().toISOString()
     };
 
-    addUser(newUser);
-    setIsModalOpen(false);
+    setIsSubmitting(true);
+    try {
+      await addUser(newUser);
+      setIsModalOpen(false);
+    } catch (error: any) {
+      alert(error.message || "Une erreur est survenue");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const openAddModal = () => {
@@ -259,7 +268,7 @@ export default function EquipePage() {
 
               <div className="flex justify-end gap-3 pt-4 mt-6 border-t border-slate-100">
                 <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>Annuler</Button>
-                <Button type="submit" className="bg-[#0b213f] hover:bg-[#18355c] text-white">Créer le profil</Button>
+                <Button type="submit" disabled={isSubmitting} className="bg-[#0b213f] hover:bg-[#18355c] text-white">{isSubmitting ? "Création..." : "Créer le profil"}</Button>
               </div>
             </form>
           </div>

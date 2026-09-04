@@ -143,35 +143,64 @@ export function useAuth() {
   };
 
   const addUser = async (user: User) => {
-    // Generate a unique slug for the shop based on the name
-    const shopSlug = user.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Math.floor(Math.random() * 1000);
-    
-    // Create the shop first
-    const { data: shopData, error: shopError } = await supabase.from('shops').insert({
-      name: user.name,
-      slug: shopSlug,
-    }).select().single();
+    if (user.role === 'employee') {
+      if (!currentUser?.shopId) {
+        throw new Error("Action non autorisée. Boutique introuvable.");
+      }
+      
+      const currentEmployees = users.filter(u => u.role !== 'owner');
+      if (currentEmployees.length >= 2) {
+        throw new Error("Limite atteinte : Vous ne pouvez pas ajouter plus de 2 employés.");
+      }
 
-    if (shopError || !shopData) {
-      console.error("Error creating shop", shopError);
-      throw new Error("Impossible de créer la boutique.");
+      // Optimistic update
+      const newUserWithShop = { ...user, shopId: currentUser.shopId };
+      setUsers([...users, newUserWithShop]);
+      
+      const { error } = await supabase.from('profiles').insert({
+        id: crypto.randomUUID(), // Use a real UUID for non-auth profiles
+        name: user.name,
+        identifier: user.identifier,
+        pin_code: user.pinCode,
+        role: user.role,
+        shop_id: currentUser.shopId,
+        permissions: user.permissions,
+        created_at: user.createdAt
+      });
+      
+      if (error) {
+        console.error("Error creating employee", error);
+        setUsers(users.filter(u => u.id !== user.id)); // rollback
+        throw new Error("Impossible de créer l'employé.");
+      }
+    } else {
+      // Logic for owner signup
+      const shopSlug = user.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Math.floor(Math.random() * 1000);
+      
+      const { data: shopData, error: shopError } = await supabase.from('shops').insert({
+        name: user.name,
+        slug: shopSlug,
+      }).select().single();
+
+      if (shopError || !shopData) {
+        console.error("Error creating shop", shopError);
+        throw new Error("Impossible de créer la boutique.");
+      }
+
+      const newUserWithShop = { ...user, shopId: shopData.id, shopSlug: shopData.slug, shopName: shopData.name };
+      setUsers([...users, newUserWithShop]);
+      
+      await supabase.from('profiles').insert({
+        id: user.id,
+        name: "Gérant",
+        identifier: user.identifier,
+        pin_code: user.pinCode,
+        role: user.role,
+        shop_id: shopData.id,
+        permissions: user.permissions,
+        created_at: user.createdAt
+      });
     }
-
-    const newUserWithShop = { ...user, shopId: shopData.id, shopSlug: shopData.slug, shopName: shopData.name };
-    
-    // Optimistic update
-    setUsers([...users, newUserWithShop]);
-    
-    await supabase.from('profiles').insert({
-      id: user.id,
-      name: "Gérant", // Owner's default name
-      identifier: user.identifier,
-      pin_code: user.pinCode,
-      role: user.role,
-      shop_id: shopData.id,
-      permissions: user.permissions, // JSONB
-      created_at: user.createdAt
-    });
   };
 
   const deleteUser = async (id: string) => {
