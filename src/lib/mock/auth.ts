@@ -31,13 +31,19 @@ export function useAuth() {
     // Check Supabase Auth (for Google OAuth)
     const checkSupabaseAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session && session.user && !storedSession) {
+      
+      const parsedSession = storedSession ? JSON.parse(storedSession) : null;
+      const needsShopId = parsedSession && !parsedSession.shopId;
+
+      if (session && session.user && (!storedSession || needsShopId)) {
+        const { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
         const user: User = {
           id: session.user.id,
           name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
           identifier: session.user.email || '',
           pinCode: '0000', // Dummy pin for OAuth users
           role: 'owner',
+          shopId: profile?.shop_id,
           permissions: { canViewDashboard: true },
           createdAt: session.user.created_at
         };
@@ -52,14 +58,16 @@ export function useAuth() {
     fetchUsers();
 
     // Listen to Auth changes
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
+        const { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
         const user: User = {
           id: session.user.id,
           name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
           identifier: session.user.email || '',
           pinCode: '0000',
           role: 'owner',
+          shopId: profile?.shop_id,
           permissions: { canViewDashboard: true },
           createdAt: session.user.created_at
         };
