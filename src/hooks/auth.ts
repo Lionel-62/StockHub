@@ -121,10 +121,19 @@ export function useAuth() {
   };
 
   const logout = async () => {
+    const isEmployee = currentUser?.role === "employee";
     setCurrentUser(null);
     localStorage.removeItem("stockhub_session");
     await logoutAction();
-    await supabase.auth.signOut();
+    
+    if (!isEmployee) {
+      await supabase.auth.signOut();
+      window.location.href = "/login";
+    } else {
+      // If employee logs out, we keep the underlying Google session (if any)
+      // and reload to let the app restore the owner session automatically.
+      window.location.href = "/dashboard";
+    }
   };
 
 const addUser = async (user: User) => {
