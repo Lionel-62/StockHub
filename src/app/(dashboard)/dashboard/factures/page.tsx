@@ -114,7 +114,7 @@ export default function InvoicesPage() {
       {/* Tableau des factures */}
       <Card className="shadow-none border-0 ring-0 bg-white rounded-xl overflow-visible">
         <CardContent className="p-0 overflow-visible">
-          <div className="overflow-x-auto overflow-y-visible">
+          <div className="overflow-x-auto overflow-y-visible min-h-[300px]">
             <Table>
               <TableHeader className="bg-slate-50/50">
                 <TableRow>
