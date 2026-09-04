@@ -272,7 +272,7 @@ export default function ProductsPage() {
       <Card className="shadow-sm border-slate-200 bg-white rounded-xl overflow-visible">
         <CardContent className="p-0 overflow-visible">
           <div className="overflow-x-auto overflow-y-visible">
-            <Table>
+            <Table className="min-w-[800px]">
               <TableHeader className="bg-slate-50/50">
                 <TableRow>
                   <TableHead className="w-[80px]">Image</TableHead>
