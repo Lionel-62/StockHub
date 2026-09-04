@@ -16,7 +16,7 @@ export default function InvoiceDetailPage() {
 
   if (!isLoaded) {
     return (
-      <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6">
+      <div className="p-3 md:p-0 max-w-5xl mx-auto space-y-6">
         <div className="bg-white p-4 rounded-xl border border-slate-200 h-16 flex items-center">
           <Skeleton className="h-8 w-1/3" />
         </div>
@@ -48,7 +48,7 @@ export default function InvoiceDetailPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-6">
+    <div className="p-3 md:p-0 max-w-5xl mx-auto space-y-6">
       
       {/* Barre d'actions */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">

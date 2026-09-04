@@ -116,7 +116,7 @@ export default function SalesPage() {
   const statuses = ["Tous", "Payée", "Livrée", "En attente", "Annulée"];
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-3 md:p-0 max-w-7xl mx-auto space-y-6">
       
       {/* En-tête de la page */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -189,7 +189,7 @@ export default function SalesPage() {
       </div>
 
       {/* Tableau des commandes */}
-      <Card className="shadow-none border-0 ring-0 bg-transparent sm:bg-white sm:shadow-sm sm:ring-1 sm:ring-slate-200 rounded-xl overflow-visible">
+      <Card className="shadow-none border-0 ring-0 bg-transparent sm:bg-white sm:shadow-sm sm:ring-1 sm:ring-slate-200 rounded-none sm:rounded-xl overflow-visible border-x-0 sm:border-x">
         <CardContent className="p-0 overflow-visible">
           <div className="overflow-x-auto overflow-y-visible min-h-[300px]">
             <Table>

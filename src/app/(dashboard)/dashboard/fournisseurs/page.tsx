@@ -112,7 +112,7 @@ export default function SuppliersPage() {
   };
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 relative">
+    <div className="p-3 md:p-0 max-w-7xl mx-auto space-y-6 relative">
       
       {/* En-tête de la page */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -153,7 +153,7 @@ export default function SuppliersPage() {
       </div>
 
       {/* Tableau des Fournisseurs */}
-      <Card className="shadow-none border-0 ring-0 bg-white rounded-xl overflow-visible">
+      <Card className="shadow-none border-0 ring-0 bg-white rounded-none sm:rounded-xl overflow-visible border-x-0 sm:border-x">
         <CardContent className="p-0 overflow-visible">
           <div className="overflow-x-auto overflow-y-visible">
             <Table>

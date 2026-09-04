@@ -58,7 +58,7 @@ export default function ShopConfigPage() {
         description="Les paramètres de votre boutique en ligne ont été enregistrés avec succès."
       />
 
-      <div className="p-4 md:p-8 max-w-[1000px] mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-300">
+      <div className="p-3 md:p-0 max-w-[1000px] mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-300">
         
         {/* En-tête */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

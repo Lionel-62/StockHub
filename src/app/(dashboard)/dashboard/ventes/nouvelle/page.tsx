@@ -136,7 +136,7 @@ export default function PointOfSalePage() {
   };
 
   return (
-    <div className="p-4 md:p-6 max-w-[1600px] mx-auto min-h-screen">
+    <div className="p-3 md:p-0 max-w-[1600px] mx-auto min-h-screen">
       
       {/* Header */}
       <div className="flex items-center justify-between mb-6">

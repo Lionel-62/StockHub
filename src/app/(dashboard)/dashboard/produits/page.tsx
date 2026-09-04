@@ -228,7 +228,7 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 relative">
+    <div className="p-3 md:p-0 max-w-7xl mx-auto space-y-6 relative">
       
       {/* En-tête de la page */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

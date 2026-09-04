@@ -223,7 +223,7 @@ export default function CreateInvoicePage() {
   const productOptions = products.map(p => ({ value: p.id, label: `${p.name} (${p.stock} en stock)` }));
 
   return (
-    <div className="p-4 md:p-6 h-full flex flex-col space-y-4">
+    <div className="p-3 md:p-0 h-full flex flex-col space-y-4">
       {/* Header compact */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
         <div className="flex items-center gap-4">

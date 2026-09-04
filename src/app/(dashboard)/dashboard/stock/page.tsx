@@ -84,7 +84,7 @@ export default function StockPage() {
   };
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+    <div className="p-3 md:p-0 max-w-7xl mx-auto space-y-6">
       
       {/* En-tête */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -187,7 +187,7 @@ export default function StockPage() {
       </div>
 
       {/* Tableau */}
-      <Card className="shadow-none border-0 ring-0 bg-white rounded-xl overflow-hidden">
+      <Card className="shadow-none border-0 ring-0 bg-white rounded-none sm:rounded-xl overflow-hidden border-x-0 sm:border-x">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             {activeTab === "inventaire" ? (

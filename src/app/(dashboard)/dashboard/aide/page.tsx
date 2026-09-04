@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function HelpSupportPage() {
   return (
-    <div className="p-6 md:p-8 max-w-5xl mx-auto space-y-6">
+    <div className="p-3 md:p-0 max-w-5xl mx-auto space-y-6">
       <div className="mb-8 text-center max-w-2xl mx-auto">
         <div className="h-16 w-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
           <LifeBuoy size={32} />
