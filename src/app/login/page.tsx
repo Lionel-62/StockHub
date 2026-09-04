@@ -141,7 +141,7 @@ export default function LoginPage() {
         
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-slate-900 mb-1">StockHub</h1>
+          <img src="/logo.png" alt="StockHub Logo" className="h-10 sm:h-12 w-auto object-contain mx-auto mb-2" />
           <p className="text-slate-500 text-sm">Gérez votre boutique en toute simplicité.</p>
         </div>
 

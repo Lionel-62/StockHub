@@ -2,7 +2,7 @@
 
 import { Menu, Search, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -12,6 +12,11 @@ export function Topbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const isDashboardHome = pathname === "/dashboard";
+
+  // Automatically close mobile menu when navigating to a new page
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   return (
     <>

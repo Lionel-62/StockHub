@@ -62,9 +62,7 @@ export default function EmployeLoginPage() {
     <div className="min-h-[calc(100vh-4rem)] bg-slate-50 flex flex-col justify-center items-center p-4">
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
         <div className="p-8 text-center flex flex-col items-center">
-          <div className="bg-blue-100 p-4 rounded-full mb-4">
-            <LogIn className="text-blue-600" size={32} />
-          </div>
+          <img src="/logo.png" alt="StockHub Logo" className="h-10 sm:h-12 w-auto object-contain mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-slate-800">Espace Vendeur</h1>
           <p className="text-slate-500 mt-2 text-sm">Identifiez-vous pour accéder à votre espace</p>
         </div>
