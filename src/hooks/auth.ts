@@ -89,10 +89,10 @@ export function useAuth() {
   }, []);
 
   const fetchUsers = async () => {
-    const { data, error } = await supabase.from('profiles').select('*');
-    if (!error && data) {
+    const res = await getTeamMembersAction();
+    if (res.success && res.data) {
       // Map DB snake_case to camelCase
-      const mappedUsers: User[] = data.map(d => ({
+      const mappedUsers: User[] = res.data.map((d: any) => ({
         id: d.id,
         name: d.name,
         identifier: d.identifier,
