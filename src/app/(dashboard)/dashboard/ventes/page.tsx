@@ -191,7 +191,7 @@ export default function SalesPage() {
       {/* Tableau des commandes */}
       <Card className="shadow-none border-0 ring-0 bg-transparent sm:bg-white sm:shadow-sm sm:ring-1 sm:ring-slate-200 rounded-xl overflow-visible">
         <CardContent className="p-0 overflow-visible">
-          <div className="overflow-x-auto overflow-y-visible">
+          <div className="overflow-x-auto overflow-y-visible min-h-[300px]">
             <Table>
               <TableHeader className="bg-slate-50/50">
                 <TableRow>
