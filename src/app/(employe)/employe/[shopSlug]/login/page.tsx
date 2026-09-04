@@ -73,7 +73,7 @@ export default function EmployeLoginPage({ params }: { params: { shopSlug: strin
     );
   }
 
-  if (currentUser) return null; // Avoid flicker before redirect
+  if (currentUser && currentUser.role === "employee") return null; // Avoid flicker before redirect
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-slate-50 flex flex-col justify-center items-center p-4">
