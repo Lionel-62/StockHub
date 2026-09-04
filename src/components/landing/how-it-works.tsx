@@ -22,6 +22,10 @@ export function HowItWorks() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
           {/* Step 1 */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200 p-8 rounded-3xl relative shadow-sm hover:shadow-md transition-shadow"
           >
@@ -37,6 +41,10 @@ export function HowItWorks() {
 
           {/* Step 2 */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200 p-8 rounded-3xl relative shadow-sm hover:shadow-md transition-shadow"
           >
@@ -52,6 +60,10 @@ export function HowItWorks() {
 
           {/* Step 3 */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200 p-8 rounded-3xl relative shadow-sm hover:shadow-md transition-shadow"
           >

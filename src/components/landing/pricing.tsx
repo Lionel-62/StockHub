@@ -24,6 +24,10 @@ export function Pricing() {
           
           {/* Plan Gratuit */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between hover:border-slate-300 transition-all"
           >
@@ -62,6 +66,10 @@ export function Pricing() {
 
           {/* Plan Pro (Featured) */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border-2 border-[#0b213f] rounded-3xl p-8 flex flex-col justify-between shadow-glow relative transform lg:-translate-y-2"
           >
@@ -106,6 +114,10 @@ export function Pricing() {
 
           {/* Plan Business */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between hover:border-slate-300 transition-all"
           >

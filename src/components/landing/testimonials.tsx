@@ -23,6 +23,10 @@ export function Testimonials() {
           
           {/* Testimonial 1 */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200 p-8 rounded-3xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
           >
@@ -49,6 +53,10 @@ export function Testimonials() {
 
           {/* Testimonial 2 */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border-2 border-[#0b213f] p-8 rounded-3xl shadow-card-lift flex flex-col justify-between relative"
           >
@@ -78,6 +86,10 @@ export function Testimonials() {
 
           {/* Testimonial 3 */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200 p-8 rounded-3xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
           >

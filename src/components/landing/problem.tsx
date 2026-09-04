@@ -26,6 +26,10 @@ export function Problem() {
           
           {/* Card 1: Cahier / Excel */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200 rounded-2xl p-7 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
           >
@@ -45,6 +49,10 @@ export function Problem() {
 
           {/* Card 2: Complex Sites */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200 rounded-2xl p-7 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
           >
@@ -64,6 +72,10 @@ export function Problem() {
 
           {/* Card 3: WhatsApp Clutter */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200 rounded-2xl p-7 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group"
           >

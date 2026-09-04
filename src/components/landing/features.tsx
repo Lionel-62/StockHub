@@ -26,6 +26,10 @@ export function Features() {
           
           {/* Feature 1: Inventory & Invoicing */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200/90 rounded-3xl p-8 hover:border-[#0b213f]/30 shadow-sm hover:shadow-card-lift transition-all"
           >
@@ -56,6 +60,10 @@ export function Features() {
 
           {/* Feature 2: Automated Storefront */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200/90 rounded-3xl p-8 hover:border-[#0b213f]/30 shadow-sm hover:shadow-card-lift transition-all"
           >
@@ -83,6 +91,10 @@ export function Features() {
 
           {/* Feature 3: WhatsApp Direct Checkout */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200/90 rounded-3xl p-8 hover:border-[#0f9d58]/30 shadow-sm hover:shadow-card-lift transition-all"
           >
@@ -104,6 +116,10 @@ export function Features() {
 
           {/* Feature 4: Staff Access & Permissions */}
           <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
             className="bg-white border border-slate-200/90 rounded-3xl p-8 hover:border-amber-300 shadow-sm hover:shadow-card-lift transition-all"
           >
