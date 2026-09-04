@@ -35,6 +35,9 @@ export function useAuth() {
       const { data: { session } } = await supabase.auth.getSession();
       
       const parsedSession = storedSession ? JSON.parse(storedSession) : null;
+      if (parsedSession && parsedSession.role === 'employee') {
+        return; // Do not overwrite employee session with underlying Google owner session
+      }
       const needsShopId = parsedSession && !parsedSession.shopId;
 
       if (session && session.user) {
@@ -63,6 +66,11 @@ export function useAuth() {
     // Listen to Auth changes
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
+        const currentLocalSession = localStorage.getItem("stockhub_session");
+        if (currentLocalSession) {
+          const parsed = JSON.parse(currentLocalSession);
+          if (parsed.role === 'employee') return; // Do not overwrite employee session
+        }
         const { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
         const user: User = {
           id: session.user.id,
