@@ -95,7 +95,7 @@ export default function EquipePage() {
   };
 
   const handleShare = async (user: User) => {
-    const loginUrl = `${window.location.origin}/employe/login`;
+    const loginUrl = `${window.location.origin}/employe/${currentUser?.shopSlug}/login`;
     const message = `Bonjour ${user.name},\n\nVoici tes accès pour l'espace vendeur StockHub :\n\nLien de connexion : ${loginUrl}\nIdentifiant : ${user.identifier}\nCode PIN : ${user.pinCode}\n\nNe partage pas ces informations.`;
     
     if (navigator.share) {

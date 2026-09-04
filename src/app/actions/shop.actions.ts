@@ -33,3 +33,18 @@ export async function updateShopSettingsAction(shopData: any) {
   if (error) return { success: false, error: error.message };
   return { success: true, data };
 }
+
+export async function getShopBySlugAction(slug: string) {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from('shops')
+    .select('id, name, slug')
+    .eq('slug', slug)
+    .single();
+
+  if (error || !data) {
+    return { success: false, error: 'Boutique introuvable' };
+  }
+  
+  return { success: true, data };
+}

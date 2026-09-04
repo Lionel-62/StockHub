@@ -4,19 +4,26 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { setSession, deleteSession } from '@/lib/auth/session';
 import { checkRateLimit, incrementRateLimit, resetRateLimit } from '@/lib/auth/rate-limit';
 
-export async function loginAction(identifier: string, pinCode: string, allowedRole?: "owner" | "employee") {
+export async function loginAction(identifier: string, pinCode: string, allowedRole?: "owner" | "employee", shopSlug?: string) {
   const rateLimit = checkRateLimit(identifier);
   if (!rateLimit.allowed) {
     return { success: false, error: `Trop de tentatives. Veuillez réessayer dans ${rateLimit.retryAfter} secondes.` };
   }
 
   const supabase = createAdminClient();
-  const { data, error } = await supabase.rpc('verify_pin_login', {
-    p_identifier: identifier,
-    p_pin_code: pinCode,
-  });
+  
+  let query = supabase
+    .from('profiles')
+    .select('*, shops!inner(slug, name)')
+    .eq('identifier', identifier)
+    .eq('pin_code', pinCode);
+    
+  if (allowedRole === "employee" && shopSlug) {
+    query = query.eq('shops.slug', shopSlug);
+  }
 
-  const userRecord = data?.[0];
+  const { data, error } = await query.single();
+  const userRecord = data;
 
   if (!error && userRecord) {
     if (allowedRole && userRecord.role !== allowedRole) {
@@ -32,8 +39,8 @@ export async function loginAction(identifier: string, pinCode: string, allowedRo
       identifier: userRecord.identifier,
       role: userRecord.role,
       shopId: userRecord.shop_id,
-      shopSlug: userRecord.shop_slug,
-      shopName: userRecord.shop_name,
+      shopSlug: userRecord.shops?.slug || userRecord.shop_slug,
+      shopName: userRecord.shops?.name || userRecord.shop_name,
       permissions: typeof userRecord.permissions === 'string' ? JSON.parse(userRecord.permissions) : userRecord.permissions,
       createdAt: userRecord.created_at || new Date().toISOString()
     };

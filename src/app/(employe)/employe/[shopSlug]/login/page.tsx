@@ -5,10 +5,27 @@ import { useRouter } from "next/navigation";
 import { Lock, User as UserIcon, AlertCircle, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/auth";
+import { getShopBySlugAction } from "@/app/actions/shop.actions";
 
-export default function EmployeLoginPage() {
+export default function EmployeLoginPage({ params }: { params: { shopSlug: string } }) {
   const router = useRouter();
   const { login, currentUser, isLoaded } = useAuth();
+  const [shopName, setShopName] = useState("");
+
+  useEffect(() => {
+    // Fetch shop name for display
+    const fetchShopName = async () => {
+      try {
+        const res = await getShopBySlugAction(params.shopSlug);
+        if (res.success && res.data) {
+          setShopName(res.data.name);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchShopName();
+  }, [params.shopSlug]);
   
   const [identifier, setIdentifier] = useState("");
   const [pinCode, setPinCode] = useState("");
@@ -37,7 +54,7 @@ export default function EmployeLoginPage() {
       return;
     }
 
-    const result = await login(identifier, pinCode, "employee");
+    const result = await login(identifier, pinCode, "employee", params.shopSlug);
     if (!result.success) {
       setError(result.error || "Identifiant ou code PIN incorrect.");
     } else {
@@ -64,6 +81,7 @@ export default function EmployeLoginPage() {
         <div className="p-8 text-center flex flex-col items-center">
           <img src="/logo.png" alt="StockHub Logo" className="h-10 sm:h-12 w-auto object-contain mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-slate-800">Espace Vendeur</h1>
+          {shopName && <div className="inline-block mt-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-100">{shopName}</div>}
           <p className="text-slate-500 mt-2 text-sm">Identifiez-vous pour accéder à votre espace</p>
         </div>
 

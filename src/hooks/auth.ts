@@ -106,8 +106,8 @@ export function useAuth() {
     setIsLoaded(true);
   };
 
-    const login = async (identifier: string, pinCode: string, allowedRole?: "owner" | "employee") => {
-    const res = await loginAction(identifier, pinCode, allowedRole);
+    const login = async (identifier: string, pinCode: string, allowedRole?: "owner" | "employee", shopSlug?: string) => {
+    const res = await loginAction(identifier, pinCode, allowedRole, shopSlug);
     if (res.success && res.user) {
       const user = {
         ...res.user,
