@@ -10,7 +10,7 @@ export function Footer() {
           {/* Footer Column 1: Brand */}
           <div className="col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4 group z-50">
-              <img src="/logo.png" alt="StockHub Logo" className="h-12 sm:h-14 w-auto object-contain" />
+              <img src="/logo.png" alt="StockHub Logo" className="h-14 sm:h-16 w-auto object-contain" />
             </Link>
             <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-sm mb-6">
               La plateforme tout-en-un de gestion de stocks, caisse enregistreuse et vitrine WhatsApp conçue sur-mesure pour les commerces d&apos;Afrique.

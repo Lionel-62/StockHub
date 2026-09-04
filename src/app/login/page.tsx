@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LogoLoader } from "@/components/ui/logo-loader";
 import { useAuth } from "@/hooks/auth";
 import { supabase } from "@/lib/supabase/client";
 
@@ -133,7 +134,15 @@ export default function LoginPage() {
     }
   };
 
-  if (!isLoaded || currentUser) return null;
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <LogoLoader message="Préparation de l'interface..." />
+      </div>
+    );
+  }
+  
+  if (currentUser) return null;
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-4">
@@ -141,7 +150,7 @@ export default function LoginPage() {
         
         {/* Header */}
         <div className="text-center mb-8">
-          <img src="/logo.png" alt="StockHub Logo" className="h-10 sm:h-12 w-auto object-contain mx-auto mb-2" />
+          <img src="/logo.png" alt="StockHub Logo" className="h-14 sm:h-16 w-auto object-contain mx-auto mb-4" />
           <p className="text-slate-500 text-sm">Gérez votre boutique en toute simplicité.</p>
         </div>
 

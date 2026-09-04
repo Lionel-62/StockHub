@@ -26,7 +26,7 @@ export function Header() {
           
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-2 group z-50">
-            <img src="/logo.png" alt="StockHub Logo" className="h-10 sm:h-12 w-auto object-contain" />
+            <img src="/logo.png" alt="StockHub Logo" className="h-12 sm:h-14 w-auto object-contain" />
           </Link>
 
           {/* Desktop Navigation */}

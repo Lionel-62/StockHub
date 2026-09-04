@@ -65,10 +65,7 @@ export default function EmployeLoginPage({ params }: { params: { shopSlug: strin
   if (!isLoaded) {
     return (
       <div className="min-h-[calc(100vh-4rem)] bg-slate-50 flex items-center justify-center">
-        <div className="flex flex-col items-center">
-          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-slate-500 font-medium">Chargement de l'espace vendeur...</p>
-        </div>
+        <LogoLoader message="Chargement de l'espace vendeur..." />
       </div>
     );
   }
@@ -79,7 +76,7 @@ export default function EmployeLoginPage({ params }: { params: { shopSlug: strin
     <div className="min-h-[calc(100vh-4rem)] bg-slate-50 flex flex-col justify-center items-center p-4">
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
         <div className="p-8 text-center flex flex-col items-center">
-          <img src="/logo.png" alt="StockHub Logo" className="h-10 sm:h-12 w-auto object-contain mx-auto mb-4" />
+          <img src="/logo.png" alt="StockHub Logo" className="h-14 sm:h-16 w-auto object-contain mx-auto mb-6" />
           <h1 className="text-2xl font-bold text-slate-800">Espace Vendeur</h1>
           {shopName && <div className="inline-block mt-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-100">{shopName}</div>}
           <p className="text-slate-500 mt-2 text-sm">Identifiez-vous pour accéder à votre espace</p>
