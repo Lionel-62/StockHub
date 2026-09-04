@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, User as UserIcon, AlertCircle, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LogoLoader } from "@/components/ui/logo-loader";
 import { useAuth } from "@/hooks/auth";
 import { getShopBySlugAction } from "@/app/actions/shop.actions";
 

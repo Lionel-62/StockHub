@@ -1,5 +1,5 @@
-import { LogoLoader } from "@/components/ui/logo-loader";
 "use client";
+import { LogoLoader } from "@/components/ui/logo-loader";
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/auth";
