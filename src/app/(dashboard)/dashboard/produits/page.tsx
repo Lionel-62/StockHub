@@ -269,7 +269,7 @@ export default function ProductsPage() {
       </div>
 
       {/* Tableau des produits */}
-      <Card className="shadow-sm border-slate-200 bg-white rounded-xl overflow-visible">
+      <Card className="border-0 rounded-none bg-transparent shadow-none overflow-visible">
         <CardContent className="p-0 overflow-visible">
           <div className="overflow-x-auto overflow-y-visible">
             <Table className="min-w-[800px]">
