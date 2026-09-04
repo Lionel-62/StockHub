@@ -86,7 +86,8 @@ export function useShopSettings(publicShopId?: string) {
 
     setShopSettings(newSettings);
     
-    await supabase.from('shops').update({
+    await supabase.from('shops').upsert({
+      id: shopId,
       name: newSettings.name,
       slug: newSettings.slug,
       description: newSettings.description,
@@ -96,7 +97,7 @@ export function useShopSettings(publicShopId?: string) {
       meta_api_enabled: newSettings.metaApiEnabled,
       meta_phone_number_id: newSettings.metaPhoneNumberId,
       meta_access_token: newSettings.metaAccessToken
-    }).eq('id', shopId);
+    });
     
     // Dispatch event for other tabs just in case, though they should really listen to Supabase realtime
     window.dispatchEvent(new Event("shopSettingsUpdated"));

@@ -14,14 +14,14 @@ export default function LoginPage() {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   
   // Login State
-  const [loginIdentifier, setLoginIdentifier] = useState("");
-  const [loginPin, setLoginPin] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
   
   // Register State
   const [regName, setRegName] = useState("");
-  const [regIdentifier, setRegIdentifier] = useState("");
-  const [regPin, setRegPin] = useState("");
-  const [regConfirmPin, setRegConfirmPin] = useState("");
+  const [regEmail, setRegEmail] = useState("");
+  const [regPassword, setRegPassword] = useState("");
+  const [regConfirmPassword, setRegConfirmPassword] = useState("");
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -41,15 +41,19 @@ export default function LoginPage() {
     setError("");
     setSuccess("");
 
-    if (!loginIdentifier || !loginPin) {
+    if (!loginEmail || !loginPassword) {
       setError("Veuillez remplir tous les champs.");
       return;
     }
 
     setIsLoading(true);
-    const result = await login(loginIdentifier, loginPin, "owner");
-    if (!result.success) {
-      setError(result.error || "Identifiant ou code PIN incorrect.");
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+      email: loginEmail,
+      password: loginPassword,
+    });
+
+    if (authError) {
+      setError("Email ou mot de passe incorrect.");
       setIsLoading(false);
     }
     // Redirection happens in useEffect on success
@@ -78,59 +82,50 @@ export default function LoginPage() {
     setError("");
     setSuccess("");
 
-    if (!regName || !regIdentifier || !regPin || !regConfirmPin) {
+    if (!regName || !regEmail || !regPassword || !regConfirmPassword) {
       setError("Veuillez remplir tous les champs.");
       return;
     }
 
-    if (regPin.length !== 4) {
-      setError("Le code PIN doit comporter 4 chiffres.");
+    if (regPassword.length < 6) {
+      setError("Le mot de passe doit comporter au moins 6 caractères.");
       return;
     }
 
-    if (regPin !== regConfirmPin) {
-      setError("Les codes PIN ne correspondent pas.");
+    if (regPassword !== regConfirmPassword) {
+      setError("Les mots de passe ne correspondent pas.");
       return;
     }
 
     setIsLoading(true);
     try {
-      const { data: existingUser } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('identifier', regIdentifier)
-        .single();
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: regEmail,
+        password: regPassword,
+        options: {
+          data: {
+            full_name: regName
+          }
+        }
+      });
 
-      if (existingUser) {
-        setError("Cet identifiant est déjà utilisé.");
+      if (signUpError) {
+        if (signUpError.message.includes('already registered')) {
+          setError("Cet email est déjà utilisé.");
+        } else {
+          setError(signUpError.message);
+        }
         setIsLoading(false);
         return;
       }
-
-      const newUser = {
-        id: `user-owner-${Date.now()}`,
-        name: regName,
-        identifier: regIdentifier,
-        pinCode: regPin,
-        role: "owner" as const,
-        permissions: { canViewDashboard: true },
-        createdAt: new Date().toISOString()
-      };
-
-      await addUser(newUser);
-      
-      // Do not auto-login. Switch to login tab, prefill identifier, and show success message
-      setActiveTab("login");
-      setLoginIdentifier(regIdentifier);
-      setLoginPin("");
       
       // Clear register fields
       setRegName("");
-      setRegIdentifier("");
-      setRegPin("");
-      setRegConfirmPin("");
+      setRegEmail("");
+      setRegPassword("");
+      setRegConfirmPassword("");
       
-      setSuccess("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+      setSuccess("Inscription réussie ! Vous êtes maintenant connecté.");
     } catch (err: any) {
       setError("Une erreur est survenue lors de l'inscription.");
     } finally {
@@ -198,11 +193,11 @@ export default function LoginPage() {
         {activeTab === "login" ? (
           <form onSubmit={handleLogin} className="space-y-5 animate-in fade-in slide-in-from-left-2 duration-300">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Identifiant</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
               <input
-                type="text"
-                value={loginIdentifier}
-                onChange={(e) => setLoginIdentifier(e.target.value)}
+                type="email"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
                 className="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all text-sm placeholder:text-slate-400"
                 placeholder="vous@entreprise.com"
               />
@@ -210,18 +205,17 @@ export default function LoginPage() {
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-sm font-semibold text-slate-700">Code PIN</label>
+                <label className="block text-sm font-semibold text-slate-700">Mot de passe</label>
                 <button type="button" className="text-xs text-slate-500 hover:text-slate-700 transition-colors">
-                  Code PIN oublié ?
+                  Mot de passe oublié ?
                 </button>
               </div>
               <input
                 type="password"
-                maxLength={4}
-                value={loginPin}
-                onChange={(e) => setLoginPin(e.target.value.replace(/[^0-9]/g, ''))}
-                className="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-widest text-lg"
-                placeholder="••••"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                className="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-wide text-sm"
+                placeholder="••••••••"
               />
             </div>
 
@@ -261,7 +255,7 @@ export default function LoginPage() {
             <div className="pt-2 text-center">
               <button 
                 type="button"
-                onClick={() => { setLoginIdentifier("admin"); setLoginPin("0000"); }}
+                onClick={() => { setLoginEmail("demo@stockhub.com"); setLoginPassword("password123"); }}
                 className="text-[11px] text-slate-400 hover:text-slate-600 underline underline-offset-2"
               >
                 Auto-remplir compte de démonstration
@@ -283,11 +277,11 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Identifiant</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
               <input
-                type="text"
-                value={regIdentifier}
-                onChange={(e) => setRegIdentifier(e.target.value)}
+                type="email"
+                value={regEmail}
+                onChange={(e) => setRegEmail(e.target.value)}
                 className="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all text-sm placeholder:text-slate-400"
                 placeholder="vous@entreprise.com"
               />
@@ -295,26 +289,24 @@ export default function LoginPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Code PIN</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mot de passe</label>
                 <input
                   type="password"
-                  maxLength={4}
-                  value={regPin}
-                  onChange={(e) => setRegPin(e.target.value.replace(/[^0-9]/g, ''))}
-                  className="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-widest text-center text-lg"
-                  placeholder="••••"
+                  value={regPassword}
+                  onChange={(e) => setRegPassword(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-wide text-sm"
+                  placeholder="••••••••"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Confirmer PIN</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Confirmer</label>
                 <input
                   type="password"
-                  maxLength={4}
-                  value={regConfirmPin}
-                  onChange={(e) => setRegConfirmPin(e.target.value.replace(/[^0-9]/g, ''))}
-                  className="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-widest text-center text-lg"
-                  placeholder="••••"
+                  value={regConfirmPassword}
+                  onChange={(e) => setRegConfirmPassword(e.target.value)}
+                  className="w-full px-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-wide text-sm"
+                  placeholder="••••••••"
                 />
               </div>
             </div>

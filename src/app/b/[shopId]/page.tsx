@@ -214,19 +214,6 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "register">("register");
   const [authForm, setAuthForm] = useState({ name: "", phone: "", email: "", password: "" });
-  
-  // If the shop is not active, or slug doesn't match, we could show a 404, but for this MVP we'll just show the shop if it's active
-  if (shopLoaded && !shopSettings.isActive) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 text-center">
-        <div>
-          <StoreIcon className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-slate-800">Boutique fermée</h1>
-          <p className="text-slate-500 mt-2">Cette boutique n'est actuellement pas disponible.</p>
-        </div>
-      </div>
-    );
-  }
 
   // Filter products that are in stock and published
   const availableProducts = products.filter(p => p.stock > 0 && p.isPublishedOnStore !== false);
@@ -577,8 +564,8 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
             <ShoppingCart className="h-16 w-16 text-slate-200 mx-auto mb-4" />
             {availableProducts.length === 0 ? (
               <>
-                <h3 className="text-xl font-bold text-slate-700">La boutique est vide</h3>
-                <p className="text-slate-500">Aucun produit n'est actuellement disponible dans cette boutique. Revenez plus tard !</p>
+                <h3 className="text-xl font-bold text-slate-700">De nouveaux articles arrivent bientôt !</h3>
+                <p className="text-slate-500 max-w-sm mx-auto mt-2">Nous préparons actuellement notre prochaine collection. Restez connectés, nos nouveautés seront disponibles très prochainement pour vous satisfaire.</p>
               </>
             ) : (
               <>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Store, Save, Eye, Smartphone, Link as LinkIcon, Power, PowerOff, Bell, CheckCircle2, ChevronDown, HelpCircle, Plus, Trash2 } from "lucide-react";
+import { Store, Save, Eye, Smartphone, Link as LinkIcon, Bell, ChevronDown, HelpCircle, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useShopSettings } from "@/lib/mock/shop";
@@ -21,10 +21,6 @@ export default function ShopConfigPage() {
   const [newFaqAnswer, setNewFaqAnswer] = useState("");
   const [isAddingFaq, setIsAddingFaq] = useState(false);
   
-  // WhatsApp Verification State
-  const [verificationState, setVerificationState] = useState<"idle" | "sending" | "sent" | "verified">("idle");
-  const [verificationCode, setVerificationCode] = useState("");
-
   const handleAddFaq = () => {
     if (newFaqQuestion.trim() && newFaqAnswer.trim()) {
       addFaq({ question: newFaqQuestion.trim(), answer: newFaqAnswer.trim() });
@@ -43,25 +39,6 @@ export default function ShopConfigPage() {
   const handleSave = () => {
     saveShopSettings(formData);
     setShowModal(true);
-  };
-
-  const handleSendCode = () => {
-    if (!formData.whatsappNumber) {
-      alert("Veuillez entrer un numéro WhatsApp.");
-      return;
-    }
-    setVerificationState("sending");
-    setTimeout(() => {
-      setVerificationState("sent");
-    }, 1500);
-  };
-
-  const handleVerifyCode = () => {
-    if (verificationCode.length < 4) {
-      alert("Veuillez entrer un code valide à 4 chiffres.");
-      return;
-    }
-    setVerificationState("verified");
   };
 
   const [origin, setOrigin] = useState("");
@@ -93,19 +70,12 @@ export default function ShopConfigPage() {
             <p className="text-slate-500 mt-1">Configurez votre vitrine publique pour recevoir des commandes.</p>
           </div>
           <div className="flex items-center gap-3">
-            {shopSettings.slug ? (
-              <Link href={`/b/${shopSettings.slug}`} target="_blank">
-                <Button variant="outline" className="text-[#0b213f] border-slate-200 hover:bg-slate-50">
-                  <Eye className="mr-2 h-4 w-4" />
-                  Voir ma boutique
-                </Button>
-              </Link>
-            ) : (
-              <Button disabled variant="outline" className="text-slate-400 border-slate-200 cursor-not-allowed">
+            <Link href={`/b/${shopSettings.slug || formData.slug || 'ma-boutique'}`} target="_blank">
+              <Button variant="outline" className="text-[#0b213f] border-slate-200 hover:bg-slate-50">
                 <Eye className="mr-2 h-4 w-4" />
                 Voir ma boutique
               </Button>
-            )}
+            </Link>
             <Button 
               onClick={handleSave}
               className="bg-[#0b213f] hover:bg-[#18355c] text-white shadow-sm"
@@ -163,155 +133,50 @@ export default function ShopConfigPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-slate-200 shadow-sm rounded-2xl overflow-hidden">
+            <Card className="border-slate-200 shadow-sm rounded-2xl overflow-hidden mt-6">
               <CardContent className="p-6 space-y-6">
                 
                 <div className="flex items-center gap-2 mb-2">
-                  <Bell className="h-5 w-5 text-[#0f9d58]" />
-                  <h3 className="text-lg font-bold text-[#0f9d58]">Contact WhatsApp</h3>
-                  <CheckCircle2 className="h-5 w-5 text-[#0f9d58]" />
+                  <Bell className="h-5 w-5 text-[#3CBA0B]" />
+                  <h3 className="text-lg font-bold text-[#3CBA0B]">Contact WhatsApp</h3>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-[#0b213f]">Numéro WhatsApp</label>
-                  
-                  {verificationState === "verified" ? (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between p-4 border border-green-200 bg-green-50 rounded-xl">
-                         <span className="font-bold text-green-800 text-lg">{formData.whatsappNumber}</span>
-                         <Button variant="ghost" onClick={() => {
-                            setVerificationState("idle");
-                            setVerificationCode("");
-                         }} className="text-green-700 hover:text-green-800 hover:bg-green-100">
-                           Modifier
-                         </Button>
-                      </div>
-                      <div className="flex items-center gap-3 bg-green-100 text-green-800 px-4 py-3 rounded-xl border border-green-200 font-medium text-sm animate-in zoom-in-95">
-                        <CheckCircle2 className="h-6 w-6 text-green-600" />
-                        <div>
-                          <p className="font-bold">Numéro vérifié avec succès !</p>
-                          <p className="text-xs text-green-700 opacity-90">Vos notifications de commandes sont maintenant actives.</p>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex border border-slate-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-[#0f9d58]/20 focus-within:border-[#0f9d58] transition-all bg-white">
-                        <div className="flex items-center gap-2 px-3 py-3 border-r border-slate-200 bg-slate-50 cursor-pointer hover:bg-slate-100">
-                          <span className="text-lg leading-none">🇧🇯</span>
-                          <ChevronDown className="h-4 w-4 text-slate-400" />
-                        </div>
-                        <input 
-                          type="text" 
-                          value={formData.whatsappNumber}
-                          onChange={(e) => {
-                            setFormData({...formData, whatsappNumber: e.target.value});
-                            if (verificationState !== "idle") {
-                              setVerificationState("idle");
-                              setVerificationCode("");
-                            }
-                          }}
-                          placeholder="+229 47566406"
-                          className="flex-1 p-3 outline-none text-slate-800 bg-transparent"
-                        />
-                      </div>
-                      <p className="text-sm text-slate-500 pt-2">
-                        Entrez votre numéro WhatsApp pour recevoir les notifications de commandes et autres alertes importantes.
-                      </p>
-
-                      {verificationState === "idle" && (
-                        <Button onClick={handleSendCode} className="bg-[#0f9d58] hover:bg-[#0d8a4d] text-white font-medium rounded-lg px-6 py-2.5 h-auto mt-2">
-                          Recevoir le code de vérification
-                        </Button>
-                      )}
-                      
-                      {verificationState === "sending" && (
-                        <Button disabled className="bg-slate-200 text-slate-500 font-medium rounded-lg px-6 py-2.5 h-auto flex items-center gap-2 mt-2">
-                          <span className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></span>
-                          Envoi en cours...
-                        </Button>
-                      )}
-                      
-                      {verificationState === "sent" && (
-                        <div className="space-y-3 bg-green-50/80 p-4 rounded-xl border border-green-200 mt-2 animate-in fade-in slide-in-from-top-2">
-                          <label className="text-sm font-semibold text-green-800">Code de sécurité</label>
-                          <div className="flex gap-2">
-                            <input 
-                              type="text" 
-                              placeholder="Ex: 4852" 
-                              value={verificationCode}
-                              onChange={(e) => setVerificationCode(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
-                              className="w-32 border border-green-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#0f9d58]/40 focus:border-[#0f9d58] text-center text-lg tracking-widest font-bold text-green-900 bg-white"
-                              maxLength={4}
-                            />
-                            <Button onClick={handleVerifyCode} className="bg-[#0f9d58] hover:bg-[#0d8a4d] text-white py-2.5 h-auto px-6 font-bold shadow-sm shadow-[#0f9d58]/20">
-                              Vérifier
-                            </Button>
-                          </div>
-                          <p className="text-xs text-green-600">Un code à 4 chiffres a été envoyé au {formData.whatsappNumber}</p>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-
-              </CardContent>
-            </Card>
-
-            {/* Advanced API Configuration */}
-            <Card className="border-slate-200 shadow-sm rounded-2xl overflow-hidden mt-6">
-              <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-                <CardTitle className="text-lg text-slate-800 flex items-center gap-2">
-                  <Power className="h-5 w-5 text-purple-600" />
-                  API Meta WhatsApp (Avancé)
-                </CardTitle>
-                <CardDescription>
-                  Connectez-vous directement à l'API Meta officielle pour automatiser les messages de confirmation de commande et le support.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6 space-y-6">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-6">
-                  <div>
-                    <h4 className="font-bold text-slate-800 text-sm">Activer l'intégration API</h4>
-                    <p className="text-xs text-slate-500">Les commandes utiliseront l'API officielle au lieu d'une redirection web.</p>
+                  <label className="text-sm font-bold text-[#002B5D]">Numéro WhatsApp</label>
+                  <div className="flex border border-slate-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-[#3CBA0B]/20 focus-within:border-[#3CBA0B] transition-all bg-white">
+                    <select 
+                      className="px-2 py-3 border-r border-slate-200 bg-slate-50 outline-none text-sm font-medium text-slate-700 cursor-pointer"
+                      onChange={(e) => {
+                        const currentNum = formData.whatsappNumber.replace(/^\+\d+\s*/, '');
+                        setFormData({...formData, whatsappNumber: e.target.value + currentNum});
+                      }}
+                      value={formData.whatsappNumber.match(/^\+(\d+)/)?.[0] || "+229"}
+                    >
+                      <option value="+229">🇧🇯 +229 (Bénin)</option>
+                      <option value="+225">🇨🇮 +225 (Côte d'Ivoire)</option>
+                      <option value="+228">🇹🇬 +228 (Togo)</option>
+                      <option value="+221">🇸🇳 +221 (Sénégal)</option>
+                      <option value="+237">🇨🇲 +237 (Cameroun)</option>
+                      <option value="+241">🇬🇦 +241 (Gabon)</option>
+                      <option value="+242">🇨🇬 +242 (Congo)</option>
+                      <option value="+243">🇨🇩 +243 (RDC)</option>
+                    </select>
+                    <input 
+                      type="text" 
+                      value={formData.whatsappNumber.replace(/^\+\d+\s*/, '')}
+                      onChange={(e) => {
+                        const prefix = formData.whatsappNumber.match(/^\+(\d+)/)?.[0] || "+229";
+                        const val = e.target.value.replace(/[^0-9]/g, '');
+                        setFormData({...formData, whatsappNumber: prefix + val});
+                      }}
+                      placeholder="47566406"
+                      className="flex-1 p-3 outline-none text-slate-800 bg-transparent"
+                    />
                   </div>
-                  <button 
-                    onClick={() => setFormData({...formData, metaApiEnabled: !formData.metaApiEnabled})}
-                    className={cn("w-12 h-6 rounded-full relative transition-colors duration-200 ease-in-out shadow-inner", formData.metaApiEnabled ? "bg-purple-600" : "bg-slate-200")}
-                  >
-                    <span className={cn("absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow transition-transform duration-200 ease-in-out", formData.metaApiEnabled ? "translate-x-6" : "translate-x-0")} />
-                  </button>
+                  <p className="text-sm text-slate-500 pt-2">
+                    Saisissez votre numéro (sans l'indicatif) pour recevoir directement les commandes de vos clients sur WhatsApp.
+                  </p>
                 </div>
-
-                {formData.metaApiEnabled && (
-                  <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
-                    <div className="bg-purple-50 border border-purple-100 p-4 rounded-xl text-xs text-purple-800 mb-4 leading-relaxed">
-                      <strong>Attention :</strong> Ces informations se trouvent dans votre <a href="https://developers.facebook.com/" target="_blank" className="underline font-bold">Console Meta for Developers</a>. Assurez-vous d'avoir configuré le Webhook de StockHub (<code>/api/whatsapp/webhook</code>).
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold text-slate-700">Phone Number ID (ID du numéro de téléphone)</label>
-                      <input 
-                        type="text" 
-                        value={formData.metaPhoneNumberId || ""}
-                        onChange={(e) => setFormData({...formData, metaPhoneNumberId: e.target.value})}
-                        placeholder="Ex: 104939284758392"
-                        className="w-full border border-slate-200 rounded-xl p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-600/20 focus:border-purple-600 transition-all bg-slate-50"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold text-slate-700">Permanent Access Token (Jeton d'accès)</label>
-                      <input 
-                        type="password" 
-                        value={formData.metaAccessToken || ""}
-                        onChange={(e) => setFormData({...formData, metaAccessToken: e.target.value})}
-                        placeholder="EAAGm0s... (très long)"
-                        className="w-full border border-slate-200 rounded-xl p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-600/20 focus:border-purple-600 transition-all bg-slate-50"
-                      />
-                    </div>
-                  </div>
-                )}
               </CardContent>
             </Card>
 
@@ -389,39 +254,6 @@ export default function ShopConfigPage() {
           </div>
 
           <div className="space-y-6">
-            <Card className={cn("border-2 rounded-2xl overflow-hidden transition-all duration-300", formData.isActive ? "border-green-500 shadow-md shadow-green-500/10" : "border-slate-200")}>
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg flex justify-between items-center">
-                  Statut
-                  <div className={cn("px-2.5 py-1 rounded-full text-xs font-bold", formData.isActive ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600")}>
-                    {formData.isActive ? "En ligne" : "Hors ligne"}
-                  </div>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6 pt-0 space-y-4">
-                <Button 
-                  translate="no"
-                  onClick={() => setFormData({...formData, isActive: !formData.isActive})}
-                  variant="outline" 
-                  className={cn("w-full py-6 flex items-center justify-center gap-2 font-semibold text-base transition-all", 
-                    formData.isActive 
-                      ? "border-red-200 text-red-600 hover:bg-red-50" 
-                      : "border-green-200 text-green-600 hover:bg-green-50"
-                  )}
-                >
-                  {formData.isActive ? (
-                    <><PowerOff className="h-5 w-5" /> <span>Désactiver la boutique</span></>
-                  ) : (
-                    <><Power className="h-5 w-5" /> <span>Activer la boutique</span></>
-                  )}
-                </Button>
-                <p className="text-xs text-slate-500 text-center">
-                  {formData.isActive 
-                    ? "Votre boutique est visible par le public." 
-                    : "Votre boutique est actuellement fermée au public."}
-                </p>
-              </CardContent>
-            </Card>
 
             <Card className="border-slate-200 shadow-sm rounded-2xl overflow-hidden">
               <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
