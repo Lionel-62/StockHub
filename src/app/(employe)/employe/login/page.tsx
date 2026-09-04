@@ -19,6 +19,8 @@ export default function EmployeLoginPage() {
     if (isLoaded && currentUser) {
       if (currentUser.role === "employee") {
         router.push("/dashboard/ventes");
+      } else if (currentUser.role === "owner") {
+        router.push("/dashboard"); // Redirige le gérant vers son tableau de bord
       }
     }
   }, [isLoaded, currentUser, router]);
