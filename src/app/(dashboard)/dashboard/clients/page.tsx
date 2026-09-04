@@ -186,7 +186,7 @@ export default function ClientsPage() {
       {/* Tableau des clients */}
       <Card className="shadow-none border-0 ring-0 bg-white rounded-xl overflow-visible">
         <CardContent className="p-0 overflow-visible">
-          <div className="overflow-x-auto overflow-y-visible min-h-[300px]">
+          <div className="overflow-x-auto overflow-y-visible">
             <Table>
               <TableHeader className="bg-slate-50/50">
                 <TableRow>
