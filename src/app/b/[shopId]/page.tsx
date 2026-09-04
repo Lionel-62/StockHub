@@ -38,9 +38,9 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
 
   return (
     <>
-      <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-100 transition-all duration-300 group flex flex-col">
+      <div className="bg-white flex flex-row py-4 sm:py-6 group transition-colors hover:bg-slate-50">
         <div 
-          className="aspect-square bg-slate-50 relative overflow-hidden flex-shrink-0 group/image cursor-pointer"
+          className="w-24 h-24 sm:w-32 sm:h-32 bg-slate-50 relative flex-shrink-0 cursor-pointer overflow-hidden rounded-md"
           onClick={() => { if (currentImage) setIsFullscreen(true); }}
         >
         {product.promotionalPrice && (
@@ -78,7 +78,7 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
           {product.stock <= 5 ? `🔥 Vite, plus que ${product.stock} !` : `Stock: ${product.stock}`}
         </div>
       </div>
-      <div className="p-4 sm:p-5 flex flex-col flex-1 bg-gradient-to-b from-transparent to-slate-50/50">
+      <div className="pl-4 sm:pl-5 flex flex-col flex-1 justify-center">
         <div className="flex-1">
           <h3 className="font-bold text-slate-900 line-clamp-2 text-sm sm:text-base group-hover:text-[#0b213f] transition-colors">{product.name}</h3>
           {product.description && (
@@ -101,17 +101,17 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
           const qtyInCart = cart.filter((item: any) => item.product.id === product.id).reduce((sum: number, item: any) => sum + item.quantity, 0);
           if (qtyInCart > 0) {
             return (
-              <div className="w-full mt-4 flex items-center justify-between bg-orange-50 border border-orange-200 rounded-xl overflow-hidden shadow-sm">
+              <div className="w-full mt-4 flex items-center justify-between border-y border-slate-200 bg-slate-50">
                 <button 
                   onClick={() => {
                     const cartItem = cart.find((i: any) => i.product.id === product.id);
                     if (cartItem) updateQuantity(cartItem.id, -1);
                   }}
-                  className="px-4 py-2 text-orange-600 hover:bg-orange-100 transition-colors font-bold text-lg"
+                  className="px-4 py-2 text-slate-600 hover:bg-slate-200 transition-colors font-bold text-lg"
                 >
                   -
                 </button>
-                <div className="flex-1 text-center font-bold text-orange-700">
+                <div className="flex-1 text-center font-bold text-slate-700 text-sm">
                   {qtyInCart} au panier
                 </div>
                 <button 
@@ -120,7 +120,7 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
                     const cartItem = cart.find((i: any) => i.product.id === product.id);
                     if (cartItem) updateQuantity(cartItem.id, 1);
                   }}
-                  className={cn("px-4 py-2 text-orange-600 hover:bg-orange-100 transition-colors font-bold text-lg", qtyInCart >= product.stock && "opacity-50 cursor-not-allowed")}
+                  className={cn("px-4 py-2 text-slate-600 hover:bg-slate-200 transition-colors font-bold text-lg", qtyInCart >= product.stock && "opacity-50 cursor-not-allowed")}
                 >
                   +
                 </button>
@@ -130,7 +130,7 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
           return (
             <Button 
               onClick={() => handleAddToCartClick(product)}
-              className="w-full mt-4 bg-orange-500 hover:bg-orange-600 text-white rounded-xl shadow-sm shadow-orange-500/20"
+              className="w-full mt-4 bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 rounded-none font-medium transition-colors"
             >
               Ajouter au panier
             </Button>
@@ -545,8 +545,8 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
       </div>
 
       {/* Products Grid */}
-      <main className="max-w-5xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      <main className="max-w-3xl mx-auto px-4 py-8">
+        <div className="flex flex-col divide-y divide-slate-200">
           {displayedProducts.map(product => (
             <ShopProductCard
               key={product.id}
@@ -584,11 +584,11 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
             <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Foire Aux Questions</h2>
             <p className="text-slate-500 mt-2">Trouvez rapidement des réponses à vos questions.</p>
           </div>
-          <div className="space-y-4">
+          <div className="flex flex-col divide-y divide-slate-200 border-y border-slate-200">
             {faqs.map((faq) => (
               <details 
                 key={faq.id} 
-                className="group bg-white border border-slate-200 rounded-xl overflow-hidden [&_summary::-webkit-details-marker]:hidden"
+                className="group bg-white overflow-hidden [&_summary::-webkit-details-marker]:hidden"
               >
                 <summary className="flex items-center justify-between p-5 cursor-pointer font-semibold text-slate-800 hover:text-[#0b213f] transition-colors">
                   {faq.question}
@@ -625,7 +625,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50">
+            <div className="flex-1 overflow-y-auto p-4 bg-white">
               {cart.length === 0 ? (
                 <div className="text-center py-10">
                   <div className="h-20 w-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -635,8 +635,8 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                 </div>
               ) : (
                 cart.map(item => (
-                  <div key={item.id} className="flex gap-4 bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
-                    <div className="h-20 w-20 bg-slate-100 rounded-xl overflow-hidden relative flex-shrink-0">
+                  <div key={item.id} className="flex gap-4 py-4 border-b border-slate-200 bg-white">
+                    <div className="h-20 w-20 bg-slate-100 rounded-md overflow-hidden relative flex-shrink-0">
                       {item.product.imageUrl ? (
                         <Image src={item.product.imageUrl} alt={item.product.name} fill className="object-cover" />
                       ) : (
@@ -665,7 +665,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                         <div className="font-bold text-[#0b213f]">
                           {formatCurrency(item.product.promotionalPrice || item.product.salePrice)}
                         </div>
-                        <div className="flex items-center gap-3 bg-slate-100 px-2 py-1 rounded-lg">
+                        <div className="flex items-center bg-white border border-slate-300">
                           <button 
                             onClick={() => updateQuantity(item.id, -1)}
                             className="text-slate-600 hover:text-slate-900"
@@ -688,7 +688,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
               )}
 
               {cart.length > 0 && (
-                <div className="bg-white border border-slate-200 shadow-sm mt-6 rounded-lg overflow-hidden">
+                <div className="border-y border-slate-200 mt-6">
                   <div className="bg-[#0d8f76] text-white font-bold text-center py-3">
                     Formulaire de commande
                   </div>
@@ -703,13 +703,13 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                     </div>
 
                     {loggedInCustomer ? (
-                      <div className="bg-slate-50 border border-slate-200 p-3 rounded-lg mb-2">
+                      <div className="bg-slate-50 border-b border-slate-200 p-3 mb-2">
                         <div className="text-xs font-semibold text-slate-500 mb-1">Commande pour :</div>
                         <div className="font-bold text-slate-800">{loggedInCustomer.name}</div>
                         <div className="text-sm text-slate-600">{loggedInCustomer.phone}</div>
                       </div>
                     ) : (
-                      <div className="bg-orange-50 border border-orange-100 p-3 rounded-lg mb-2 text-sm text-orange-800">
+                      <div className="bg-orange-50 border-b border-orange-100 p-3 mb-2 text-sm text-orange-800">
                         Vous serez invité à vous connecter ou créer un compte lors de la validation pour sécuriser votre commande.
                       </div>
                     )}
@@ -747,7 +747,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                       />
                     )}
 
-                    <div className="border border-[#0d8f76]/20 bg-[#0d8f76]/5 rounded-xl p-4 mt-4">
+                    <div className="border-t border-slate-200 py-4 mt-4">
                       <label className="block text-xs font-bold text-[#0d8f76] mb-3 border-l-4 border-[#0d8f76] pl-2">Livrez-moi dans :</label>
                       <div className="flex flex-wrap gap-2">
                         {['Aujourd\'hui', '24h', '48h', '72h', '1 semaine'].map(d => (
@@ -773,7 +773,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
               <div className="p-4 bg-white border-t border-slate-100 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
                 <Button 
                   onClick={handleCheckoutClick}
-                  className="w-full py-6 bg-[#f39c12] hover:bg-[#e67e22] text-white text-lg font-bold rounded-xl shadow-lg shadow-[#f39c12]/30 flex items-center justify-center gap-2"
+                  className="w-full py-6 bg-[#0b213f] hover:bg-[#18355c] text-white text-lg font-bold rounded-none flex items-center justify-center gap-2"
                 >
                   <StoreIcon className="h-5 w-5" /> Commander
                 </Button>
