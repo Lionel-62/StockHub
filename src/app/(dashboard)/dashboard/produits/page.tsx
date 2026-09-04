@@ -299,7 +299,7 @@ export default function ProductsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="font-semibold text-slate-900 line-clamp-1">{product.name}</div>
-                      <div className="text-xs text-slate-500 mt-0.5">{product.sku}</div>
+                      <div className="text-xs text-slate-500 mt-0.5"><span className="font-mono">{product.sku}</span></div>
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 font-medium">
@@ -307,10 +307,10 @@ export default function ProductsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right text-slate-500 font-medium">
-                      {formatCurrency(product.purchasePrice)}
+                      <span className="font-mono">{formatCurrency(product.purchasePrice)}</span>
                     </TableCell>
                     <TableCell className="text-right font-bold text-slate-900">
-                      {formatCurrency(product.salePrice)}
+                      <span className="font-mono">{formatCurrency(product.salePrice)}</span>
                     </TableCell>
                     <TableCell className="text-center">
                       <Badge 
@@ -320,7 +320,7 @@ export default function ProductsPage() {
                           "bg-red-100 text-red-700 hover:bg-red-200"
                         )}
                       >
-                        {product.stock}
+                        <span className="font-mono">{product.stock}</span>
                       </Badge>
                       {product.isPublishedOnStore !== false ? (
                         <div className="flex items-center justify-center mt-1 text-xs text-blue-600 bg-blue-50 w-fit mx-auto px-2 py-0.5 rounded-full gap-1" title="Publié sur la boutique">

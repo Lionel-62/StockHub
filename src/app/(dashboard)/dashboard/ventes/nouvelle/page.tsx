@@ -191,7 +191,7 @@ export default function PointOfSalePage() {
                   {/* Stock Badge */}
                   <div className="absolute top-2 right-2 z-10">
                     <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold shadow-sm backdrop-blur-sm border", product.stock <= 5 ? "bg-red-50 text-red-600 border-red-100" : "bg-white/90 text-slate-800 border-slate-100")}>
-                      {product.stock}
+                      <span className="font-mono">{product.stock}</span>
                     </span>
                   </div>
 
@@ -218,7 +218,7 @@ export default function PointOfSalePage() {
                     
                     <div className="mt-2 flex flex-wrap items-center justify-between gap-1">
                       <span className="text-[#0b213f] font-black text-sm sm:text-[15px]">
-                        {formatCurrency(product.salePrice)}
+                        <span className="font-mono">{formatCurrency(product.salePrice)}</span>
                       </span>
                       
                       {/* Add/Quantity Controls */}
@@ -337,7 +337,7 @@ export default function PointOfSalePage() {
                       >
                         <Minus size={14} />
                       </button>
-                      <span className="w-8 text-center font-bold text-xs text-slate-900">{item.cartQuantity}</span>
+                      <span className="w-8 text-center font-bold text-xs text-slate-900"><span className="font-mono">{item.cartQuantity}</span></span>
                       <button 
                         onClick={() => updateQuantity(item.id, 1)}
                         disabled={item.cartQuantity >= item.stock}
@@ -347,7 +347,7 @@ export default function PointOfSalePage() {
                       </button>
                     </div>
                     <div className="font-bold text-slate-900 text-sm">
-                      {formatCurrency(item.salePrice * item.cartQuantity)}
+                      <span className="font-mono">{formatCurrency(item.salePrice * item.cartQuantity)}</span>
                     </div>
                   </div>
                 </div>
@@ -385,18 +385,18 @@ export default function PointOfSalePage() {
             <div className="space-y-1 mb-3 bg-slate-50 p-3 rounded-lg border border-slate-100">
               <div className="flex justify-between text-slate-500 text-xs">
                 <span>Sous-total HT</span>
-                <span className="font-medium">{formatCurrency(subtotal)}</span>
+                <span className="font-medium"><span className="font-mono">{formatCurrency(subtotal)}</span></span>
               </div>
               {applyTax && (
                 <div className="flex justify-between text-slate-500 text-xs">
                   <span>TVA (18%)</span>
-                  <span className="font-medium">{formatCurrency(tax)}</span>
+                  <span className="font-medium"><span className="font-mono">{formatCurrency(tax)}</span></span>
                 </div>
               )}
               <div className="h-px w-full bg-slate-200 my-1"></div>
               <div className="flex justify-between text-[#0b213f] text-lg font-black">
                 <span>Total</span>
-                <span>{formatCurrency(total)}</span>
+                <span><span className="font-mono">{formatCurrency(total)}</span></span>
               </div>
             </div>
 
@@ -434,7 +434,7 @@ export default function PointOfSalePage() {
                 <CheckCircle2 size={20} />
                 <span>Encaisser</span>
               </div>
-              <span>{formatCurrency(total)}</span>
+              <span><span className="font-mono">{formatCurrency(total)}</span></span>
             </Button>
           </div>
         </div>
@@ -446,7 +446,7 @@ export default function PointOfSalePage() {
         <div className="lg:hidden fixed bottom-[60px] md:bottom-0 left-0 right-0 p-3 bg-white border-t border-slate-200 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.1)] z-40 flex items-center justify-between animate-in slide-in-from-bottom-10">
           <div className="flex flex-col">
             <span className="text-xs text-slate-500 font-medium">Total ({cart.reduce((a, b) => a + b.cartQuantity, 0)} articles)</span>
-            <span className="font-black text-lg text-[#0b213f] leading-none">{formatCurrency(total)}</span>
+            <span className="font-black text-lg text-[#0b213f] leading-none"><span className="font-mono">{formatCurrency(total)}</span></span>
           </div>
           <Button 
             onClick={() => document.getElementById('ticket-section')?.scrollIntoView({ behavior: 'smooth' })} 

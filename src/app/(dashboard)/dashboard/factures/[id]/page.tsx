@@ -150,8 +150,8 @@ export default function InvoiceDetailPage() {
                 <tr key={idx} className="border-b border-slate-100 last:border-0">
                   <td className="py-4 text-slate-800 font-medium">{line.description}</td>
                   <td className="py-4 text-center text-slate-600">{line.quantity}</td>
-                  <td className="py-4 text-right text-slate-600">{formatCurrency(line.unitPrice)}</td>
-                  <td className="py-4 text-right font-semibold text-slate-900">{formatCurrency(line.total)}</td>
+                  <td className="py-4 text-right text-slate-600"><span className="font-mono">{formatCurrency(line.unitPrice)}</span></td>
+                  <td className="py-4 text-right font-semibold text-slate-900"><span className="font-mono">{formatCurrency(line.total)}</span></td>
                 </tr>
               ))}
             </tbody>
@@ -162,15 +162,15 @@ export default function InvoiceDetailPage() {
           <div className="w-64 space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-slate-500 font-medium">Sous-total</span>
-              <span className="text-slate-900 font-semibold">{formatCurrency(invoice.subtotal)}</span>
+              <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(invoice.subtotal)}</span></span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-slate-500 font-medium">TVA (18%)</span>
-              <span className="text-slate-900 font-semibold">{formatCurrency(invoice.taxAmount)}</span>
+              <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(invoice.taxAmount)}</span></span>
             </div>
             <div className="flex justify-between text-lg pt-3 border-t border-slate-200">
               <span className="font-bold text-slate-900">Total TTC</span>
-              <span className="font-bold text-slate-900">{formatCurrency(invoice.total)}</span>
+              <span className="font-bold text-slate-900"><span className="font-mono">{formatCurrency(invoice.total)}</span></span>
             </div>
           </div>
         </div>

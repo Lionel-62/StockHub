@@ -89,11 +89,11 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
           <div className="flex flex-col">
             {product.promotionalPrice ? (
               <>
-                <div className="text-xs font-medium text-slate-400 line-through mb-0.5">{formatCurrency(product.salePrice)}</div>
-                <div className="font-black text-red-600 text-lg sm:text-xl">{formatCurrency(product.promotionalPrice)}</div>
+                <div className="text-xs font-medium text-slate-400 line-through mb-0.5"><span className="font-mono">{formatCurrency(product.salePrice)}</span></div>
+                <div className="font-black text-red-600 text-lg sm:text-xl"><span className="font-mono">{formatCurrency(product.promotionalPrice)}</span></div>
               </>
             ) : (
-              <div className="font-black text-[#0b213f] text-lg sm:text-xl">{formatCurrency(product.salePrice)}</div>
+              <div className="font-black text-[#0b213f] text-lg sm:text-xl"><span className="font-mono">{formatCurrency(product.salePrice)}</span></div>
             )}
           </div>
         </div>
@@ -663,7 +663,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                       </div>
                       <div className="flex items-center justify-between mt-2">
                         <div className="font-bold text-[#0b213f]">
-                          {formatCurrency(item.product.promotionalPrice || item.product.salePrice)}
+                          <span className="font-mono">{formatCurrency(item.product.promotionalPrice || item.product.salePrice)}</span>
                         </div>
                         <div className="flex items-center gap-3 bg-slate-100 px-2 py-1 rounded-lg">
                           <button 
@@ -672,7 +672,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                           >
                             <Minus className="h-3 w-3" />
                           </button>
-                          <span className="text-sm font-bold w-4 text-center">{item.quantity}</span>
+                          <span className="text-sm font-bold w-4 text-center"><span className="font-mono">{item.quantity}</span></span>
                           <button 
                             onClick={() => updateQuantity(item.id, 1)}
                             className="text-slate-600 hover:text-slate-900 disabled:opacity-30"
@@ -695,11 +695,11 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                   <div className="p-4 space-y-4">
                     <div className="flex justify-between text-sm border-b border-slate-100 pb-2">
                       <span className="text-slate-500">Sous-total:</span>
-                      <span className="font-medium text-slate-700">{formatCurrency(cartTotal)}</span>
+                      <span className="font-medium text-slate-700"><span className="font-mono">{formatCurrency(cartTotal)}</span></span>
                     </div>
                     <div className="flex justify-between text-base font-bold pb-2">
                       <span className="text-slate-800">Total:</span>
-                      <span className="text-[#0d8f76]">{formatCurrency(cartTotal)}</span>
+                      <span className="text-[#0d8f76]"><span className="font-mono">{formatCurrency(cartTotal)}</span></span>
                     </div>
 
                     {loggedInCustomer ? (
@@ -935,7 +935,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
               <div>
                 <div className="font-medium text-slate-900 line-clamp-2">{selectedProductForOptions.name}</div>
                 <div className="text-orange-500 font-bold mt-1">
-                  {formatCurrency(selectedProductForOptions.promotionalPrice || selectedProductForOptions.salePrice)}
+                  <span className="font-mono">{formatCurrency(selectedProductForOptions.promotionalPrice || selectedProductForOptions.salePrice)}</span>
                 </div>
               </div>
             </div>

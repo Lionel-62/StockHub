@@ -211,7 +211,7 @@ export default function RapportsPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">Chiffre d'affaires</p>
-              <h3 className="text-xl font-bold text-slate-900">{formatCurrency(stats.ca)}</h3>
+              <h3 className="text-xl font-bold text-slate-900"><span className="font-mono">{formatCurrency(stats.ca)}</span></h3>
             </div>
           </CardContent>
         </Card>
@@ -223,7 +223,7 @@ export default function RapportsPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">CA En ligne</p>
-              <h3 className="text-xl font-bold text-slate-900">{formatCurrency(stats.caOnline)}</h3>
+              <h3 className="text-xl font-bold text-slate-900"><span className="font-mono">{formatCurrency(stats.caOnline)}</span></h3>
             </div>
           </CardContent>
         </Card>
@@ -235,7 +235,7 @@ export default function RapportsPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">CA Sur place</p>
-              <h3 className="text-xl font-bold text-slate-900">{formatCurrency(stats.caInStore)}</h3>
+              <h3 className="text-xl font-bold text-slate-900"><span className="font-mono">{formatCurrency(stats.caInStore)}</span></h3>
             </div>
           </CardContent>
         </Card>
@@ -271,7 +271,7 @@ export default function RapportsPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-500">Panier moyen</p>
-              <h3 className="text-xl font-bold text-slate-900">{formatCurrency(stats.averageBasket)}</h3>
+              <h3 className="text-xl font-bold text-slate-900"><span className="font-mono">{formatCurrency(stats.averageBasket)}</span></h3>
             </div>
           </CardContent>
         </Card>
@@ -297,7 +297,7 @@ export default function RapportsPage() {
                   <tbody className="divide-y divide-slate-100">
                     {filteredOrders.slice(0, 5).map(order => (
                       <tr key={order.id} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="px-4 py-3 font-medium text-slate-900">{order.orderNumber}</td>
+                        <td className="px-4 py-3 font-medium text-slate-900"><span className="font-mono">{order.orderNumber}</span></td>
                         <td className="px-4 py-3 text-slate-500">
                           {new Date(order.date).toLocaleDateString("fr-FR", { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                         </td>
@@ -310,7 +310,7 @@ export default function RapportsPage() {
                             {order.status}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-right font-medium text-slate-900">{formatCurrency(order.totalAmount)}</td>
+                        <td className="px-4 py-3 text-right font-medium text-slate-900"><span className="font-mono">{formatCurrency(order.totalAmount)}</span></td>
                       </tr>
                     ))}
                   </tbody>

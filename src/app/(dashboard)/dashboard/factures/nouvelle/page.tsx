@@ -390,7 +390,7 @@ export default function CreateInvoicePage() {
                   <div className="pt-2 text-right">
                     <span className="text-xs text-slate-500 mr-2">Total ligne :</span>
                     <span className="font-semibold text-slate-900">
-                      {formatCurrency((typeof line.quantity === 'number' ? line.quantity : (parseFloat(line.quantity) || 0)) * (typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0)))}
+                      <span className="font-mono">{formatCurrency((typeof line.quantity === 'number' ? line.quantity : (parseFloat(line.quantity) || 0)) * (typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0)))}</span>
                     </span>
                   </div>
                 </div>
@@ -468,8 +468,8 @@ export default function CreateInvoicePage() {
                     <tr key={idx} className="border-b border-slate-100 last:border-0">
                       <td className="py-4 text-slate-800 font-medium">{line.description || <span className="text-slate-300 italic">Article sans nom</span>}</td>
                       <td className="py-4 text-center text-slate-600">{line.quantity}</td>
-                      <td className="py-4 text-right text-slate-600">{formatCurrency(typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0))}</td>
-                      <td className="py-4 text-right font-semibold text-slate-900">{formatCurrency((typeof line.quantity === 'number' ? line.quantity : (parseFloat(line.quantity) || 0)) * (typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0)))}</td>
+                      <td className="py-4 text-right text-slate-600"><span className="font-mono">{formatCurrency(typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0))}</span></td>
+                      <td className="py-4 text-right font-semibold text-slate-900"><span className="font-mono">{formatCurrency((typeof line.quantity === 'number' ? line.quantity : (parseFloat(line.quantity) || 0)) * (typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0)))}</span></td>
                     </tr>
                   ))}
                 </tbody>
@@ -481,17 +481,17 @@ export default function CreateInvoicePage() {
               <div className="w-full sm:w-64 space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-500 font-medium">Sous-total</span>
-                  <span className="text-slate-900 font-semibold">{formatCurrency(subtotal)}</span>
+                  <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(subtotal)}</span></span>
                 </div>
                 {applyTax && (
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500 font-medium">TVA (18%)</span>
-                    <span className="text-slate-900 font-semibold">{formatCurrency(tax)}</span>
+                    <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(tax)}</span></span>
                   </div>
                 )}
                 <div className="flex justify-between text-lg pt-3 border-t border-slate-200">
                   <span className="font-bold text-slate-900">Total TTC</span>
-                  <span className="font-bold text-slate-900">{formatCurrency(total)}</span>
+                  <span className="font-bold text-slate-900"><span className="font-mono">{formatCurrency(total)}</span></span>
                 </div>
               </div>
             </div>

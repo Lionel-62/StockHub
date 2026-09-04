@@ -225,10 +225,10 @@ export default function StockPage() {
                       <TableRow key={product.id} className="hover:bg-slate-50 transition-colors">
                         <TableCell>
                           <div className="font-semibold text-slate-900 line-clamp-1">{product.name}</div>
-                          <div className="text-xs text-slate-500 mt-0.5">{product.sku}</div>
+                          <div className="text-xs text-slate-500 mt-0.5"><span className="font-mono">{product.sku}</span></div>
                         </TableCell>
                         <TableCell className="text-slate-500">{product.category}</TableCell>
-                        <TableCell className="text-center font-bold text-slate-900">{product.stock}</TableCell>
+                        <TableCell className="text-center font-bold text-slate-900"><span className="font-mono">{product.stock}</span></TableCell>
                         <TableCell>
                           <Badge 
                             className={cn("font-medium", 

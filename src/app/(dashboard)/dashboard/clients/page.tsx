@@ -262,7 +262,7 @@ export default function ClientsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right font-semibold text-slate-900">
-                        {formatCurrency(client.totalAmount || 0)}
+                        <span className="font-mono">{formatCurrency(client.totalAmount || 0)}</span>
                       </TableCell>
                       <TableCell className="text-center relative">
                         <button 

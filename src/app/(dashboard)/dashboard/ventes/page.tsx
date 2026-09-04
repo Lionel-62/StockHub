@@ -230,7 +230,7 @@ export default function SalesPage() {
                   paginatedOrders.map((order) => (
                     <TableRow key={order.id} className="hover:bg-slate-50 transition-colors group">
                       <TableCell>
-                        <div className="font-semibold text-slate-900">{order.orderNumber}</div>
+                        <div className="font-semibold text-slate-900"><span className="font-mono">{order.orderNumber}</span></div>
                         <div className="text-xs text-slate-500 mt-0.5">{order.itemsCount} article(s)</div>
                       </TableCell>
                       <TableCell>
@@ -253,7 +253,7 @@ export default function SalesPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right font-bold text-slate-900">
-                        {formatCurrency(order.totalAmount)}
+                        <span className="font-mono">{formatCurrency(order.totalAmount)}</span>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="text-sm text-slate-600">{order.paymentMethod}</div>

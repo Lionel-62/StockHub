@@ -151,7 +151,7 @@ export default function InvoicesPage() {
                       onClick={() => router.push(`/dashboard/factures/${inv.id}`)}
                     >
                       <TableCell>
-                        <div className="font-semibold text-slate-900">{inv.invoiceNumber}</div>
+                        <div className="font-semibold text-slate-900"><span className="font-mono">{inv.invoiceNumber}</span></div>
                       </TableCell>
                       <TableCell>
                         <div className="font-medium text-slate-700">{inv.clientName}</div>
@@ -177,7 +177,7 @@ export default function InvoicesPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right font-bold text-slate-900">
-                        {formatCurrency(inv.total)}
+                        <span className="font-mono">{formatCurrency(inv.total)}</span>
                       </TableCell>
                       <TableCell className="text-center relative">
                         <button 
