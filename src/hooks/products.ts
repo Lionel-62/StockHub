@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { getProductsAction, addProductAction, updateProductAction, deleteProductAction } from "@/app/actions/products.actions";
 
 export interface Product {
   id: string;
@@ -111,7 +112,7 @@ export function useProducts(publicShopId?: string) {
 
   const deleteProduct = async (id: string) => {
     setProducts(products.filter(p => p.id !== id));
-    await supabase.from('products').delete().eq('id', id);
+    await deleteProductAction(id);
   };
 
   // For compatibility with older code that used setProducts(newArray)
@@ -119,7 +120,7 @@ export function useProducts(publicShopId?: string) {
     setProducts(newProducts);
     // Sync only stock changes to Supabase to keep it simple for now
     for (const prod of newProducts) {
-      await supabase.from('products').update({ stock: prod.stock, status: prod.status }).eq('id', prod.id);
+      await updateProductAction(prod.id, { stock: prod.stock, status: prod.status });
     }
   };
 

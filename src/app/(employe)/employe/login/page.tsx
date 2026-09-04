@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, User as UserIcon, AlertCircle, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/mock/auth";
+import { useAuth } from "@/hooks/auth";
 
 export default function EmployeLoginPage() {
   const router = useRouter();

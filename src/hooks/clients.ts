@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Contact } from "./contacts";
 import { supabase } from "@/lib/supabase/client";
+import { getClientsAction, addClientAction, updateClientAction, deleteClientAction } from "@/app/actions/clients.actions";
 
 export type Client = Contact;
 
@@ -94,7 +95,7 @@ export function useClients(publicShopId?: string) {
 
   const deleteClient = async (id: string) => {
     setClients(clients.filter(c => c.id !== id));
-    await supabase.from('clients').delete().eq('id', id);
+    await deleteClientAction(id);
   };
 
   return {

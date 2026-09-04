@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { getOrdersAction, addOrderAction, updateOrderAction, deleteOrderAction } from "@/app/actions/orders.actions";
 
 export interface Order {
   id: string;
@@ -106,7 +107,7 @@ export function useOrders(publicShopId?: string) {
 
   const deleteOrder = async (id: string) => {
     setOrders(orders.filter(o => o.id !== id));
-    await supabase.from('orders').delete().eq('id', id);
+    await deleteOrderAction(id);
   };
 
   const replaceAllOrders = async (newOrders: Order[]) => {

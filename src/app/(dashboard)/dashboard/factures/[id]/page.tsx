@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { ChevronLeft, Edit, Trash2, Printer, Send, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useInvoices } from "@/lib/mock/invoices";
+import { useInvoices } from "@/hooks/invoices";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";

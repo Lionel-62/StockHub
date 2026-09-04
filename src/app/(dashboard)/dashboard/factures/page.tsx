@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useInvoices } from "@/lib/mock/invoices";
+import { useInvoices } from "@/hooks/invoices";
 import { cn } from "@/lib/utils";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { ConfirmModal } from "@/components/ui/confirm-modal";

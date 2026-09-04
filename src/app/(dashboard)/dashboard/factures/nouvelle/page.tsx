@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Card, CardContent } from "@/components/ui/card";
-import { useClients } from "@/lib/mock/clients";
-import { useProducts, Product } from "@/lib/mock/products";
-import { useInvoices, Invoice } from "@/lib/mock/invoices";
-import { useOrders } from "@/lib/mock/orders";
-import { useSettings } from "@/lib/mock/settings";
+import { useClients } from "@/hooks/clients";
+import { useProducts, Product } from "@/hooks/products";
+import { useInvoices, Invoice } from "@/hooks/invoices";
+import { useOrders } from "@/hooks/orders";
+import { useSettings } from "@/hooks/settings";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 

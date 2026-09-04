@@ -5,8 +5,8 @@ import { StatCard, StatCardSkeleton } from "@/components/dashboard/stat-card";
 import { SalesChart } from "@/components/dashboard/sales-chart";
 import { AlertList } from "@/components/dashboard/alert-list";
 import { RecentOrders } from "@/components/dashboard/recent-orders";
-import { useOrders } from "@/lib/mock/orders";
-import { useProducts } from "@/lib/mock/products";
+import { useOrders } from "@/hooks/orders";
+import { useProducts } from "@/hooks/products";
 
 export default function DashboardPage() {
   const { orders, isLoaded: ordersLoaded } = useOrders();

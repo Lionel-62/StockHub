@@ -1,0 +1,19 @@
+commit 5e0fe6156d2a7392fb5ac21e6daf295d112e038d
+Author: StockHub Dev <dev@stockhub.com>
+Date:   Fri Sep 4 14:40:37 2026 +0100
+
+    fix: mobile layout for products table
+
+diff --git a/src/app/(dashboard)/dashboard/produits/page.tsx b/src/app/(dashboard)/dashboard/produits/page.tsx
+index c1a4d3a..ba53a9b 100644
+--- a/src/app/(dashboard)/dashboard/produits/page.tsx
++++ b/src/app/(dashboard)/dashboard/produits/page.tsx
+@@ -272,7 +272,7 @@ export default function ProductsPage() {
+       <Card className="shadow-sm border-slate-200 bg-white rounded-xl overflow-visible">
+         <CardContent className="p-0 overflow-visible">
+           <div className="overflow-x-auto overflow-y-visible">
+-            <Table>
++            <Table className="min-w-[800px]">
+               <TableHeader className="bg-slate-50/50">
+                 <TableRow>
+                   <TableHead className="w-[80px]">Image</TableHead>

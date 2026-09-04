@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { BarChart2, TrendingUp, DollarSign, Package, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useOrders } from "@/lib/mock/orders";
+import { useOrders } from "@/hooks/orders";
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 // Utilitaires de date natifs

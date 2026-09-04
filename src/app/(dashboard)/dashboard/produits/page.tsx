@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useProducts, Product } from "@/lib/mock/products";
+import { useProducts, Product } from "@/hooks/products";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
 import Image from "next/image";
 import { cn } from "@/lib/utils";

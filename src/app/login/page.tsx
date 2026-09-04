@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/mock/auth";
+import { useAuth } from "@/hooks/auth";
 import { supabase } from "@/lib/supabase/client";
 
 export default function LoginPage() {

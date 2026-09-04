@@ -14,7 +14,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { useOrders } from "@/lib/mock/orders";
+import { useOrders } from "@/hooks/orders";
 
 export function RecentOrders() {
   const { orders, isLoaded } = useOrders();

@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { CustomSelect } from "@/components/ui/custom-select";
 import Link from "next/link";
 import Image from "next/image";
-import { useProducts, Product } from "@/lib/mock/products";
-import { useOrders, Order } from "@/lib/mock/orders";
-import { useClients } from "@/lib/mock/clients";
+import { useProducts, Product } from "@/hooks/products";
+import { useOrders, Order } from "@/hooks/orders";
+import { useClients } from "@/hooks/clients";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 

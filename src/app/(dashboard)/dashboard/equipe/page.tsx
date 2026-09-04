@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { User, useAuth } from "@/lib/mock/auth";
+import { User, useAuth } from "@/hooks/auth";
 import { Plus, Search, Trash2, KeyRound, ShieldAlert, Check, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

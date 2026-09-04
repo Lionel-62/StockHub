@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { cn } from "@/lib/utils";
-import { useSettings } from "@/lib/mock/settings";
+import { useSettings } from "@/hooks/settings";
 import { SuccessModal } from "@/components/ui/success-modal";
 
 const TABS = [

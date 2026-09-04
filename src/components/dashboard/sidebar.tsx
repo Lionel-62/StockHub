@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/lib/mock/auth";
+import { useAuth } from "@/hooks/auth";
 import {
   LayoutDashboard,
   Package,

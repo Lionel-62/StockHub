@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { useProducts } from "@/lib/mock/products";
+import { useProducts } from "@/hooks/products";
 
 export function AlertList() {
   const { products, isLoaded } = useProducts();

@@ -14,8 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Contact } from "@/lib/mock/contacts";
-import { useClients } from "@/lib/mock/clients";
+import { Contact } from "@/hooks/contacts";
+import { useClients } from "@/hooks/clients";
 import { cn } from "@/lib/utils";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { ConfirmModal } from "@/components/ui/confirm-modal";

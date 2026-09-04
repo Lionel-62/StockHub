@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { loginAction, logoutAction } from "@/app/actions/auth.actions";
+import { getTeamMembersAction, addTeamMemberAction, deleteTeamMemberAction } from "@/app/actions/team.actions";
 
 export interface User {
   id: string;
@@ -102,77 +104,54 @@ export function useAuth() {
     setIsLoaded(true);
   };
 
-  const login = async (identifier: string, pinCode: string, allowedRole?: "owner" | "employee") => {
-    // We use a custom RPC function to bypass RLS securely for PIN login
-    const { data, error } = await supabase
-      .rpc('verify_pin_login', {
-        p_identifier: identifier,
-        p_pin_code: pinCode
-      });
-
-    const userRecord = data?.[0]; // The RPC returns a table/array
-
-    if (!error && userRecord) {
-      if (allowedRole && userRecord.role !== allowedRole) {
-        return { success: false, error: allowedRole === "owner" ? "Veuillez utiliser l'espace employé." : "Veuillez utiliser l'espace propriétaire." };
-      }
-
-      const user: User = {
-        id: userRecord.id,
-        name: userRecord.name,
-        identifier: userRecord.identifier,
-        pinCode: pinCode, // Not returned securely, we use the input
-        role: userRecord.role,
-        shopId: userRecord.shop_id,
-        shopSlug: userRecord.shop_slug,
-        shopName: userRecord.shop_name,
-        permissions: typeof userRecord.permissions === 'string' ? JSON.parse(userRecord.permissions) : userRecord.permissions,
-        createdAt: new Date().toISOString() // Or return from RPC if needed
-      };
+    const login = async (identifier: string, pinCode: string, allowedRole?: "owner" | "employee") => {
+    const res = await loginAction(identifier, pinCode, allowedRole);
+    if (res.success && res.user) {
+      const user = {
+        ...res.user,
+        pinCode: pinCode
+      } as User;
       setCurrentUser(user);
       localStorage.setItem("stockhub_session", JSON.stringify(user));
       return { success: true };
     }
-    return { success: false, error: "Identifiant ou code PIN incorrect." };
+    return { success: false, error: res.error || "Identifiant ou code PIN incorrect." };
   };
 
   const logout = async () => {
     setCurrentUser(null);
     localStorage.removeItem("stockhub_session");
+    await logoutAction();
     await supabase.auth.signOut();
   };
 
-  const addUser = async (user: User) => {
-    if (user.role === 'employee') {
+const addUser = async (user: User) => {
+    if (user.role === "employee") {
       if (!currentUser?.shopId) {
         throw new Error("Action non autorisée. Boutique introuvable.");
       }
       
-      const currentEmployees = users.filter(u => u.role !== 'owner');
+      const currentEmployees = users.filter(u => u.role !== "owner");
       if (currentEmployees.length >= 2) {
         throw new Error("Limite atteinte : Vous ne pouvez pas ajouter plus de 2 employés.");
       }
 
-      // Optimistic update
-      const newUserWithShop = { ...user, shopId: currentUser.shopId };
-      setUsers([...users, newUserWithShop]);
-      
-      const { error } = await supabase.from('profiles').insert({
-        id: crypto.randomUUID(), // Use a real UUID for non-auth profiles
+      const res = await addTeamMemberAction({
         name: user.name,
         identifier: user.identifier,
-        pin_code: user.pinCode,
+        pinCode: user.pinCode,
         role: user.role,
-        shop_id: currentUser.shopId,
         permissions: user.permissions,
-        created_at: user.createdAt
+        createdAt: user.createdAt
       });
       
-      if (error) {
-        console.error("Error creating employee", error);
-        setUsers(users.filter(u => u.id !== user.id)); // rollback
-        throw new Error("Impossible de créer l'employé.");
+      if (!res.success) {
+        console.error("Error creating employee", res.error);
+        throw new Error(res.error || "Impossible de créer l'employé.");
       }
+      
+      const newUserWithShop = { ...user, shopId: currentUser.shopId };
+      setUsers([...users, newUserWithShop]);
     } else {
       // Logic for owner signup
       const shopSlug = user.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Math.floor(Math.random() * 1000);
@@ -205,7 +184,7 @@ export function useAuth() {
 
   const deleteUser = async (id: string) => {
     setUsers(users.filter(u => u.id !== id));
-    await supabase.from('profiles').delete().eq('id', id);
+    await deleteTeamMemberAction(id);
   };
 
   return {

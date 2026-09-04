@@ -14,8 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useProducts, Product } from "@/lib/mock/products";
-import { mockStockMovements } from "@/lib/mock/stock";
+import { useProducts, Product } from "@/hooks/products";
+import { mockStockMovements } from "@/hooks/stock";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { getInvoicesAction, addInvoiceAction, updateInvoiceAction, deleteInvoiceAction } from "@/app/actions/invoices.actions";
 
 export interface InvoiceItem {
   id: string;
@@ -116,7 +117,7 @@ export function useInvoices(publicShopId?: string) {
 
   const deleteInvoice = async (id: string) => {
     setInvoices(invoices.filter(inv => inv.id !== id));
-    await supabase.from('invoices').delete().eq('id', id);
+    await deleteInvoiceAction(id);
   };
 
   const updateInvoiceStatus = async (id: string, newStatus: Invoice["status"]) => {
