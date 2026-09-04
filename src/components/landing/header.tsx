@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X, ArrowRight, Store } from "lucide-react";
+import { Menu, X, ArrowRight, Store, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/lib/mock/auth";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { currentUser, isLoaded } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,22 +40,37 @@ export function Header() {
 
           {/* Quick Action Buttons */}
           <div className="flex items-center gap-2.5 sm:gap-3">
-            <Link 
-              href="/login" 
-              className="text-sm font-semibold text-slate-700 hover:text-slate-900 px-3 py-2 rounded-full hover:bg-slate-100 transition-colors hidden sm:inline-block"
-            >
-              Connexion
-            </Link>
-            <Link href="/login">
-              <motion.button 
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="text-sm font-medium text-white bg-[#0b213f] hover:bg-slate-900 px-5 py-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-1.5"
-              >
-                <span>Créer une vitrine</span>
-                <ArrowRight className="w-4 h-4" />
-              </motion.button>
-            </Link>
+            {isLoaded && currentUser ? (
+              <Link href="/dashboard">
+                <motion.button 
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="text-sm font-medium text-white bg-[#0b213f] hover:bg-slate-900 px-5 py-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-1.5"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span>Tableau de bord</span>
+                </motion.button>
+              </Link>
+            ) : (
+              <>
+                <Link 
+                  href="/login" 
+                  className="text-sm font-semibold text-slate-700 hover:text-slate-900 px-3 py-2 rounded-full hover:bg-slate-100 transition-colors hidden sm:inline-block"
+                >
+                  Connexion
+                </Link>
+                <Link href="/login">
+                  <motion.button 
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="text-sm font-medium text-white bg-[#0b213f] hover:bg-slate-900 px-5 py-2.5 rounded-full transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-1.5"
+                  >
+                    <span>Créer une vitrine</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </motion.button>
+                </Link>
+              </>
+            )}
             
             {/* Mobile Menu Toggle */}
             <button 
@@ -102,16 +119,31 @@ export function Header() {
                 <Link href="#demo" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Démo</Link>
                 <Link href="#tarifs" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Tarifs</Link>
                 <Link href="#temoignages" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Témoignages</Link>
-              </div>
-
-              <div className="mt-auto flex flex-col gap-3">
-                <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="w-full py-3 text-center font-semibold text-slate-700 bg-slate-100 rounded-xl">
-                  Connexion
-                </Link>
-                <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="w-full py-3 text-center font-semibold text-white bg-[#0b213f] rounded-xl flex items-center justify-center gap-2">
-                  <span>Créer une vitrine</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+                
+                {/* Mobile Actions */}
+                <div className="mt-6 flex flex-col gap-3">
+                  {isLoaded && currentUser ? (
+                    <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                      <button className="w-full text-center text-sm font-medium text-white bg-[#0b213f] hover:bg-slate-900 py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+                        <LayoutDashboard className="w-4 h-4" />
+                        Tableau de bord
+                      </button>
+                    </Link>
+                  ) : (
+                    <>
+                      <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                        <button className="w-full text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 py-3 rounded-xl transition-colors border border-slate-200">
+                          Connexion
+                        </button>
+                      </Link>
+                      <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                        <button className="w-full text-center text-sm font-medium text-white bg-[#0b213f] hover:bg-slate-900 py-3 rounded-xl transition-colors">
+                          Créer ma vitrine
+                        </button>
+                      </Link>
+                    </>
+                  )}
+                </div>
               </div>
             </motion.div>
           </motion.div>
