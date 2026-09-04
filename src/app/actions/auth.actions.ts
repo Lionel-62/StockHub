@@ -52,3 +52,9 @@ export async function logoutAction() {
   await deleteSession();
   return { success: true };
 }
+
+export async function syncSessionAction(sessionData: any) {
+  console.log("syncSessionAction called with:", sessionData);
+  await setSession(sessionData);
+  return { success: true };
+}

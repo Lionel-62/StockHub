@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { loginAction, logoutAction } from "@/app/actions/auth.actions";
+import { loginAction, logoutAction, syncSessionAction } from "@/app/actions/auth.actions";
 import { getTeamMembersAction, addTeamMemberAction, deleteTeamMemberAction } from "@/app/actions/team.actions";
 
 export interface User {
@@ -37,13 +37,13 @@ export function useAuth() {
       const parsedSession = storedSession ? JSON.parse(storedSession) : null;
       const needsShopId = parsedSession && !parsedSession.shopId;
 
-      if (session && session.user && (!storedSession || needsShopId)) {
+      if (session && session.user) {
         const { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
         const user: User = {
           id: session.user.id,
           name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
           identifier: session.user.email || '',
-          pinCode: '0000', // Dummy pin for OAuth users
+          pinCode: '0000',
           role: 'owner',
           shopId: profile?.shop_id,
           permissions: { canViewDashboard: true },
@@ -51,6 +51,7 @@ export function useAuth() {
         };
         setCurrentUser(user);
         localStorage.setItem("stockhub_session", JSON.stringify(user));
+        await syncSessionAction(user);
       }
     };
     
@@ -75,6 +76,7 @@ export function useAuth() {
         };
         setCurrentUser(user);
         localStorage.setItem("stockhub_session", JSON.stringify(user));
+        await syncSessionAction(user);
       } else if (event === 'SIGNED_OUT') {
         setCurrentUser(null);
         localStorage.removeItem("stockhub_session");

@@ -20,7 +20,16 @@ export async function getTeamMembersAction() {
 
 export async function addTeamMemberAction(userData: any) {
   const session = await getSession();
-  if (!session?.shopId || session.role !== 'owner') return { success: false, error: 'Non autorisé' };
+  console.log("addTeamMemberAction - Session:", session);
+  if (!session) {
+     return { success: false, error: 'Non autorisé: Session manquante ou invalide (Cookie non trouvé)' };
+  }
+  if (!session.shopId) {
+     return { success: false, error: 'Non autorisé: shopId manquant dans la session' };
+  }
+  if (session.role !== 'owner') {
+     return { success: false, error: 'Non autorisé: Seul le gérant (owner) peut ajouter un employé' };
+  }
 
   const supabase = createAdminClient();
   
