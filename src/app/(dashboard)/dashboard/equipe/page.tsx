@@ -94,9 +94,22 @@ export default function EquipePage() {
     }
   };
 
-  const handleShare = (user: User) => {
+  const handleShare = async (user: User) => {
     const loginUrl = `${window.location.origin}/employe/login`;
     const message = `Bonjour ${user.name},\n\nVoici tes accès pour l'espace vendeur StockHub :\n\nLien de connexion : ${loginUrl}\nIdentifiant : ${user.identifier}\nCode PIN : ${user.pinCode}\n\nNe partage pas ces informations.`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Accès StockHub",
+          text: message,
+        });
+        return;
+      } catch (err) {
+        // Fallback to clipboard if share gets cancelled or fails
+        console.error("Partage natif annulé ou échoué", err);
+      }
+    }
     
     navigator.clipboard.writeText(message).then(() => {
       alert("Les accès ont été copiés dans le presse-papier ! Vous pouvez maintenant les coller dans un message pour l'envoyer à votre employé.");
