@@ -20,6 +20,14 @@ export function useClients(publicShopId?: string) {
   };
 
   useEffect(() => {
+    const shopId = getShopId();
+    if (shopId) {
+      const cached = localStorage.getItem("stockhub_cache_clients_" + shopId);
+      if (cached) {
+        setClients(JSON.parse(cached));
+        setIsLoaded(true);
+      }
+    }
     fetchClients();
   }, []);
 
@@ -51,6 +59,7 @@ export function useClients(publicShopId?: string) {
         createdAt: d.created_at
       }));
       setClients(mapped);
+      localStorage.setItem("stockhub_cache_clients_" + shopId, JSON.stringify(mapped));
     }
     setIsLoaded(true);
   };

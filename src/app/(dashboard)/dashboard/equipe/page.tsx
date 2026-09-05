@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, useAuth } from "@/hooks/auth";
 import { Plus, Search, Trash2, KeyRound, ShieldAlert, Check, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,8 +17,12 @@ import {
 import { ConfirmModal } from "@/components/ui/confirm-modal";
 
 export default function EquipePage() {
-  const { users, addUser, deleteUser, currentUser } = useAuth();
+  const { users, addUser, deleteUser, currentUser, fetchUsers } = useAuth();
   
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

@@ -28,6 +28,7 @@ export function useAuth() {
     const storedSession = localStorage.getItem("stockhub_session");
     if (storedSession) {
       setCurrentUser(JSON.parse(storedSession));
+      setIsLoaded(true); // Optimistic instant UI load
     }
     
     // Check Supabase Auth (for Google OAuth)
@@ -36,9 +37,9 @@ export function useAuth() {
       
       const parsedSession = storedSession ? JSON.parse(storedSession) : null;
       if (parsedSession && parsedSession.role === 'employee') {
+        if (!storedSession) setIsLoaded(true);
         return; // Do not overwrite employee session with underlying Google owner session
       }
-      const needsShopId = parsedSession && !parsedSession.shopId;
 
       if (session && session.user) {
         const { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
@@ -56,12 +57,13 @@ export function useAuth() {
         localStorage.setItem("stockhub_session", JSON.stringify(user));
         await syncSessionAction(user);
       }
+      
+      if (!storedSession) {
+        setIsLoaded(true);
+      }
     };
     
     checkSupabaseAuth();
-
-    // Fetch all profiles from Supabase
-    fetchUsers();
 
     // Listen to Auth changes
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
@@ -111,7 +113,6 @@ export function useAuth() {
       }));
       setUsers(mappedUsers);
     }
-    setIsLoaded(true);
   };
 
     const login = async (identifier: string, pinCode: string, allowedRole?: "owner" | "employee", shopSlug?: string) => {
@@ -213,6 +214,7 @@ const addUser = async (user: User) => {
     deleteUser,
     login,
     logout,
-    isLoaded
+    isLoaded,
+    fetchUsers
   };
 }

@@ -54,7 +54,7 @@ export function useShopSettings(publicShopId?: string) {
       .single();
 
     if (!error && data) {
-      setShopSettings({
+      const newSettings = {
         id: data.id,
         name: data.name,
         slug: data.slug,
@@ -65,18 +65,22 @@ export function useShopSettings(publicShopId?: string) {
         metaApiEnabled: data.meta_api_enabled,
         metaPhoneNumberId: data.meta_phone_number_id || "",
         metaAccessToken: data.meta_access_token || ""
-      });
-    } else {
-      // Fallback local if DB not configured yet
-      const localShop = localStorage.getItem("stockhub_settings_shop");
-      if (localShop) {
-        setShopSettings(JSON.parse(localShop));
-      }
+      };
+      setShopSettings(newSettings);
+      localStorage.setItem("stockhub_settings_shop_" + shopId, JSON.stringify(newSettings));
     }
     setIsLoaded(true);
   };
 
   useEffect(() => {
+    const shopId = getShopId();
+    if (shopId) {
+      const cached = localStorage.getItem("stockhub_settings_shop_" + shopId) || localStorage.getItem("stockhub_settings_shop");
+      if (cached) {
+        setShopSettings(JSON.parse(cached));
+        setIsLoaded(true);
+      }
+    }
     loadFromSupabase();
   }, [publicShopId]);
 

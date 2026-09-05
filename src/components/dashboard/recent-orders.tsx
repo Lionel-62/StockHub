@@ -13,11 +13,14 @@ import {
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Order } from "@/hooks/orders";
 
-import { useOrders } from "@/hooks/orders";
+interface RecentOrdersProps {
+  orders: Order[];
+}
 
-export function RecentOrders() {
-  const { orders, isLoaded } = useOrders();
+export function RecentOrders({ orders }: RecentOrdersProps) {
+  const isLoaded = true; // Data is already loaded by the parent component
   const recentOrders = orders.slice(0, 5); // Get top 5 most recent orders
 
   return (

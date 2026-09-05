@@ -2,40 +2,60 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
+import { Order } from "@/hooks/orders";
 
-const data = [
-  { name: 'Lun', ventes: 350 },
-  { name: 'Mar', ventes: 450 },
-  { name: 'Mer', ventes: 600 },
-  { name: 'Jeu', ventes: 350 },
-  { name: 'Ven', ventes: 700 },
-  { name: 'Sam', ventes: 950 },
-  { name: 'Dim', ventes: 500 },
-];
+interface SalesChartProps {
+  orders: Order[];
+}
 
-export function SalesChart() {
+export function SalesChart({ orders }: SalesChartProps) {
   const [period, setPeriod] = useState<"7" | "30">("7");
-  const [activeIndex, setActiveIndex] = useState(5); // Saturday active by default to match mockup
+
+  const data = useMemo(() => {
+    const days = period === "7" ? 7 : 30;
+    const now = new Date();
+    const result = [];
+    
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(now.getDate() - i);
+      
+      const dayStr = d.toISOString().split('T')[0];
+      const ordersForDay = orders.filter(o => o.date.startsWith(dayStr) && o.status !== "Annulée");
+      const ventes = ordersForDay.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+      
+      result.push({
+        name: period === "7" 
+          ? d.toLocaleDateString('fr-FR', { weekday: 'short' }).replace('.', '')
+          : d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }),
+        ventes,
+        fullDate: dayStr
+      });
+    }
+    return result;
+  }, [orders, period]);
+
+  const [activeIndex, setActiveIndex] = useState(data.length - 1);
 
   return (
     <Card className="shadow-sm border-slate-200 col-span-2">
       <CardHeader className="flex flex-row items-start justify-between pb-2">
         <div>
-          <CardTitle className="text-base font-bold text-slate-900">Ventes des 7 derniers jours</CardTitle>
+          <CardTitle className="text-base font-bold text-slate-900">Ventes des {period} derniers jours</CardTitle>
           <p className="text-xs text-slate-400 mt-1">Boutique physique + boutique en ligne</p>
         </div>
         <div className="flex bg-slate-100 rounded-full p-1">
           <button 
             className={cn("px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 active:scale-95", period === "7" ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50")}
-            onClick={() => setPeriod("7")}
+            onClick={() => { setPeriod("7"); setActiveIndex(6); }}
           >
             7 jours
           </button>
           <button 
             className={cn("px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 active:scale-95", period === "30" ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50")}
-            onClick={() => setPeriod("30")}
+            onClick={() => { setPeriod("30"); setActiveIndex(29); }}
           >
             30 jours
           </button>
@@ -52,7 +72,7 @@ export function SalesChart() {
                   setActiveIndex(state.activeTooltipIndex as number);
                 }
               }}
-              onMouseLeave={() => setActiveIndex(5)} // Reset to Saturday
+              onMouseLeave={() => setActiveIndex(data.length - 1)}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis 
@@ -71,8 +91,9 @@ export function SalesChart() {
                 cursor={{ fill: 'transparent' }}
                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: '#0b213f', color: 'white' }}
                 itemStyle={{ color: 'white' }}
+                formatter={(value: number) => [`${new Intl.NumberFormat('fr-FR').format(Math.round(value))} FCFA`, 'Ventes']}
               />
-              <Bar dataKey="ventes" radius={[4, 4, 4, 4]} barSize={40}>
+              <Bar dataKey="ventes" radius={[4, 4, 4, 4]} barSize={period === "7" ? 40 : 10}>
                 {data.map((entry, index) => (
                   <Cell 
                     key={`cell-${index}`} 

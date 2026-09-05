@@ -36,6 +36,14 @@ export function useProducts(publicShopId?: string) {
   };
 
   useEffect(() => {
+    const shopId = getShopId();
+    if (shopId) {
+      const cached = localStorage.getItem("stockhub_cache_products_" + shopId);
+      if (cached) {
+        setProducts(JSON.parse(cached));
+        setIsLoaded(true);
+      }
+    }
     fetchProducts();
   }, [publicShopId]);
 
@@ -69,6 +77,7 @@ export function useProducts(publicShopId?: string) {
         isPublishedOnStore: true
       }));
       setProducts(mapped);
+      localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(mapped));
     }
     setIsLoaded(true);
   };

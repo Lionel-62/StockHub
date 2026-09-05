@@ -88,13 +88,13 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
-        <SalesChart />
+        <SalesChart orders={orders} />
         <div className="md:col-span-1">
-          <AlertList />
+          <AlertList products={products} />
         </div>
       </div>
 
-      <RecentOrders />
+      <RecentOrders orders={orders} />
     </div>
   );
 }

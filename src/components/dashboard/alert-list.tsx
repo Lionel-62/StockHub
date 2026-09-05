@@ -4,11 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Product } from "@/hooks/products";
 
-import { useProducts } from "@/hooks/products";
+interface AlertListProps {
+  products: Product[];
+}
 
-export function AlertList() {
-  const { products, isLoaded } = useProducts();
+export function AlertList({ products }: AlertListProps) {
+  const isLoaded = true; // Data is already loaded by the parent component
   
   // Filter products with low stock (<= 15) and sort by stock ascending
   const alerts = products

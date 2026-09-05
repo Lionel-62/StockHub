@@ -36,6 +36,14 @@ export function useOrders(publicShopId?: string) {
   };
 
   useEffect(() => {
+    const shopId = getShopId();
+    if (shopId) {
+      const cached = localStorage.getItem("stockhub_cache_orders_" + shopId);
+      if (cached) {
+        setOrders(JSON.parse(cached));
+        setIsLoaded(true);
+      }
+    }
     fetchOrders();
   }, []);
 
@@ -67,6 +75,7 @@ export function useOrders(publicShopId?: string) {
         clientId: undefined
       }));
       setOrders(mapped);
+      localStorage.setItem("stockhub_cache_orders_" + shopId, JSON.stringify(mapped));
     }
     setIsLoaded(true);
   };

@@ -40,6 +40,14 @@ export function useInvoices(publicShopId?: string) {
   };
 
   useEffect(() => {
+    const shopId = getShopId();
+    if (shopId) {
+      const cached = localStorage.getItem("stockhub_cache_invoices_" + shopId);
+      if (cached) {
+        setInvoices(JSON.parse(cached));
+        setIsLoaded(true);
+      }
+    }
     fetchInvoices();
   }, []);
 
@@ -72,6 +80,7 @@ export function useInvoices(publicShopId?: string) {
         dueDate: d.due_date
       }));
       setInvoices(mapped);
+      localStorage.setItem("stockhub_cache_invoices_" + shopId, JSON.stringify(mapped));
     }
     setIsLoaded(true);
   };
