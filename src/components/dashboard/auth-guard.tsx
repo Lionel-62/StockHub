@@ -16,6 +16,11 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       router.push("/login");
       return;
     }
+
+    if (!currentUser.shopId && pathname !== "/onboarding") {
+      router.push("/onboarding");
+      return;
+    }
     
     // Check permissions
     if (currentUser.role === "employee") {

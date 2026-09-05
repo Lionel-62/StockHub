@@ -70,26 +70,9 @@ export async function registerOwnerAction(payload: {
   userId: string;
   name: string;
   email: string;
-  shopName: string;
-  shopDescription: string;
-  whatsapp: string;
 }) {
   try {
     const supabase = createAdminClient();
-
-    const shopSlug = payload.shopName.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') + '-' + Math.floor(Math.random() * 1000);
-          
-    const { data: shopData, error: shopError } = await supabase.from('shops').insert({
-      name: payload.shopName,
-      description: payload.shopDescription,
-      whatsapp_number: payload.whatsapp,
-      slug: shopSlug,
-    }).select().single();
-
-    if (shopError || !shopData) {
-      console.error("Shop creation error:", shopError);
-      return { success: false, error: "Erreur lors de la création de la boutique." };
-    }
 
     const { error: profileError } = await supabase.from('profiles').insert({
       id: payload.userId,
@@ -97,9 +80,9 @@ export async function registerOwnerAction(payload: {
       identifier: payload.email,
       pin_code: '0000',
       role: 'owner',
-      shop_id: shopData.id,
       permissions: { canViewDashboard: true },
       created_at: new Date().toISOString()
+      // shop_id is null for now
     });
     
     if (profileError) {
@@ -109,7 +92,8 @@ export async function registerOwnerAction(payload: {
 
     return { success: true };
   } catch (err: any) {
-    return { success: false, error: err.message || "Erreur interne" };
+    console.error("Register Error:", err);
+    return { success: false, error: err.message || "Erreur interne lors de l'inscription." };
   }
 }
 
@@ -140,27 +124,11 @@ export async function completeGoogleSignupAction(userId: string, email: string, 
       return { success: true };
     }
 
-    // 1. Create a shop
-    const shopSlug = `boutique-${Math.random().toString(36).substring(2, 6)}`;
-    const shopName = name ? `Boutique de ${name}` : "Ma Boutique";
-    const { data: shop, error: shopError } = await supabase
-      .from('shops')
-      .insert({
-        slug: shopSlug,
-        name: shopName,
-        is_active: true,
-      })
-      .select()
-      .single();
-
-    if (shopError) throw shopError;
-
-    // 2. Create the profile
+    // 1. Create the profile (shop_id is null for now)
     const { error: profileError } = await supabase
       .from('profiles')
       .insert({
         id: userId,
-        shop_id: shop.id,
         name: name || email,
         identifier: email,
         role: 'owner',
@@ -168,8 +136,6 @@ export async function completeGoogleSignupAction(userId: string, email: string, 
       });
 
     if (profileError) {
-      // Rollback shop if profile fails
-      await supabase.from('shops').delete().eq('id', shop.id);
       throw profileError;
     }
 
@@ -177,5 +143,65 @@ export async function completeGoogleSignupAction(userId: string, email: string, 
   } catch (err: any) {
     console.error("Google Signup Complete Error:", err);
     return { success: false, error: err.message || "Erreur lors de la création du compte Google." };
+  }
+}
+
+export async function createShopAction(userId: string, shopName: string, category: string, whatsapp: string, description: string) {
+  try {
+    const supabase = createAdminClient();
+    
+    const shopSlug = `boutique-${Math.random().toString(36).substring(2, 6)}`;
+    
+    const { data: shop, error: shopError } = await supabase
+      .from('shops')
+      .insert({
+        slug: shopSlug,
+        name: shopName,
+        category,
+        whatsapp_number: whatsapp,
+        description,
+        is_active: true,
+      })
+      .select()
+      .single();
+      
+    if (shopError) throw shopError;
+    
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({ shop_id: shop.id })
+      .eq('id', userId);
+      
+    if (profileError) {
+      await supabase.from('shops').delete().eq('id', shop.id);
+      throw profileError;
+    }
+    
+    // Fetch updated user details to sync session
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*, shops!inner(slug, name)')
+      .eq('id', userId)
+      .single();
+      
+    if (profile) {
+      const sessionData = {
+        id: profile.id,
+        name: profile.name,
+        identifier: profile.identifier,
+        role: profile.role,
+        shopId: profile.shop_id,
+        shopSlug: profile.shops?.slug,
+        shopName: profile.shops?.name,
+        permissions: typeof profile.permissions === 'string' ? JSON.parse(profile.permissions) : profile.permissions,
+        createdAt: profile.created_at
+      };
+      await setSession(sessionData);
+      return { success: true, user: sessionData };
+    }
+    
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Erreur lors de la création de la boutique." };
   }
 }
