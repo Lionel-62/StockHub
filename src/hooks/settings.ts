@@ -97,19 +97,27 @@ export function useSettings(publicShopId?: string) {
 
   const saveSettings = async (newSettings: CompanySettings) => {
     const shopId = getShopId();
-    setSettings(newSettings);
-    localStorage.setItem(`stockhub_settings_v2_${shopId}`, JSON.stringify(newSettings));
+    let finalPhone = newSettings.phone;
+    if (newSettings.countryCode && !finalPhone.startsWith("+")) {
+      const cleanPhone = finalPhone.replace(/\s+/g, "");
+      finalPhone = `${newSettings.countryCode}${cleanPhone.startsWith("0") ? cleanPhone.substring(1) : cleanPhone}`;
+    }
     
+    // Update local state with the potentially modified phone
+    const settingsToSave = { ...newSettings, phone: finalPhone };
+    setSettings(settingsToSave);
+    localStorage.setItem(`stockhub_settings_v2_${shopId}`, JSON.stringify(settingsToSave));
+
     // Sync to DB
     if (shopId !== "default") {
       await updateShopSettingsAction({
-        name: newSettings.name,
-        whatsapp_number: newSettings.phone,
-        category: newSettings.category,
-        description: newSettings.description,
-        country: newSettings.country,
-        city: newSettings.city,
-        country_code: newSettings.countryCode
+        name: settingsToSave.name,
+        whatsapp_number: settingsToSave.phone,
+        category: settingsToSave.category,
+        description: settingsToSave.description,
+        country: settingsToSave.country,
+        city: settingsToSave.city,
+        country_code: settingsToSave.countryCode
       });
     }
     
