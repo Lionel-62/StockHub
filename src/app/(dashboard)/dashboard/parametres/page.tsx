@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { CustomSelect } from "@/components/ui/custom-select";
 import { cn } from "@/lib/utils";
 import { useSettings } from "@/hooks/settings";
+import { useAuth } from "@/hooks/auth";
 import { SuccessModal } from "@/components/ui/success-modal";
 
 const TABS = [
@@ -30,6 +31,7 @@ export default function SettingsPage() {
   const [showModal, setShowModal] = useState(false);
   
   const { settings, saveSettings, isLoaded } = useSettings();
+  const { currentUser } = useAuth();
   const [formData, setFormData] = useState(settings);
 
   useEffect(() => {
@@ -118,6 +120,36 @@ export default function SettingsPage() {
           {/* TONGLET: GÉNÉRAL */}
           {activeTab === "general" && (
             <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
+              {/* Informations du compte (Lecture seule) */}
+              <Card className="shadow-sm border-slate-200 overflow-hidden">
+                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900">Informations du Compte</CardTitle>
+                  <CardDescription>Vos coordonnées d'inscription (Non modifiables).</CardDescription>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700">Nom / Propriétaire</label>
+                      <input 
+                        type="text" 
+                        value={currentUser?.name || ""} 
+                        readOnly
+                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-500 cursor-not-allowed outline-none" 
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700">Adresse Email</label>
+                      <input 
+                        type="email" 
+                        value={currentUser?.identifier || ""} 
+                        readOnly
+                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-500 cursor-not-allowed outline-none" 
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               <Card className="shadow-sm border-slate-200 overflow-hidden">
                 <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
                   <CardTitle className="text-lg font-bold text-slate-900">Profil de l'Entreprise</CardTitle>
