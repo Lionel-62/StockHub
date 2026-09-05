@@ -77,7 +77,8 @@ function LoginForm() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard?flow=${isSignUp ? 'signup' : 'login'}`
+          // Redirect to server-side callback route for proper validation
+          redirectTo: `${window.location.origin}/auth/callback?flow=${isSignUp ? 'signup' : 'login'}`
         }
       });
       if (error) throw error;

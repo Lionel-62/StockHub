@@ -169,7 +169,7 @@ export async function createShopAction(userId: string, shopName: string, categor
     
     const { error: profileError } = await supabase
       .from('profiles')
-      .update({ shop_id: shop.id })
+      .update({ shop_id: shop.id, onboarding_completed: true })
       .eq('id', userId);
       
     if (profileError) {

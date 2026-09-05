@@ -12,6 +12,7 @@ export interface User {
   shopId?: string;
   shopSlug?: string;
   shopName?: string;
+  onboardingCompleted?: boolean;
   permissions: {
     canViewDashboard: boolean;
   };
@@ -61,7 +62,7 @@ export function useAuth() {
       }
 
       // STEP 1: Check if the user has a profile in our database
-      let { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
+      let { data: profile } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
 
       // STEP 2: If no profile and this is a SIGNUP flow, create the profile
       if (!profile && isSignupFlow) {
@@ -71,7 +72,7 @@ export function useAuth() {
           session.user.user_metadata?.full_name || ''
         );
         if (res.success) {
-          const { data: newProfile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
+          const { data: newProfile } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
           profile = newProfile;
         }
       }
@@ -89,6 +90,7 @@ export function useAuth() {
       }
 
       // STEP 4: Profile found → create session
+      const needsOnboarding = !profile.onboarding_completed || !profile.shop_id;
       const user: User = {
         id: session.user.id,
         name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
@@ -96,6 +98,7 @@ export function useAuth() {
         pinCode: '0000',
         role: 'owner',
         shopId: profile.shop_id,
+        onboardingCompleted: profile.onboarding_completed ?? false,
         permissions: { canViewDashboard: true },
         createdAt: session.user.created_at
       };
@@ -104,13 +107,13 @@ export function useAuth() {
       await syncSessionAction(user);
       setIsLoaded(true);
 
-      // STEP 5: Explicit routing - don't rely on AuthGuard for post-OAuth redirect
+      // STEP 5: Explicit routing based on onboarding status
+      // Only redirect if we're on /auth/callback (just came from OAuth) or dashboard
       if (typeof window !== 'undefined') {
-        if (!profile.shop_id) {
-          // No shop yet → go to onboarding
+        const path = window.location.pathname;
+        if (needsOnboarding && path !== '/onboarding') {
           window.location.href = '/onboarding';
-        } else if (window.location.pathname !== '/dashboard') {
-          // Has a shop but not on dashboard → send to dashboard
+        } else if (!needsOnboarding && path !== '/dashboard' && (path.startsWith('/auth') || path === '/login')) {
           window.location.href = '/dashboard';
         }
       }
