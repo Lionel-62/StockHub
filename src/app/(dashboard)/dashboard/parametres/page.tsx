@@ -226,7 +226,7 @@ export default function SettingsPage() {
                       </div>
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Téléphone</label>
+                      <label className="text-sm font-semibold text-slate-700">Numéro WhatsApp</label>
                       <div className="relative">
                         <Smartphone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                         <input 
@@ -234,15 +234,85 @@ export default function SettingsPage() {
                           value={formData.phone} 
                           onChange={e => setFormData({...formData, phone: e.target.value})}
                           className="w-full pl-9 pr-3 p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
+                          placeholder="+229 01 02 03 04"
                         />
                       </div>
                     </div>
                   </div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700">Pays</label>
+                      <select 
+                        value={formData.country || ""}
+                        onChange={e => {
+                          const country = e.target.value;
+                          let code = formData.countryCode;
+                          if (country === "Bénin") code = "+229";
+                          if (country === "Côte d'Ivoire") code = "+225";
+                          if (country === "Sénégal") code = "+221";
+                          if (country === "Cameroun") code = "+237";
+                          if (country === "Mali") code = "+223";
+                          if (country === "Togo") code = "+228";
+                          if (country === "Burkina Faso") code = "+226";
+                          if (country === "France") code = "+33";
+                          
+                          setFormData({...formData, country, countryCode: code});
+                        }}
+                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                      >
+                        <option value="Bénin">Bénin</option>
+                        <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+                        <option value="Sénégal">Sénégal</option>
+                        <option value="Cameroun">Cameroun</option>
+                        <option value="Mali">Mali</option>
+                        <option value="Togo">Togo</option>
+                        <option value="Burkina Faso">Burkina Faso</option>
+                        <option value="France">France</option>
+                      </select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700">Ville</label>
+                      <input 
+                        type="text" 
+                        value={formData.city || ""} 
+                        onChange={e => setFormData({...formData, city: e.target.value})}
+                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
+                        placeholder="Ex: Cotonou"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700">Catégorie</label>
+                      <select 
+                        value={formData.category || "autre"}
+                        onChange={e => setFormData({...formData, category: e.target.value})}
+                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                      >
+                        <option value="vetements">Vêtements & Mode</option>
+                        <option value="electronique">Électronique & Tech</option>
+                        <option value="alimentation">Alimentation & Restauration</option>
+                        <option value="informatique">Informatique</option>
+                        <option value="services">Services</option>
+                        <option value="autre">Autre / Général</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-slate-700">Description de la boutique</label>
+                    <textarea 
+                      rows={3} 
+                      value={formData.description || ""} 
+                      onChange={e => setFormData({...formData, description: e.target.value})}
+                      className="w-full p-3 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
+                      placeholder="Petite description de votre activité..."
+                    />
+                  </div>
+
                   <div className="space-y-1.5">
                     <label className="text-sm font-semibold text-slate-700">Adresse complète</label>
                     <textarea 
-                      rows={3} 
+                      rows={2} 
                       value={formData.address} 
                       onChange={e => setFormData({...formData, address: e.target.value})}
                       className="w-full p-3 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
