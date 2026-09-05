@@ -32,15 +32,15 @@ export default function OnboardingPage() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    if (isLoaded && currentUser && currentUser.shopId) {
-      // If user already has a shop, they shouldn't be here
+    if (isLoaded && currentUser && currentUser.onboardingCompleted) {
+      // If user already finished onboarding, they shouldn't be here
       router.push("/dashboard");
     } else if (isLoaded && !currentUser) {
       router.push("/login");
     }
   }, [isLoaded, currentUser, router]);
 
-  if (!isLoaded || !currentUser || currentUser.shopId) {
+  if (!isLoaded || !currentUser || currentUser.onboardingCompleted) {
     return null; // Or a loader
   }
 
