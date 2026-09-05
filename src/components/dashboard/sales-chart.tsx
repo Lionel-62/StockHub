@@ -91,7 +91,7 @@ export function SalesChart({ orders }: SalesChartProps) {
                 cursor={{ fill: 'transparent' }}
                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: '#0b213f', color: 'white' }}
                 itemStyle={{ color: 'white' }}
-                formatter={(value: number) => [`${new Intl.NumberFormat('fr-FR').format(Math.round(value))} FCFA`, 'Ventes']}
+                formatter={(value: any) => [`${new Intl.NumberFormat('fr-FR').format(Math.round(Number(value)))} FCFA`, 'Ventes']}
               />
               <Bar dataKey="ventes" radius={[4, 4, 4, 4]} barSize={period === "7" ? 40 : 10}>
                 {data.map((entry, index) => (
