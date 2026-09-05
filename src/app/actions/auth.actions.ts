@@ -74,6 +74,12 @@ export async function registerOwnerAction(payload: {
   try {
     const supabase = createAdminClient();
 
+    // Check if profile already exists (e.g. created by Supabase DB Trigger)
+    const { data: existingProfile } = await supabase.from('profiles').select('id').eq('id', payload.userId).single();
+    if (existingProfile) {
+      return { success: true };
+    }
+
     const { error: profileError } = await supabase.from('profiles').insert({
       id: payload.userId,
       name: payload.name,
