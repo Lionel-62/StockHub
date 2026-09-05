@@ -101,13 +101,17 @@ export default function ShopConfigPage() {
                   <input 
                     type="text" 
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => {
+                      const newName = e.target.value;
+                      const newSlug = newName.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+                      setFormData({...formData, name: newName, slug: newSlug || 'ma-boutique'});
+                    }}
                     className="w-full border border-slate-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] transition-all"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700">Lien de votre boutique</label>
+                  <label className="text-sm font-semibold text-slate-700">Lien de votre boutique (Auto-généré)</label>
                   <div className="flex">
                     <span className="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-slate-200 bg-slate-50 text-slate-500 sm:text-sm">
                       stockhub.com/b/
@@ -115,8 +119,8 @@ export default function ShopConfigPage() {
                     <input 
                       type="text" 
                       value={formData.slug}
-                      onChange={(e) => setFormData({...formData, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-')})}
-                      className="flex-1 border border-slate-200 rounded-r-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] transition-all"
+                      readOnly
+                      className="flex-1 border border-slate-200 rounded-r-xl p-3 bg-slate-100 text-slate-500 cursor-not-allowed outline-none transition-all"
                     />
                   </div>
                 </div>
