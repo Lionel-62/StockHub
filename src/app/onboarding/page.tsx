@@ -24,6 +24,9 @@ export default function OnboardingPage() {
   const [category, setCategory] = useState("");
   
   const [shopName, setShopName] = useState("");
+  const [country, setCountry] = useState("Bénin");
+  const [countryCode, setCountryCode] = useState("+229");
+  const [city, setCity] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [description, setDescription] = useState("");
   
@@ -55,7 +58,7 @@ export default function OnboardingPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!shopName || !whatsapp) {
+    if (!shopName || !whatsapp || !country || !city) {
       setError("Veuillez remplir les champs obligatoires (*)");
       return;
     }
@@ -64,7 +67,8 @@ export default function OnboardingPage() {
     setIsLoading(true);
 
     try {
-      const result = await createShopAction(currentUser.id, shopName, category, whatsapp, description);
+      const fullNumber = whatsapp.startsWith("+") ? whatsapp : `${countryCode}${whatsapp.startsWith("0") ? whatsapp.substring(1) : whatsapp}`;
+      const result = await createShopAction(currentUser.id, shopName, category, fullNumber, description, country, city, countryCode);
       if (result.success) {
         setSuccess(true);
         setTimeout(() => {
@@ -197,18 +201,61 @@ export default function OnboardingPage() {
                   />
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      Pays <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={`${country}|${countryCode}`}
+                      onChange={(e) => {
+                        const [c, code] = e.target.value.split('|');
+                        setCountry(c);
+                        setCountryCode(code);
+                      }}
+                      className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
+                    >
+                      <option value="Bénin|+229">Bénin (+229)</option>
+                      <option value="Côte d'Ivoire|+225">Côte d'Ivoire (+225)</option>
+                      <option value="Sénégal|+221">Sénégal (+221)</option>
+                      <option value="Cameroun|+237">Cameroun (+237)</option>
+                      <option value="Mali|+223">Mali (+223)</option>
+                      <option value="Togo|+228">Togo (+228)</option>
+                      <option value="Burkina Faso|+226">Burkina Faso (+226)</option>
+                      <option value="France|+33">France (+33)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                      Ville <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
+                      placeholder="Ex: Cotonou"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
                     <Phone size={16} className="text-[#0d9488]" />
                     Numéro WhatsApp (pour les commandes) <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="tel"
-                    value={whatsapp}
-                    onChange={(e) => setWhatsapp(e.target.value)}
-                    className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
-                    placeholder="+225 01 02 03 04 05"
-                  />
+                  <div className="flex">
+                    <span className="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-slate-200 bg-slate-50 text-slate-500 text-sm font-medium">
+                      {countryCode}
+                    </span>
+                    <input
+                      type="tel"
+                      value={whatsapp}
+                      onChange={(e) => setWhatsapp(e.target.value)}
+                      className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-r-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
+                      placeholder="Ex: 01 02 03 04 05"
+                    />
+                  </div>
                   <p className="text-xs text-slate-500 mt-1.5 ml-1">Ce numéro servira à recevoir les commandes de vos clients.</p>
                 </div>
 

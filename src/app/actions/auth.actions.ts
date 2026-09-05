@@ -146,7 +146,7 @@ export async function completeGoogleSignupAction(userId: string, email: string, 
   }
 }
 
-export async function createShopAction(userId: string, shopName: string, category: string, whatsapp: string, description: string) {
+export async function createShopAction(userId: string, shopName: string, category: string, whatsapp: string, description: string, country?: string, city?: string, countryCode?: string) {
   try {
     const supabase = createAdminClient();
     
@@ -160,6 +160,9 @@ export async function createShopAction(userId: string, shopName: string, categor
         category,
         whatsapp_number: whatsapp,
         description,
+        country: country || null,
+        city: city || null,
+        country_code: countryCode || null,
         is_active: true,
       })
       .select()
