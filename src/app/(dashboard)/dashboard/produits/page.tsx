@@ -206,7 +206,7 @@ export default function ProductsPage() {
     if (modalMode === "add") {
       const newProduct = {
         ...currentProduct,
-        id: `prod-${Date.now()}`,
+        id: crypto.randomUUID(),
         sku: currentProduct.sku || `SKU-${Math.floor(1000 + Math.random() * 9000)}`,
         stock: stockNum,
         purchasePrice: Number(currentProduct.purchasePrice) || 0,
