@@ -65,3 +65,50 @@ export async function syncSessionAction(sessionData: any) {
   await setSession(sessionData);
   return { success: true };
 }
+
+export async function registerOwnerAction(payload: {
+  userId: string;
+  name: string;
+  email: string;
+  shopName: string;
+  shopDescription: string;
+  whatsapp: string;
+}) {
+  try {
+    const supabase = createAdminClient();
+
+    const shopSlug = payload.shopName.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') + '-' + Math.floor(Math.random() * 1000);
+          
+    const { data: shopData, error: shopError } = await supabase.from('shops').insert({
+      name: payload.shopName,
+      description: payload.shopDescription,
+      whatsapp_number: payload.whatsapp,
+      slug: shopSlug,
+    }).select().single();
+
+    if (shopError || !shopData) {
+      console.error("Shop creation error:", shopError);
+      return { success: false, error: "Erreur lors de la création de la boutique." };
+    }
+
+    const { error: profileError } = await supabase.from('profiles').insert({
+      id: payload.userId,
+      name: payload.name,
+      identifier: payload.email,
+      pin_code: '0000',
+      role: 'owner',
+      shop_id: shopData.id,
+      permissions: { canViewDashboard: true },
+      created_at: new Date().toISOString()
+    });
+    
+    if (profileError) {
+      console.error("Profile creation error:", profileError);
+      return { success: false, error: "Erreur lors de la création du profil." };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Erreur interne" };
+  }
+}

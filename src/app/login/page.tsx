@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { LogoLoader } from "@/components/ui/logo-loader";
 import { useAuth } from "@/hooks/auth";
 import { supabase } from "@/lib/supabase/client";
+import { registerOwnerAction } from "@/app/actions/auth.actions";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -124,30 +125,17 @@ export default function LoginPage() {
         }
         if (!authData.user) throw new Error("Erreur inattendue lors de la création.");
 
-        // 2. Create Shop
-        const shopSlug = shopName.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Math.floor(Math.random() * 1000);
-        const { data: shopData, error: shopError } = await supabase.from('shops').insert({
-          name: shopName,
-          description: shopDescription,
-          whatsapp_number: whatsapp,
-          slug: shopSlug,
-        }).select().single();
-
-        if (shopError || !shopData) throw new Error("Erreur lors de la création de la boutique.");
-
-        // 3. Create Profile linked to the Shop
-        const { error: profileError } = await supabase.from('profiles').insert({
-          id: authData.user.id,
+        // 2 & 3. Create Shop and Profile via Server Action (Bypassing RLS)
+        const result = await registerOwnerAction({
+          userId: authData.user.id,
           name: regName,
-          identifier: regEmail,
-          pin_code: '0000',
-          role: 'owner',
-          shop_id: shopData.id,
-          permissions: { canViewDashboard: true },
-          created_at: new Date().toISOString()
+          email: regEmail,
+          shopName,
+          shopDescription,
+          whatsapp
         });
-        
-        if (profileError) throw profileError;
+
+        if (!result.success) throw new Error(result.error);
 
         setSuccess("Boutique créée avec succès ! Redirection...");
       } catch (err: any) {
