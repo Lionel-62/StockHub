@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { useSettings } from "@/hooks/settings";
 import { useAuth } from "@/hooks/auth";
 import { SuccessModal } from "@/components/ui/success-modal";
+import { updateProfileNameAction, syncSessionAction } from "@/app/actions/auth.actions";
 
 const TABS = [
   { id: "general", label: "Général", icon: Building2 },
@@ -33,6 +34,8 @@ export default function SettingsPage() {
   const { settings, saveSettings, isLoaded } = useSettings();
   const { currentUser } = useAuth();
   const [formData, setFormData] = useState(settings);
+  const [ownerName, setOwnerName] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (isLoaded) {
@@ -40,10 +43,29 @@ export default function SettingsPage() {
     }
   }, [isLoaded, settings]);
 
-  const handleSave = () => {
+  useEffect(() => {
+    if (currentUser?.name) {
+      setOwnerName(currentUser.name);
+    }
+  }, [currentUser]);
+
+  const handleSave = async () => {
+    setIsSaving(true);
     saveSettings(formData);
+    
+    if (currentUser && ownerName !== currentUser.name) {
+      const res = await updateProfileNameAction(currentUser.id, ownerName);
+      if (res.success) {
+        const updatedUser = { ...currentUser, name: ownerName };
+        localStorage.setItem("stockhub_session", JSON.stringify(updatedUser));
+        await syncSessionAction(updatedUser);
+        window.dispatchEvent(new Event("storage"));
+      }
+    }
+    
     setIsSaved(true);
     setShowModal(true);
+    setIsSaving(false);
     setTimeout(() => setIsSaved(false), 3000);
   };
 
@@ -78,13 +100,14 @@ export default function SettingsPage() {
         </div>
         <Button 
           onClick={handleSave}
+          disabled={isSaving}
           className={cn(
             "bg-[#0b213f] hover:bg-[#18355c] text-white transition-all shadow-sm w-full md:w-auto",
             isSaved && "bg-green-600 hover:bg-green-700"
           )}
         >
           {isSaved ? <Check size={16} className="mr-2" /> : <Save size={16} className="mr-2" />}
-          {isSaved ? "Enregistré" : "Enregistrer les modifications"}
+          {isSaved ? "Enregistré" : isSaving ? "Enregistrement..." : "Enregistrer les modifications"}
         </Button>
       </div>
 
@@ -124,7 +147,7 @@ export default function SettingsPage() {
               <Card className="shadow-sm border-slate-200 overflow-hidden">
                 <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
                   <CardTitle className="text-lg font-bold text-slate-900">Informations du Compte</CardTitle>
-                  <CardDescription>Vos coordonnées d'inscription (Non modifiables).</CardDescription>
+                  <CardDescription>L'email d'inscription est verrouillé, mais le nom reste modifiable.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -132,9 +155,9 @@ export default function SettingsPage() {
                       <label className="text-sm font-semibold text-slate-700">Nom / Propriétaire</label>
                       <input 
                         type="text" 
-                        value={currentUser?.name || ""} 
-                        readOnly
-                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-500 cursor-not-allowed outline-none" 
+                        value={ownerName} 
+                        onChange={(e) => setOwnerName(e.target.value)}
+                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] transition-all text-slate-900" 
                       />
                     </div>
                     <div className="space-y-1.5">

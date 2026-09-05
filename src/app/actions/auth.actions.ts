@@ -112,3 +112,20 @@ export async function registerOwnerAction(payload: {
     return { success: false, error: err.message || "Erreur interne" };
   }
 }
+
+export async function updateProfileNameAction(userId: string, newName: string) {
+  try {
+    const supabase = createAdminClient();
+    
+    const { error } = await supabase
+      .from('profiles')
+      .update({ name: newName })
+      .eq('id', userId);
+      
+    if (error) throw error;
+    
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Erreur interne" };
+  }
+}
