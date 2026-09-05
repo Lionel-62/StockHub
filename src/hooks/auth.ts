@@ -135,6 +135,16 @@ export function useAuth() {
         isHandled = false; // Allow re-validation on new sign-in
         await validateAndSetGoogleSession(session, isSignupFlow);
       } else if (event === 'SIGNED_OUT') {
+        const stored = localStorage.getItem("stockhub_session");
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            if (parsed.role === 'employee') {
+              // Ignore Supabase signout for employees
+              return;
+            }
+          } catch(e) {}
+        }
         setCurrentUser(null);
         localStorage.removeItem("stockhub_session");
         setIsLoaded(true);
