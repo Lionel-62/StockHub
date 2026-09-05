@@ -104,7 +104,23 @@ export function useAuth() {
           const parsed = JSON.parse(currentLocalSession);
           if (parsed.role === 'employee') return; // Do not overwrite employee session
         }
+
+        // SECURITY CHECK: Only allow users who have a profile in our database
         const { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
+        
+        if (!profile) {
+          // No profile found = user never registered on StockHub
+          // Sign them out immediately and redirect to register
+          await supabase.auth.signOut();
+          localStorage.removeItem("stockhub_session");
+          setCurrentUser(null);
+          setIsLoaded(true);
+          if (typeof window !== 'undefined') {
+            window.location.href = '/login?error=account_not_found';
+          }
+          return;
+        }
+
         const user: User = {
           id: session.user.id,
           name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
