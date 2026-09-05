@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { getProductsAction, addProductAction, updateProductAction, deleteProductAction } from "@/app/actions/products.actions";
+import { addProductAction, updateProductAction, deleteProductAction } from "@/app/actions/products.actions";
 
 export interface Product {
   id: string;
@@ -63,7 +63,7 @@ export function useProducts(publicShopId?: string) {
     if (!error && data) {
       const mapped: Product[] = data.map(d => ({
         id: d.id,
-        sku: d.barcode || "", // using barcode for sku
+        sku: d.barcode || "",
         name: d.name,
         description: d.description || undefined,
         category: d.category || "",
@@ -72,7 +72,7 @@ export function useProducts(publicShopId?: string) {
         promotionalPrice: d.promotional_price || undefined,
         stock: d.stock,
         status: d.status as any,
-        imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop", // Placeholder since we don't have images yet
+        imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
         packOffers: typeof d.pack_offers === 'string' ? JSON.parse(d.pack_offers) : d.pack_offers,
         isPublishedOnStore: true
       }));
@@ -86,59 +86,83 @@ export function useProducts(publicShopId?: string) {
     const shopId = getShopId();
     if (!shopId) return;
 
-    setProducts([product, ...products]);
-    await supabase.from('products').insert({
+    // Optimistic update
+    setProducts(prev => [product, ...prev]);
+
+    const result = await addProductAction({
       id: product.id,
-      shop_id: shopId,
       name: product.name,
       category: product.category,
       stock: product.stock,
       purchase_price: product.purchasePrice,
       sale_price: product.salePrice,
-      promotional_price: product.promotionalPrice,
-      pack_offers: product.packOffers,
-      description: product.description,
+      promotional_price: product.promotionalPrice ?? null,
+      pack_offers: product.packOffers ?? null,
+      description: product.description ?? null,
       barcode: product.sku,
-      status: product.status
+      status: product.status,
     });
+
+    if (!result.success) {
+      // Rollback on failure
+      console.error("Erreur ajout produit:", result.error);
+      setProducts(prev => prev.filter(p => p.id !== product.id));
+    } else {
+      const cached = JSON.parse(localStorage.getItem("stockhub_cache_products_" + shopId) || "[]");
+      localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify([product, ...cached.filter((p: Product) => p.id !== product.id)]));
+    }
   };
 
   const updateProduct = async (product: Product) => {
-    setProducts(products.map(p => p.id === product.id ? product : p));
-    await supabase.from('products').update({
+    const shopId = getShopId();
+    // Optimistic update
+    setProducts(prev => prev.map(p => p.id === product.id ? product : p));
+
+    const result = await updateProductAction(product.id, {
       name: product.name,
       category: product.category,
       stock: product.stock,
       purchase_price: product.purchasePrice,
       sale_price: product.salePrice,
-      promotional_price: product.promotionalPrice,
-      pack_offers: product.packOffers,
-      description: product.description,
+      promotional_price: product.promotionalPrice ?? null,
+      pack_offers: product.packOffers ?? null,
+      description: product.description ?? null,
       barcode: product.sku,
-      status: product.status
-    }).eq('id', product.id);
+      status: product.status,
+    });
+
+    if (!result.success) {
+      console.error("Erreur mise à jour produit:", result.error);
+    } else if (shopId) {
+      const cached = JSON.parse(localStorage.getItem("stockhub_cache_products_" + shopId) || "[]");
+      localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(cached.map((p: Product) => p.id === product.id ? product : p)));
+    }
   };
 
   const deleteProduct = async (id: string) => {
-    setProducts(products.filter(p => p.id !== id));
+    setProducts(prev => prev.filter(p => p.id !== id));
+    const shopId = getShopId();
+    if (shopId) {
+      const cached = JSON.parse(localStorage.getItem("stockhub_cache_products_" + shopId) || "[]");
+      localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(cached.filter((p: Product) => p.id !== id)));
+    }
     await deleteProductAction(id);
   };
 
   // For compatibility with older code that used setProducts(newArray)
   const replaceAllProducts = async (newProducts: Product[]) => {
     setProducts(newProducts);
-    // Sync only stock changes to Supabase to keep it simple for now
     for (const prod of newProducts) {
       await updateProductAction(prod.id, { stock: prod.stock, status: prod.status });
     }
   };
 
-  return { 
-    products, 
+  return {
+    products,
     addProduct,
     updateProduct,
     deleteProduct,
-    setProducts: replaceAllProducts, 
-    isLoaded 
+    setProducts: replaceAllProducts,
+    isLoaded
   };
 }
