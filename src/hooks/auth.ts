@@ -42,9 +42,19 @@ export function useAuth() {
       }
 
       if (!session?.user) {
-        // No Google session, restore from localStorage if exists
+        // No active Google session
         if (storedSession) {
-          setCurrentUser(JSON.parse(storedSession));
+          const parsed = JSON.parse(storedSession);
+          // Employees use PIN auth (no Supabase session), trust their localStorage
+          if (parsed.role === 'employee') {
+            setCurrentUser(parsed);
+            setIsLoaded(true);
+            return;
+          }
+          // Owners use Google OAuth - if there's no Google session but there IS a stored owner session,
+          // it means the session is stale (expired or from a cleared DB). Clear it.
+          localStorage.removeItem("stockhub_session");
+          setCurrentUser(null);
         }
         setIsLoaded(true);
         return;
