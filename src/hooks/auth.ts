@@ -24,119 +24,96 @@ export function useAuth() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Load current session from localStorage (PIN auth)
-    const storedSession = localStorage.getItem("stockhub_session");
-    if (storedSession) {
-      setCurrentUser(JSON.parse(storedSession));
-      setIsLoaded(true); // Optimistic instant UI load
-    }
-    
-    // Check Supabase Auth (for Google OAuth)
-    const checkSupabaseAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      const parsedSession = storedSession ? JSON.parse(storedSession) : null;
-      if (parsedSession && parsedSession.role === 'employee') {
-        if (!storedSession) setIsLoaded(true);
-        return; // Do not overwrite employee session with underlying Google owner session
-      }
+    let isHandled = false; // Prevent double-processing
 
-      if (session && session.user) {
-        let { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
-        
-        // Check flow from URL
-        const isSignupFlow = typeof window !== 'undefined' && window.location.search.includes('flow=signup');
+    // Single unified function that validates the Google session
+    const validateAndSetGoogleSession = async (session: any, isSignupFlow: boolean) => {
+      if (isHandled) return;
+      isHandled = true;
 
-        if (!profile && isSignupFlow) {
-          // Complete Google Signup
-          const res = await completeGoogleSignupAction(
-            session.user.id, 
-            session.user.email || '', 
-            session.user.user_metadata?.full_name || ''
-          );
-          if (res.success) {
-            // Re-fetch profile
-            const { data: newProfile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
-            profile = newProfile;
-          }
-        }
-
-        // Si le profil n'existe toujours pas (ou que ce n'est pas un flux d'inscription valide)
-        if (!profile) {
-          await supabase.auth.signOut();
-          localStorage.removeItem("stockhub_session");
-          setCurrentUser(null);
+      // Block employee sessions from being overwritten
+      const storedSession = localStorage.getItem("stockhub_session");
+      if (storedSession) {
+        const parsed = JSON.parse(storedSession);
+        if (parsed.role === 'employee') {
           setIsLoaded(true);
-          
-          if (!isSignupFlow && window.location.pathname !== '/login') {
-            window.location.href = '/login?error=account_not_found';
-          }
           return;
         }
-
-        const user: User = {
-          id: session.user.id,
-          name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
-          identifier: session.user.email || '',
-          pinCode: '0000',
-          role: 'owner',
-          shopId: profile.shop_id,
-          permissions: { canViewDashboard: true },
-          createdAt: session.user.created_at
-        };
-        setCurrentUser(user);
-        localStorage.setItem("stockhub_session", JSON.stringify(user));
-        await syncSessionAction(user);
       }
-      
-      if (!storedSession) {
+
+      if (!session?.user) {
+        // No Google session, restore from localStorage if exists
+        if (storedSession) {
+          setCurrentUser(JSON.parse(storedSession));
+        }
         setIsLoaded(true);
+        return;
       }
+
+      // STEP 1: Check if the user has a profile in our database
+      let { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
+
+      // STEP 2: If no profile and this is a SIGNUP flow, create the profile
+      if (!profile && isSignupFlow) {
+        const res = await completeGoogleSignupAction(
+          session.user.id,
+          session.user.email || '',
+          session.user.user_metadata?.full_name || ''
+        );
+        if (res.success) {
+          const { data: newProfile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
+          profile = newProfile;
+        }
+      }
+
+      // STEP 3: If still no profile → REJECT. User must register first.
+      if (!profile) {
+        await supabase.auth.signOut();
+        localStorage.removeItem("stockhub_session");
+        setCurrentUser(null);
+        setIsLoaded(true);
+        if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
+          window.location.href = '/login?error=account_not_found';
+        }
+        return;
+      }
+
+      // STEP 4: Profile found → create session
+      const user: User = {
+        id: session.user.id,
+        name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
+        identifier: session.user.email || '',
+        pinCode: '0000',
+        role: 'owner',
+        shopId: profile.shop_id,
+        permissions: { canViewDashboard: true },
+        createdAt: session.user.created_at
+      };
+      setCurrentUser(user);
+      localStorage.setItem("stockhub_session", JSON.stringify(user));
+      await syncSessionAction(user);
+      setIsLoaded(true);
     };
-    
-    checkSupabaseAuth();
 
-    // Listen to Auth changes
+    // On initial load: check if a Google session already exists
+    const init = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const isSignupFlow = typeof window !== 'undefined' && window.location.search.includes('flow=signup');
+      await validateAndSetGoogleSession(session, isSignupFlow);
+    };
+
+    init();
+
+    // Listen to auth state changes (called when Google OAuth redirects back)
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
-        const currentLocalSession = localStorage.getItem("stockhub_session");
-        if (currentLocalSession) {
-          const parsed = JSON.parse(currentLocalSession);
-          if (parsed.role === 'employee') return; // Do not overwrite employee session
-        }
-
-        // SECURITY CHECK: Only allow users who have a profile in our database
-        const { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
-        
-        if (!profile) {
-          // No profile found = user never registered on StockHub
-          // Sign them out immediately and redirect to register
-          await supabase.auth.signOut();
-          localStorage.removeItem("stockhub_session");
-          setCurrentUser(null);
-          setIsLoaded(true);
-          if (typeof window !== 'undefined') {
-            window.location.href = '/login?error=account_not_found';
-          }
-          return;
-        }
-
-        const user: User = {
-          id: session.user.id,
-          name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
-          identifier: session.user.email || '',
-          pinCode: '0000',
-          role: 'owner',
-          shopId: profile?.shop_id,
-          permissions: { canViewDashboard: true },
-          createdAt: session.user.created_at
-        };
-        setCurrentUser(user);
-        localStorage.setItem("stockhub_session", JSON.stringify(user));
-        await syncSessionAction(user);
+      if (event === 'SIGNED_IN') {
+        const isSignupFlow = typeof window !== 'undefined' && window.location.search.includes('flow=signup');
+        isHandled = false; // Allow re-validation on new sign-in
+        await validateAndSetGoogleSession(session, isSignupFlow);
       } else if (event === 'SIGNED_OUT') {
         setCurrentUser(null);
         localStorage.removeItem("stockhub_session");
+        setIsLoaded(true);
       }
     });
 
