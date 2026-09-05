@@ -43,13 +43,23 @@ export function useAuth() {
 
       if (session && session.user) {
         const { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
+        
+        // Si le profil n'existe pas (compte supprimé de la BDD manuellement), on force la déconnexion
+        if (!profile) {
+          await supabase.auth.signOut();
+          localStorage.removeItem("stockhub_session");
+          setCurrentUser(null);
+          setIsLoaded(true);
+          return;
+        }
+
         const user: User = {
           id: session.user.id,
           name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
           identifier: session.user.email || '',
           pinCode: '0000',
           role: 'owner',
-          shopId: profile?.shop_id,
+          shopId: profile.shop_id,
           permissions: { canViewDashboard: true },
           createdAt: session.user.created_at
         };
