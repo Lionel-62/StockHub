@@ -129,3 +129,53 @@ export async function updateProfileNameAction(userId: string, newName: string) {
     return { success: false, error: err.message || "Erreur interne" };
   }
 }
+
+export async function completeGoogleSignupAction(userId: string, email: string, name: string) {
+  try {
+    const supabase = createAdminClient();
+    
+    // Check if profile already exists to prevent duplicate insertion
+    const { data: existingProfile } = await supabase.from('profiles').select('id').eq('id', userId).single();
+    if (existingProfile) {
+      return { success: true };
+    }
+
+    // 1. Create a shop
+    const shopSlug = `boutique-${Math.random().toString(36).substring(2, 6)}`;
+    const shopName = name ? `Boutique de ${name}` : "Ma Boutique";
+    const { data: shop, error: shopError } = await supabase
+      .from('shops')
+      .insert({
+        slug: shopSlug,
+        name: shopName,
+        is_active: true,
+      })
+      .select()
+      .single();
+
+    if (shopError) throw shopError;
+
+    // 2. Create the profile
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .insert({
+        id: userId,
+        shop_id: shop.id,
+        name: name || email,
+        identifier: email,
+        role: 'owner',
+        permissions: { canViewDashboard: true },
+      });
+
+    if (profileError) {
+      // Rollback shop if profile fails
+      await supabase.from('shops').delete().eq('id', shop.id);
+      throw profileError;
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("Google Signup Complete Error:", err);
+    return { success: false, error: err.message || "Erreur lors de la création du compte Google." };
+  }
+}

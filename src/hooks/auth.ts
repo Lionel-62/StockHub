@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { loginAction, logoutAction, syncSessionAction } from "@/app/actions/auth.actions";
+import { loginAction, logoutAction, syncSessionAction, completeGoogleSignupAction } from "@/app/actions/auth.actions";
 import { getTeamMembersAction, addTeamMemberAction, deleteTeamMemberAction } from "@/app/actions/team.actions";
 
 export interface User {
@@ -42,14 +42,35 @@ export function useAuth() {
       }
 
       if (session && session.user) {
-        const { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
+        let { data: profile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
         
-        // Si le profil n'existe pas (compte supprimé de la BDD manuellement), on force la déconnexion
+        // Check flow from URL
+        const isSignupFlow = typeof window !== 'undefined' && window.location.search.includes('flow=signup');
+
+        if (!profile && isSignupFlow) {
+          // Complete Google Signup
+          const res = await completeGoogleSignupAction(
+            session.user.id, 
+            session.user.email || '', 
+            session.user.user_metadata?.full_name || ''
+          );
+          if (res.success) {
+            // Re-fetch profile
+            const { data: newProfile } = await supabase.from('profiles').select('shop_id').eq('id', session.user.id).single();
+            profile = newProfile;
+          }
+        }
+
+        // Si le profil n'existe toujours pas (ou que ce n'est pas un flux d'inscription valide)
         if (!profile) {
           await supabase.auth.signOut();
           localStorage.removeItem("stockhub_session");
           setCurrentUser(null);
           setIsLoaded(true);
+          
+          if (!isSignupFlow && window.location.pathname !== '/login') {
+            window.location.href = '/login?error=account_not_found';
+          }
           return;
         }
 
