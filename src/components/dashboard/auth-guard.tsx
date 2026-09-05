@@ -17,8 +17,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // If onboarding not completed, block dashboard access
-    const needsOnboarding = !currentUser.onboardingCompleted || !currentUser.shopId;
+    // If onboarding not completed AND user is owner, block dashboard access
+    const needsOnboarding = currentUser.role === "owner" && (!currentUser.onboardingCompleted || !currentUser.shopId);
     if (needsOnboarding && pathname !== "/onboarding") {
       router.push("/onboarding");
       return;
@@ -58,7 +58,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   }
 
   // Prevent rendering dashboard while redirecting to onboarding
-  const needsOnboarding = !currentUser.onboardingCompleted || !currentUser.shopId;
+  const needsOnboarding = currentUser.role === "owner" && (!currentUser.onboardingCompleted || !currentUser.shopId);
   if (needsOnboarding && pathname !== "/onboarding") {
     return null;
   }

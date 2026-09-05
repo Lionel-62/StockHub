@@ -41,6 +41,7 @@ export async function loginAction(identifier: string, pinCode: string, allowedRo
       shopId: userRecord.shop_id,
       shopSlug: userRecord.shops?.slug || userRecord.shop_slug,
       shopName: userRecord.shops?.name || userRecord.shop_name,
+      onboardingCompleted: userRecord.onboarding_completed,
       permissions: typeof userRecord.permissions === 'string' ? JSON.parse(userRecord.permissions) : userRecord.permissions,
       createdAt: userRecord.created_at || new Date().toISOString()
     };
@@ -202,6 +203,7 @@ export async function createShopAction(userId: string, shopName: string, categor
         shopId: profile.shop_id,
         shopSlug: profile.shops?.slug,
         shopName: profile.shops?.name,
+        onboardingCompleted: profile.onboarding_completed,
         permissions: typeof profile.permissions === 'string' ? JSON.parse(profile.permissions) : profile.permissions,
         createdAt: profile.created_at
       };
