@@ -173,32 +173,7 @@ const addUser = async (user: User) => {
       const newUserWithShop = { ...user, shopId: currentUser.shopId };
       setUsers([...users, newUserWithShop]);
     } else {
-      // Logic for owner signup
-      const shopSlug = user.name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Math.floor(Math.random() * 1000);
-      
-      const { data: shopData, error: shopError } = await supabase.from('shops').insert({
-        name: user.name,
-        slug: shopSlug,
-      }).select().single();
-
-      if (shopError || !shopData) {
-        console.error("Error creating shop", shopError);
-        throw new Error("Impossible de créer la boutique.");
-      }
-
-      const newUserWithShop = { ...user, shopId: shopData.id, shopSlug: shopData.slug, shopName: shopData.name };
-      setUsers([...users, newUserWithShop]);
-      
-      await supabase.from('profiles').insert({
-        id: user.id,
-        name: "Gérant",
-        identifier: user.identifier,
-        pin_code: user.pinCode,
-        role: user.role,
-        shop_id: shopData.id,
-        permissions: user.permissions,
-        created_at: user.createdAt
-      });
+      throw new Error("Action non autorisée.");
     }
   };
 
