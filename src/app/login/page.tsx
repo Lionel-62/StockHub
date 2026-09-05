@@ -264,7 +264,7 @@ export default function LoginPage() {
 
             <Button 
               type="button" 
-              onClick={handleGoogleLogin}
+              onClick={() => handleGoogleLogin(false)}
               variant="outline"
               className="w-full bg-white/80 hover:bg-white border border-slate-200/80 text-slate-700 py-6 text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3"
             >
