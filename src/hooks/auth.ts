@@ -103,6 +103,17 @@ export function useAuth() {
       localStorage.setItem("stockhub_session", JSON.stringify(user));
       await syncSessionAction(user);
       setIsLoaded(true);
+
+      // STEP 5: Explicit routing - don't rely on AuthGuard for post-OAuth redirect
+      if (typeof window !== 'undefined') {
+        if (!profile.shop_id) {
+          // No shop yet → go to onboarding
+          window.location.href = '/onboarding';
+        } else if (window.location.pathname !== '/dashboard') {
+          // Has a shop but not on dashboard → send to dashboard
+          window.location.href = '/dashboard';
+        }
+      }
     };
 
     // On initial load: check if a Google session already exists
