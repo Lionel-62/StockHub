@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AlertCircle, Store, Phone, FileText, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LogoLoader } from "@/components/ui/logo-loader";
@@ -9,8 +9,11 @@ import { useAuth } from "@/hooks/auth";
 import { supabase } from "@/lib/supabase/client";
 import { registerOwnerAction } from "@/app/actions/auth.actions";
 
-export default function LoginPage() {
+import { Suspense } from "react";
+
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { currentUser, isLoaded } = useAuth();
   
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
@@ -37,6 +40,15 @@ export default function LoginPage() {
       }
     }
   }, [isLoaded, currentUser, router]);
+
+  // Handle URL errors
+  useEffect(() => {
+    const errorParam = searchParams.get('error');
+    if (errorParam === 'account_not_found') {
+      setActiveTab("register");
+      setError("Aucun compte trouvé avec cette adresse Google. Veuillez vous inscrire d'abord.");
+    }
+  }, [searchParams]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -338,5 +350,13 @@ export default function LoginPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="h-screen flex items-center justify-center bg-slate-50"><LogoLoader /></div>}>
+      <LoginForm />
+    </Suspense>
   );
 }
