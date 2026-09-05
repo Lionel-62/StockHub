@@ -54,6 +54,11 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
+
+  // Prevent rendering dashboard while redirecting to onboarding
+  if (!currentUser.shopId && pathname !== "/onboarding") {
+    return null;
+  }
   
   // Render block for prohibited routes to avoid flashing unauthorized content
   if (currentUser.role === "employee") {
