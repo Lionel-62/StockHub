@@ -72,9 +72,10 @@ export function useProducts(publicShopId?: string) {
         promotionalPrice: d.promotional_price || undefined,
         stock: d.stock,
         status: d.status as any,
-        imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
+        imageUrl: d.image_url || "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
+        galleryUrls: typeof d.gallery_urls === 'string' ? JSON.parse(d.gallery_urls) : d.gallery_urls || [],
         packOffers: typeof d.pack_offers === 'string' ? JSON.parse(d.pack_offers) : d.pack_offers,
-        isPublishedOnStore: true
+        isPublishedOnStore: d.is_published_on_store !== false
       }));
       setProducts(mapped);
       localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(mapped));
@@ -101,6 +102,9 @@ export function useProducts(publicShopId?: string) {
       description: product.description ?? null,
       barcode: product.sku,
       status: product.status,
+      image_url: product.imageUrl,
+      gallery_urls: product.galleryUrls ?? null,
+      is_published_on_store: product.isPublishedOnStore
     });
 
     if (!result.success) {
@@ -129,6 +133,9 @@ export function useProducts(publicShopId?: string) {
       description: product.description ?? null,
       barcode: product.sku,
       status: product.status,
+      image_url: product.imageUrl,
+      gallery_urls: product.galleryUrls ?? null,
+      is_published_on_store: product.isPublishedOnStore
     });
 
     if (!result.success) {
