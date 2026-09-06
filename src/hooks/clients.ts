@@ -38,14 +38,16 @@ export function useClients(publicShopId?: string) {
       return;
     }
 
-    const { data, error } = await supabase
-      .from('clients')
-      .select('*')
-      .eq('shop_id', shopId)
-      .order('created_at', { ascending: false });
+    if (publicShopId) {
+       // Storefront has no session and doesn't need to read existing clients
+       setIsLoaded(true);
+       return;
+    }
 
-    if (!error && data) {
-      const mapped: Client[] = data.map(d => ({
+    // Use server action for Dashboard
+    const res = await getClientsAction();
+    if (res.success && res.data) {
+      const mapped: Client[] = res.data.map((d: any) => ({
         id: d.id,
         name: d.name,
         email: d.email || "",
@@ -70,9 +72,8 @@ export function useClients(publicShopId?: string) {
 
     setClients([client, ...clients]);
     
-    await supabase.from('clients').insert({
+    const dbPayload = {
       id: client.id,
-      shop_id: shopId,
       name: client.name,
       email: client.email,
       phone: client.phone,
@@ -83,13 +84,21 @@ export function useClients(publicShopId?: string) {
       total_amount: client.totalAmount || 0,
       last_order_date: client.lastOrderDate,
       created_at: client.createdAt
-    });
+    };
+
+    if (publicShopId) {
+      // Public Storefront: Can insert via Supabase client because RLS allows anonymous INSERTS
+      await supabase.from('clients').insert({ ...dbPayload, shop_id: shopId });
+    } else {
+      // Dashboard: Use Server Action
+      await addClientAction(dbPayload);
+    }
   };
 
   const updateClient = async (client: Client) => {
     setClients(clients.map(c => c.id === client.id ? client : c));
 
-    await supabase.from('clients').update({
+    const dbPayload = {
       name: client.name,
       email: client.email,
       phone: client.phone,
@@ -99,12 +108,20 @@ export function useClients(publicShopId?: string) {
       source: client.source,
       total_amount: client.totalAmount || 0,
       last_order_date: client.lastOrderDate
-    }).eq('id', client.id);
+    };
+
+    if (publicShopId) {
+      await supabase.from('clients').update(dbPayload).eq('id', client.id);
+    } else {
+      await updateClientAction(client.id, dbPayload);
+    }
   };
 
   const deleteClient = async (id: string) => {
     setClients(clients.filter(c => c.id !== id));
-    await deleteClientAction(id);
+    if (!publicShopId) {
+      await deleteClientAction(id);
+    }
   };
 
   return {

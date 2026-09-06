@@ -54,22 +54,24 @@ export function useOrders(publicShopId?: string) {
       return;
     }
 
-    const { data, error } = await supabase
-      .from('orders')
-      .select('*')
-      .eq('shop_id', shopId)
-      .order('date', { ascending: false });
+    if (publicShopId) {
+       // Storefront has no session and doesn't need to read existing orders
+       setIsLoaded(true);
+       return;
+    }
 
-    if (!error && data) {
-      const mapped: Order[] = data.map(d => ({
+    // Use server action for Dashboard (handles employees & owners via cookie)
+    const res = await getOrdersAction();
+    if (res.success && res.data) {
+      const mapped: Order[] = res.data.map((d: any) => ({
         id: d.id,
         orderNumber: d.order_number,
         clientName: d.client_name,
         totalAmount: d.total_amount,
         itemsCount: d.items_count,
-        status: d.status as any,
-        paymentMethod: d.payment_method as any,
-        source: d.source as any,
+        status: d.status,
+        paymentMethod: d.payment_method,
+        source: d.source,
         items: typeof d.items === 'string' ? JSON.parse(d.items) : d.items,
         date: d.date,
         clientId: undefined
@@ -85,9 +87,9 @@ export function useOrders(publicShopId?: string) {
     if (!shopId) return;
 
     setOrders([order, ...orders]);
-    await supabase.from('orders').insert({
+    
+    const dbPayload = {
       id: order.id,
-      shop_id: shopId,
       order_number: order.orderNumber,
       client_name: order.clientName,
       total_amount: order.totalAmount,
@@ -97,12 +99,21 @@ export function useOrders(publicShopId?: string) {
       source: order.source,
       items: order.items,
       date: order.date
-    });
+    };
+
+    if (publicShopId) {
+      // Public Storefront: Can insert via Supabase client because RLS allows anonymous INSERTS
+      await supabase.from('orders').insert({ ...dbPayload, shop_id: shopId });
+    } else {
+      // Dashboard: Use Server Action
+      await addOrderAction(dbPayload);
+    }
   };
 
   const updateOrder = async (order: Order) => {
     setOrders(orders.map(o => o.id === order.id ? order : o));
-    await supabase.from('orders').update({
+    
+    const dbPayload = {
       client_name: order.clientName,
       total_amount: order.totalAmount,
       items_count: order.itemsCount,
@@ -111,26 +122,29 @@ export function useOrders(publicShopId?: string) {
       source: order.source,
       items: order.items,
       date: order.date
-    }).eq('id', order.id);
+    };
+
+    if (publicShopId) {
+      await supabase.from('orders').update(dbPayload).eq('id', order.id);
+    } else {
+      await updateOrderAction(order.id, dbPayload);
+    }
   };
 
   const deleteOrder = async (id: string) => {
     setOrders(orders.filter(o => o.id !== id));
-    await deleteOrderAction(id);
+    if (!publicShopId) {
+      await deleteOrderAction(id);
+    }
   };
 
   const replaceAllOrders = async (newOrders: Order[]) => {
     setOrders(newOrders);
-    // Usually used when status changes or a new order is added
-    // For full compatibility, we'd need to sync changes, but for now we rely on explicit methods where possible
     for (const order of newOrders) {
       const shopId = getShopId();
       if (!shopId) continue;
       
-      await supabase.from('orders').upsert({
-        id: order.id,
-        shop_id: shopId,
-        order_number: order.orderNumber,
+      const dbPayload = {
         client_name: order.clientName,
         total_amount: order.totalAmount,
         items_count: order.itemsCount,
@@ -139,7 +153,11 @@ export function useOrders(publicShopId?: string) {
         source: order.source,
         items: order.items,
         date: order.date
-      });
+      };
+
+      if (!publicShopId) {
+        await updateOrderAction(order.id, dbPayload);
+      }
     }
   };
 

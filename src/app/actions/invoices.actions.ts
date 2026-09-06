@@ -64,3 +64,17 @@ export async function deleteInvoiceAction(id: string) {
   if (error) return { success: false, error: error.message };
   return { success: true };
 }
+
+export async function addPublicInvoiceAction(shopId: string, invoiceData: any) {
+  if (!shopId) return { success: false, error: 'Shop ID manquant' };
+  
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from('invoices')
+    .insert({ ...invoiceData, shop_id: shopId })
+    .select()
+    .single();
+
+  if (error) return { success: false, error: error.message };
+  return { success: true, data };
+}

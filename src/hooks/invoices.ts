@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { getInvoicesAction, addInvoiceAction, updateInvoiceAction, deleteInvoiceAction } from "@/app/actions/invoices.actions";
+import { getInvoicesAction, addInvoiceAction, updateInvoiceAction, deleteInvoiceAction, addPublicInvoiceAction } from "@/app/actions/invoices.actions";
 
 export interface InvoiceItem {
   id: string;
@@ -58,14 +58,16 @@ export function useInvoices(publicShopId?: string) {
       return;
     }
 
-    const { data, error } = await supabase
-      .from('invoices')
-      .select('*')
-      .eq('shop_id', shopId)
-      .order('issue_date', { ascending: false });
+    if (publicShopId) {
+       // Storefront has no session and doesn't need to read existing invoices
+       setIsLoaded(true);
+       return;
+    }
 
-    if (!error && data) {
-      const mapped: Invoice[] = data.map(d => ({
+    // Use server action for Dashboard
+    const res = await getInvoicesAction();
+    if (res.success && res.data) {
+      const mapped: Invoice[] = res.data.map((d: any) => ({
         id: d.id,
         invoiceNumber: d.invoice_number,
         clientId: d.client_id || undefined,
@@ -74,7 +76,7 @@ export function useInvoices(publicShopId?: string) {
         subtotal: d.subtotal,
         taxAmount: d.tax_amount,
         total: d.total,
-        status: d.status as any,
+        status: d.status,
         items: typeof d.items === 'string' ? JSON.parse(d.items) : d.items,
         issueDate: d.issue_date,
         dueDate: d.due_date
@@ -90,9 +92,9 @@ export function useInvoices(publicShopId?: string) {
     if (!shopId) return;
 
     setInvoices([invoice, ...invoices]);
-    await supabase.from('invoices').insert({
+    
+    const dbPayload = {
       id: invoice.id,
-      shop_id: shopId,
       invoice_number: invoice.invoiceNumber,
       client_id: invoice.clientId,
       client_name: invoice.clientName,
@@ -104,12 +106,21 @@ export function useInvoices(publicShopId?: string) {
       items: invoice.items,
       issue_date: invoice.issueDate,
       due_date: invoice.dueDate
-    });
+    };
+
+    if (publicShopId) {
+      // Storefront: Use public Server Action because RLS for invoices was removed for public
+      await addPublicInvoiceAction(shopId, dbPayload);
+    } else {
+      // Dashboard: Use standard Server Action
+      await addInvoiceAction(dbPayload);
+    }
   };
 
   const updateInvoice = async (invoice: Invoice) => {
     setInvoices(invoices.map(inv => inv.id === invoice.id ? invoice : inv));
-    await supabase.from('invoices').update({
+    
+    const dbPayload = {
       invoice_number: invoice.invoiceNumber,
       client_id: invoice.clientId,
       client_name: invoice.clientName,
@@ -121,17 +132,25 @@ export function useInvoices(publicShopId?: string) {
       items: invoice.items,
       issue_date: invoice.issueDate,
       due_date: invoice.dueDate
-    }).eq('id', invoice.id);
+    };
+
+    if (!publicShopId) {
+      await updateInvoiceAction(invoice.id, dbPayload);
+    }
   };
 
   const deleteInvoice = async (id: string) => {
     setInvoices(invoices.filter(inv => inv.id !== id));
-    await deleteInvoiceAction(id);
+    if (!publicShopId) {
+      await deleteInvoiceAction(id);
+    }
   };
 
   const updateInvoiceStatus = async (id: string, newStatus: Invoice["status"]) => {
     setInvoices(invoices.map(inv => inv.id === id ? { ...inv, status: newStatus } : inv));
-    await supabase.from('invoices').update({ status: newStatus }).eq('id', id);
+    if (!publicShopId) {
+      await updateInvoiceAction(id, { status: newStatus });
+    }
   };
 
   return { 
