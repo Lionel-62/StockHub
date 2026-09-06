@@ -32,90 +32,102 @@ export function useAuth() {
       if (isHandled) return;
       isHandled = true;
 
-      // Block employee sessions from being overwritten
-      const storedSession = localStorage.getItem("stockhub_session");
-      if (storedSession) {
-        const parsed = JSON.parse(storedSession);
-        if (parsed.role === 'employee') {
+      try {
+        // Block employee sessions from being overwritten
+        const storedSession = localStorage.getItem("stockhub_session");
+        let parsedSession = null;
+        if (storedSession) {
+          try {
+            parsedSession = JSON.parse(storedSession);
+          } catch(e) {
+            console.error("Invalid stored session JSON");
+          }
+        }
+
+        if (parsedSession && parsedSession.role === 'employee') {
+          setCurrentUser(parsedSession);
           setIsLoaded(true);
           return;
         }
-      }
 
-      if (!session?.user) {
-        // No active Google session
-        if (storedSession) {
-          const parsed = JSON.parse(storedSession);
-          // Employees use PIN auth (no Supabase session), trust their localStorage
-          if (parsed.role === 'employee') {
-            setCurrentUser(parsed);
-            setIsLoaded(true);
-            return;
+        if (!session?.user) {
+          // No active Google session
+          if (parsedSession) {
+            // Employees use PIN auth (no Supabase session), trust their localStorage
+            if (parsedSession.role === 'employee') {
+              setCurrentUser(parsedSession);
+              setIsLoaded(true);
+              return;
+            }
+            // Owners use Google OAuth - if there's no Google session but there IS a stored owner session,
+            // it means the session is stale (expired or from a cleared DB). Clear it.
+            localStorage.removeItem("stockhub_session");
+            setCurrentUser(null);
           }
-          // Owners use Google OAuth - if there's no Google session but there IS a stored owner session,
-          // it means the session is stale (expired or from a cleared DB). Clear it.
+          setIsLoaded(true);
+          return;
+        }
+
+        // STEP 1: Check if the user has a profile in our database
+        let { data: profile } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
+
+        // STEP 2: If no profile and this is a SIGNUP flow, create the profile
+        if (!profile && isSignupFlow) {
+          const res = await completeGoogleSignupAction(
+            session.user.id,
+            session.user.email || '',
+            session.user.user_metadata?.full_name || ''
+          );
+          if (res.success) {
+            const { data: newProfile } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
+            profile = newProfile;
+          }
+        }
+
+        // STEP 3: If still no profile → REJECT. User must register first.
+        if (!profile) {
+          await supabase.auth.signOut();
           localStorage.removeItem("stockhub_session");
           setCurrentUser(null);
+          setIsLoaded(true);
+          if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
+            window.location.href = '/login?error=account_not_found';
+          }
+          return;
         }
+
+        // STEP 4: Profile found → create session
+        const needsOnboarding = !profile.onboarding_completed || !profile.shop_id;
+        const user: User = {
+          id: session.user.id,
+          name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
+          identifier: session.user.email || '',
+          pinCode: '0000',
+          role: 'owner',
+          shopId: profile.shop_id,
+          onboardingCompleted: profile.onboarding_completed ?? false,
+          permissions: { canViewDashboard: true },
+          createdAt: session.user.created_at
+        };
+        setCurrentUser(user);
+        localStorage.setItem("stockhub_session", JSON.stringify(user));
+        await syncSessionAction(user);
         setIsLoaded(true);
-        return;
-      }
 
-      // STEP 1: Check if the user has a profile in our database
-      let { data: profile } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
-
-      // STEP 2: If no profile and this is a SIGNUP flow, create the profile
-      if (!profile && isSignupFlow) {
-        const res = await completeGoogleSignupAction(
-          session.user.id,
-          session.user.email || '',
-          session.user.user_metadata?.full_name || ''
-        );
-        if (res.success) {
-          const { data: newProfile } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
-          profile = newProfile;
+        // STEP 5: Explicit routing based on onboarding status
+        // Only redirect if we're on /auth/callback (just came from OAuth) or dashboard
+        if (typeof window !== 'undefined') {
+          const path = window.location.pathname;
+          if (needsOnboarding && path !== '/onboarding') {
+            window.location.href = '/onboarding';
+          } else if (!needsOnboarding && path !== '/dashboard' && (path.startsWith('/auth') || path === '/login')) {
+            window.location.href = '/dashboard';
+          }
         }
-      }
-
-      // STEP 3: If still no profile → REJECT. User must register first.
-      if (!profile) {
-        await supabase.auth.signOut();
-        localStorage.removeItem("stockhub_session");
-        setCurrentUser(null);
+      } catch (err) {
+        console.error("Session validation error:", err);
         setIsLoaded(true);
-        if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
-          window.location.href = '/login?error=account_not_found';
-        }
-        return;
-      }
-
-      // STEP 4: Profile found → create session
-      const needsOnboarding = !profile.onboarding_completed || !profile.shop_id;
-      const user: User = {
-        id: session.user.id,
-        name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
-        identifier: session.user.email || '',
-        pinCode: '0000',
-        role: 'owner',
-        shopId: profile.shop_id,
-        onboardingCompleted: profile.onboarding_completed ?? false,
-        permissions: { canViewDashboard: true },
-        createdAt: session.user.created_at
-      };
-      setCurrentUser(user);
-      localStorage.setItem("stockhub_session", JSON.stringify(user));
-      await syncSessionAction(user);
-      setIsLoaded(true);
-
-      // STEP 5: Explicit routing based on onboarding status
-      // Only redirect if we're on /auth/callback (just came from OAuth) or dashboard
-      if (typeof window !== 'undefined') {
-        const path = window.location.pathname;
-        if (needsOnboarding && path !== '/onboarding') {
-          window.location.href = '/onboarding';
-        } else if (!needsOnboarding && path !== '/dashboard' && (path.startsWith('/auth') || path === '/login')) {
-          window.location.href = '/dashboard';
-        }
+        // On error, let them try again or stay on login
       }
     };
 
