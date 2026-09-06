@@ -12,7 +12,7 @@ export default function InvoiceDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { id } = params;
-  const { invoices, isLoaded } = useInvoices();
+  const { invoices, isLoaded, updateInvoiceStatus, deleteInvoice } = useInvoices();
 
   if (!isLoaded) {
     return (
@@ -76,12 +76,20 @@ export default function InvoiceDetailPage() {
         
         <div className="flex flex-wrap items-center gap-2">
           {invoice.status !== "Payée" && (
-            <Button variant="outline" className="text-green-600 bg-white border-slate-200 hover:bg-green-50 hover:border-green-200">
+            <Button 
+              variant="outline" 
+              className="text-green-600 bg-white border-slate-200 hover:bg-green-50 hover:border-green-200"
+              onClick={() => updateInvoiceStatus(invoice.id, "Payée")}
+            >
               <CreditCard size={16} className="mr-2" />
               Marquer comme payée
             </Button>
           )}
-          <Button variant="outline" className="text-slate-600 bg-white border-slate-200 hover:bg-slate-50">
+          <Button 
+            variant="outline" 
+            className="text-slate-600 bg-white border-slate-200 hover:bg-slate-50"
+            onClick={() => router.push("/dashboard/factures/nouvelle?edit=" + invoice.id)}
+          >
             <Edit size={16} className="mr-2" />
             Modifier
           </Button>
@@ -104,7 +112,16 @@ export default function InvoiceDetailPage() {
             <Send size={16} className="mr-2" />
             Envoyer via WhatsApp
           </Button>
-          <Button variant="outline" className="text-red-600 bg-white border-slate-200 hover:bg-red-50 hover:border-red-200 ml-2">
+          <Button 
+            variant="outline" 
+            className="text-red-600 bg-white border-slate-200 hover:bg-red-50 hover:border-red-200 ml-2"
+            onClick={async () => {
+              if (confirm("Voulez-vous vraiment supprimer cette facture ?")) {
+                await deleteInvoice(invoice.id);
+                router.push("/dashboard/factures");
+              }
+            }}
+          >
             <Trash2 size={16} />
           </Button>
         </div>
