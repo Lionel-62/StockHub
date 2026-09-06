@@ -22,7 +22,7 @@ export interface Invoice {
   subtotal: number;
   taxAmount: number;
   total: number;
-  status: "Brouillon" | "Envoyée" | "Payée" | "En retard";
+  status: "Brouillon" | "Envoyée" | "Payée" | "En retard" | "En attente" | "Non payée";
 }
 
 export function useInvoices(publicShopId?: string) {

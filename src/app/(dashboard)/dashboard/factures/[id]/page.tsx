@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { ChevronLeft, Edit, Trash2, Printer, Send, CreditCard } from "lucide-react";
+import { ChevronLeft, Edit, Trash2, Printer, Send, CreditCard, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useInvoices } from "@/hooks/invoices";
 import { Badge } from "@/components/ui/badge";
@@ -59,32 +59,38 @@ export default function InvoiceDetailPage() {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-bold text-slate-900">{invoice.invoiceNumber}</h1>
-              <Badge 
-                variant="outline"
-                className={cn("font-medium", 
-                  invoice.status === "Payée" ? "bg-green-50 text-green-700 border-green-200" : 
-                  invoice.status === "Envoyée" ? "bg-blue-50 text-blue-700 border-blue-200" : 
-                  invoice.status === "Brouillon" ? "bg-slate-100 text-slate-700 border-slate-200" :
-                  "bg-red-50 text-red-700 border-red-200"
-                )}
-              >
-                {invoice.status}
-              </Badge>
+              <div className="relative inline-flex items-center">
+                <select 
+                  value={invoice.status}
+                  onChange={(e) => updateInvoiceStatus(invoice.id, e.target.value as any)}
+                  className={cn("text-xs font-medium rounded-full px-2.5 py-0.5 border cursor-pointer outline-none appearance-none pr-7 transition-colors", 
+                    invoice.status === "Payée" ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100" : 
+                    invoice.status === "En attente" ? "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100" : 
+                    invoice.status === "Envoyée" ? "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100" : 
+                    invoice.status === "Brouillon" ? "bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200" :
+                    "bg-red-50 text-red-700 border-red-200 hover:bg-red-100"
+                  )}
+                >
+                  <option value="Brouillon">Brouillon</option>
+                  <option value="En attente">En attente</option>
+                  <option value="Envoyée">Envoyée</option>
+                  <option value="Non payée">Non payée</option>
+                  <option value="Payée">Payée</option>
+                  <option value="En retard">En retard</option>
+                </select>
+                <ChevronDown className={cn("absolute right-2 h-3 w-3 pointer-events-none",
+                  invoice.status === "Payée" ? "text-green-700" : 
+                  invoice.status === "En attente" ? "text-amber-700" : 
+                  invoice.status === "Envoyée" ? "text-blue-700" : 
+                  invoice.status === "Brouillon" ? "text-slate-700" :
+                  "text-red-700"
+                )} />
+              </div>
             </div>
           </div>
         </div>
         
         <div className="flex flex-wrap items-center gap-2">
-          {invoice.status !== "Payée" && (
-            <Button 
-              variant="outline" 
-              className="text-green-600 bg-white border-slate-200 hover:bg-green-50 hover:border-green-200"
-              onClick={() => updateInvoiceStatus(invoice.id, "Payée")}
-            >
-              <CreditCard size={16} className="mr-2" />
-              Marquer comme payée
-            </Button>
-          )}
           <Button 
             variant="outline" 
             className="text-slate-600 bg-white border-slate-200 hover:bg-slate-50"

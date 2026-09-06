@@ -30,7 +30,7 @@ export default function CreateInvoicePage() {
   const [applyTax, setApplyTax] = useState(true);
   const [isFromOrder, setIsFromOrder] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [status, setStatus] = useState<"Brouillon" | "Envoyée" | "Payée" | "En retard">("Brouillon");
+  const [status, setStatus] = useState<"Brouillon" | "Envoyée" | "Payée" | "En retard" | "En attente" | "Non payée">("Brouillon");
   
   const [lines, setLines] = useState<InvoiceLine[]>([
     { id: "1", description: "", quantity: 1, unitPrice: 0 }
@@ -158,7 +158,7 @@ export default function CreateInvoicePage() {
   const tax = applyTax ? subtotal * 0.18 : 0;
   const total = subtotal + tax;
 
-  const handleSave = async (status: "Brouillon" | "Envoyée" | "Payée" | "En retard") => {
+  const handleSave = async (status: "Brouillon" | "Envoyée" | "Payée" | "En retard" | "En attente" | "Non payée") => {
     if (!clientId) {
       alert("Veuillez sélectionner un client.");
       return;
