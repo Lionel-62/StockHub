@@ -12,7 +12,7 @@ export async function getOrdersAction() {
     .from('orders')
     .select('*')
     .eq('shop_id', session.shopId)
-    .order('created_at', { ascending: false });
+    .order('date', { ascending: false });
 
   if (error) return { success: false, error: error.message };
   return { success: true, data };
