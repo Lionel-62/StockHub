@@ -51,7 +51,7 @@ export default function InvoiceDetailPage() {
     <div className="p-3 md:p-0 max-w-5xl mx-auto space-y-6">
       
       {/* Barre d'actions */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div className="print:hidden flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:bg-slate-100" onClick={() => router.push("/dashboard/factures")}>
             <ChevronLeft size={18} />
@@ -85,13 +85,24 @@ export default function InvoiceDetailPage() {
             <Edit size={16} className="mr-2" />
             Modifier
           </Button>
-          <Button variant="outline" className="text-blue-600 bg-white border-slate-200 hover:bg-blue-50 hover:border-blue-200">
+          <Button 
+            variant="outline" 
+            className="text-blue-600 bg-white border-slate-200 hover:bg-blue-50 hover:border-blue-200"
+            onClick={() => window.print()}
+          >
             <Printer size={16} className="mr-2" />
-            Imprimer
+            Enregistrer en PDF
           </Button>
-          <Button variant="outline" className="text-slate-600 bg-white border-slate-200 hover:bg-slate-50">
+          <Button 
+            variant="outline" 
+            className="text-[#25D366] bg-white border-slate-200 hover:bg-[#25D366]/10 hover:border-[#25D366]/30"
+            onClick={() => {
+              const text = encodeURIComponent(`Bonjour ${invoice.clientName},\n\nVoici le résumé de votre facture ${invoice.invoiceNumber}.\n\n*Montant Total : ${formatCurrency(invoice.total)}*\n\nMerci de votre confiance !\n- StockHub`);
+              window.open(`https://wa.me/?text=${text}`, "_blank");
+            }}
+          >
             <Send size={16} className="mr-2" />
-            Renvoyer
+            Envoyer via WhatsApp
           </Button>
           <Button variant="outline" className="text-red-600 bg-white border-slate-200 hover:bg-red-50 hover:border-red-200 ml-2">
             <Trash2 size={16} />
@@ -100,7 +111,7 @@ export default function InvoiceDetailPage() {
       </div>
 
       {/* Affichage de la Facture (Même style que la prévisualisation) */}
-      <div className="bg-white w-full rounded-sm shadow-md p-8 md:p-12 text-slate-800 flex flex-col relative border border-slate-200">
+      <div className="bg-white w-full rounded-sm shadow-md p-8 md:p-12 text-slate-800 flex flex-col relative border border-slate-200 print:shadow-none print:border-none print:m-0 print:p-0">
         
         <div className="flex justify-between items-start mb-12">
           <div>
