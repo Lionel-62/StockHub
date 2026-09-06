@@ -148,13 +148,15 @@ export default function ShopConfigPage() {
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-[#002B5D]">Numéro WhatsApp</label>
                   <div className="flex border border-slate-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-[#3CBA0B]/20 focus-within:border-[#3CBA0B] transition-all bg-white">
-                    <select 
+                      <select 
                       className="px-2 py-3 border-r border-slate-200 bg-slate-50 outline-none text-sm font-medium text-slate-700 cursor-pointer"
                       onChange={(e) => {
-                        const currentNum = formData.whatsappNumber.replace(/^\+\d+\s*/, '');
+                        const codes = ["+229", "+225", "+228", "+221", "+237", "+241", "+242", "+243"];
+                        const currentPrefix = codes.find(c => formData.whatsappNumber.startsWith(c)) || "+229";
+                        const currentNum = formData.whatsappNumber.slice(currentPrefix.length).trim();
                         setFormData({...formData, whatsappNumber: e.target.value + currentNum});
                       }}
-                      value={formData.whatsappNumber.match(/^\+(\d+)/)?.[0] || "+229"}
+                      value={["+229", "+225", "+228", "+221", "+237", "+241", "+242", "+243"].find(c => formData.whatsappNumber.startsWith(c)) || "+229"}
                     >
                       <option value="+229">🇧🇯 +229 (Bénin)</option>
                       <option value="+225">🇨🇮 +225 (Côte d'Ivoire)</option>
@@ -167,9 +169,14 @@ export default function ShopConfigPage() {
                     </select>
                     <input 
                       type="text" 
-                      value={formData.whatsappNumber.replace(/^\+\d+\s*/, '')}
+                      value={(function() {
+                        const codes = ["+229", "+225", "+228", "+221", "+237", "+241", "+242", "+243"];
+                        const prefix = codes.find(c => formData.whatsappNumber.startsWith(c)) || "+229";
+                        return formData.whatsappNumber.slice(prefix.length).trim();
+                      })()}
                       onChange={(e) => {
-                        const prefix = formData.whatsappNumber.match(/^\+(\d+)/)?.[0] || "+229";
+                        const codes = ["+229", "+225", "+228", "+221", "+237", "+241", "+242", "+243"];
+                        const prefix = codes.find(c => formData.whatsappNumber.startsWith(c)) || "+229";
                         const val = e.target.value.replace(/[^0-9]/g, '');
                         setFormData({...formData, whatsappNumber: prefix + val});
                       }}
