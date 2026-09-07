@@ -77,8 +77,8 @@ function LoginForm() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          // Redirect to server-side callback route for proper validation
-          redirectTo: `${window.location.origin}/auth/callback?flow=${isSignUp ? 'signup' : 'login'}`
+          // Redirect to the login page so the browser-side Supabase client can consume the OAuth code/token and persist the session
+          redirectTo: `${window.location.origin}/login?flow=${isSignUp ? 'signup' : 'login'}`
         }
       });
       if (error) throw error;
