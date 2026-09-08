@@ -103,7 +103,7 @@ export function Hero() {
                 whileTap={{ scale: 0.95 }}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#0b213f] hover:bg-slate-900 text-white font-semibold text-base px-8 py-4 rounded-full transition-all duration-200 shadow-xl shadow-[#0b213f]/15 hover:shadow-2xl"
               >
-                <span>Commencer gratuitement (14 jours)</span>
+                <span>Commencer gratuitement</span>
                 <ArrowRight className="w-5 h-5" />
               </motion.button>
             </Link>
@@ -127,7 +127,7 @@ export function Hero() {
             transition={{ delay: 0.5 }}
             className="text-xs sm:text-sm text-slate-500 font-medium"
           >
-            Rejoint par plus de <span className="font-bold text-slate-800">5 000 commerçants</span> à Dakar, Abidjan, Douala, Lomé, Cotonou & Yaoundé.
+            Programme de lancement — soyez parmi les premiers commerçants à digitaliser leur boutique.
           </motion.p>
         </div>
 

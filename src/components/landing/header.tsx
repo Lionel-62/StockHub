@@ -33,9 +33,9 @@ export function Header() {
           <div className="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-600">
             <Link href="#fonctionnalites" className="hover:text-[#0b213f] transition-colors">Fonctionnalités</Link>
             <Link href="#comment-ca-marche" className="hover:text-[#0b213f] transition-colors">Comment ça marche</Link>
-            <Link href="#demo" className="hover:text-[#0b213f] transition-colors">Démo</Link>
+            <Link href="#pourquoi" className="hover:text-[#0b213f] transition-colors">Pourquoi nous choisir</Link>
             <Link href="#tarifs" className="hover:text-[#0b213f] transition-colors">Tarifs</Link>
-            <Link href="#temoignages" className="hover:text-[#0b213f] transition-colors">Témoignages</Link>
+            <Link href="#faq" className="hover:text-[#0b213f] transition-colors">FAQ</Link>
           </div>
 
           {/* Quick Action Buttons */}
@@ -116,9 +116,9 @@ export function Header() {
               <div className="flex flex-col gap-4 text-lg font-medium text-slate-700">
                 <Link href="#fonctionnalites" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Fonctionnalités</Link>
                 <Link href="#comment-ca-marche" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Comment ça marche</Link>
-                <Link href="#demo" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Démo</Link>
+                <Link href="#pourquoi" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Pourquoi nous choisir</Link>
                 <Link href="#tarifs" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Tarifs</Link>
-                <Link href="#temoignages" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Témoignages</Link>
+                <Link href="#faq" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">FAQ</Link>
                 
                 {/* Mobile Actions */}
                 <div className="mt-6 flex flex-col gap-3">

@@ -40,29 +40,21 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Footer Column 4: Légal & Pays */}
+          {/* Footer Column 4: Légal */}
           <div>
             <div className="font-bold text-slate-900 mb-3 text-xs uppercase tracking-wider">Légal</div>
             <ul className="space-y-2 text-xs mb-4">
-              <li><Link href="#" className="hover:text-[#0b213f] transition-colors">Conditions Générales</Link></li>
-              <li><Link href="#" className="hover:text-[#0b213f] transition-colors">Politique de Confidentialité</Link></li>
-              <li><Link href="#" className="hover:text-[#0b213f] transition-colors">Mentions Légales</Link></li>
+              <li><Link href="/cgu" className="hover:text-[#0b213f] transition-colors">Conditions Générales</Link></li>
+              <li><Link href="/confidentialite" className="hover:text-[#0b213f] transition-colors">Politique de Confidentialité</Link></li>
+              <li><Link href="/mentions-legales" className="hover:text-[#0b213f] transition-colors">Mentions Légales</Link></li>
             </ul>
-            
-            {/* Currency selection preview */}
-            <div className="text-xs font-semibold text-slate-500 mb-1">Devise d&apos;affichage:</div>
-            <select className="text-xs border border-slate-200 rounded-lg py-1 px-2 text-slate-700 bg-slate-50 w-full focus:outline-none focus:border-[#0b213f]">
-              <option>FCFA (XOF / XAF)</option>
-              <option>GNF (Guinée)</option>
-              <option>CDF (Congo)</option>
-            </select>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-200/70 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
           <div>
-            © 2026 StockHub Technologies Inc. Tous droits réservés.
+            © 2026 StockHub. Tous droits réservés.
           </div>
           <div className="flex items-center gap-1.5 font-medium text-slate-500">
             <span>Fait avec fierté et passion en Afrique</span>

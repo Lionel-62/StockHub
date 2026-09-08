@@ -32,7 +32,10 @@ export function Pricing() {
             className="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between hover:border-slate-300 transition-all"
           >
             <div>
-              <div className="text-lg font-bold text-slate-900">Plan Gratuit</div>
+              <div className="flex justify-between items-center">
+                <div className="text-lg font-bold text-slate-900">Plan Gratuit</div>
+                <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 uppercase tracking-wide">Gratuit à vie</div>
+              </div>
               <div className="text-xs text-slate-500 mt-1">Pour tester et démarrer sereinement</div>
               <div className="my-6">
                 <span className="text-4xl font-extrabold text-slate-900">0</span>
@@ -57,7 +60,7 @@ export function Pricing() {
               </ul>
             </div>
             <Link 
-              href="/login"
+              href="/login?plan=gratuit"
               className="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-3 px-6 rounded-full transition-colors text-sm"
             >
               Démarrer sans frais
@@ -105,10 +108,10 @@ export function Pricing() {
               </ul>
             </div>
             <Link 
-              href="/login"
+              href="/login?plan=pro"
               className="w-full text-center bg-[#0b213f] hover:bg-slate-900 text-white font-semibold py-3.5 px-6 rounded-full transition-all shadow-md shadow-[#0b213f]/20 text-sm"
             >
-              Choisir le Plan Pro (14j d&apos;essai)
+              Choisir le Plan Pro (14j d'essai)
             </Link>
           </motion.div>
 
@@ -146,12 +149,14 @@ export function Pricing() {
                 </li>
               </ul>
             </div>
-            <Link 
-              href="/login"
+            <a 
+              href="https://wa.me/2290162579394"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-3 px-6 rounded-full transition-colors text-sm"
             >
-              Contacter l'équipe commerciale
-            </Link>
+              Contacter l'équipe (14j d'essai)
+            </a>
           </motion.div>
 
         </div>
