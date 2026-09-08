@@ -186,6 +186,75 @@ export async function createShopAction(userId: string, shopName: string, categor
       await supabase.from('shops').delete().eq('id', shop.id);
       throw profileError;
     }
+
+    // --- Génération automatique de la FAQ ---
+    const faqBase = [
+      { question: "Comment passer commande ?", answer: "Parcourez la boutique, ajoutez vos articles au panier, puis validez votre commande sur WhatsApp avec le vendeur." },
+      { question: "Quels moyens de paiement acceptez-vous ?", answer: "Mobile Money (MTN, Moov, Orange Money, Wave) et paiement à la livraison selon votre zone." },
+      { question: "Livrez-vous dans ma ville et sous quel délai ?", answer: "Nous livrons selon votre zone. Le délai exact vous est confirmé après votre commande." },
+      { question: "Puis-je payer à la livraison ?", answer: "Oui, le paiement à la livraison est possible selon votre zone." },
+      { question: "Comment vous contacter ?", answer: "Directement via WhatsApp, en cliquant sur le bouton de commande ou de contact de la boutique." }
+    ];
+
+    let faqSpecific: { question: string, answer: string }[] = [];
+    if (category === "Mode & vêtements") {
+      faqSpecific = [
+        { question: "Comment choisir ma taille ?", answer: "Contactez-nous sur WhatsApp avant de commander, nous vous guidons pour choisir la bonne taille." },
+        { question: "Puis-je échanger si la taille ne convient pas ?", answer: "Oui, un échange est possible selon nos conditions. Contactez-nous rapidement après réception." }
+      ];
+    } else if (category === "Chaussures & maroquinerie") {
+      faqSpecific = [
+        { question: "Comment connaître ma pointure ?", answer: "Indiquez-nous votre pointure habituelle sur WhatsApp, nous vérifions la correspondance avec vous." },
+        { question: "Un échange est-il possible si ça ne chausse pas ?", answer: "Oui, sous réserve que l'article soit intact. Contactez-nous après réception." }
+      ];
+    } else if (category === "Cosmétiques & beauté") {
+      faqSpecific = [
+        { question: "Vos produits sont-ils originaux ?", answer: "Oui, nous ne vendons que des produits authentiques." },
+        { question: "Comment vos produits sont-ils conservés et expédiés ?", answer: "Nos produits sont stockés avec soin et emballés proprement pour la livraison." }
+      ];
+    } else if (category === "Alimentation & épicerie") {
+      faqSpecific = [
+        { question: "Vos produits sont-ils frais ?", answer: "Oui, nous veillons à la fraîcheur de nos produits à chaque commande." },
+        { question: "Sous combien de temps suis-je livré ?", answer: "Nous livrons dans les meilleurs délais selon votre zone, confirmés après commande." }
+      ];
+    } else if (category === "Électronique & accessoires") {
+      faqSpecific = [
+        { question: "Vos produits sont-ils neufs et garantis ?", answer: "Oui, nos produits sont neufs. Les conditions de garantie vous sont précisées à la commande." },
+        { question: "Que faire en cas de produit défectueux ?", answer: "Contactez-nous rapidement sur WhatsApp, nous trouvons une solution (échange ou remboursement)." }
+      ];
+    } else if (category === "Bijoux & Accessoires") {
+      faqSpecific = [
+        { question: "Vos bijoux résistent-ils à l'eau ?", answer: "Consultez la description du produit. Nous recommandons d'éviter le contact avec l'eau pour prolonger leur éclat." },
+        { question: "Comment sont emballés les bijoux ?", answer: "Chaque pièce est soigneusement emballée dans un écrin ou pochon, idéal pour offrir." }
+      ];
+    } else if (category === "Maison & Décoration") {
+      faqSpecific = [
+        { question: "Les articles fragiles sont-ils bien protégés pour la livraison ?", answer: "Oui, nous utilisons des emballages renforcés pour garantir une livraison sans casse." },
+        { question: "Puis-je retourner un article de décoration qui ne convient pas à mon intérieur ?", answer: "Oui, sous réserve que l'article soit dans son état et emballage d'origine." }
+      ];
+    } else if (category === "Santé & Bien-être") {
+      faqSpecific = [
+        { question: "Vos produits sont-ils certifiés ?", answer: "Nous travaillons avec des fournisseurs reconnus pour garantir la qualité de nos produits." },
+        { question: "Fournissez-vous des conseils d'utilisation ?", answer: "Oui, chaque produit est accompagné de ses précautions d'emploi. Contactez-nous pour plus de détails." }
+      ];
+    } else if (category === "Auto & Moto") {
+      faqSpecific = [
+        { question: "Les pièces sont-elles compatibles avec mon véhicule ?", answer: "Contactez-nous sur WhatsApp avec le modèle de votre véhicule pour vérifier la compatibilité." },
+        { question: "Vos pièces sont-elles garanties ?", answer: "Oui, nous offrons une garantie selon le type de pièce." }
+      ];
+    }
+
+    const allFaqs = [...faqBase, ...faqSpecific].map((faq, index) => ({
+      shop_id: shop.id,
+      question: faq.question,
+      answer: faq.answer,
+      order_index: index,
+      is_active: true
+    }));
+
+    // Insert without throwing on error to not block onboarding if it fails
+    await supabase.from('faqs').insert(allFaqs);
+    // ----------------------------------------
     
     // Fetch updated user details to sync session
     const { data: profile } = await supabase

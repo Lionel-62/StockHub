@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Store, Save, Eye, Smartphone, Link as LinkIcon, Bell, ChevronDown, HelpCircle, Plus, Trash2 } from "lucide-react";
+import { Store, Save, Eye, Smartphone, Link as LinkIcon, Bell, ChevronDown, ChevronUp, HelpCircle, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useShopSettings } from "@/hooks/shop";
@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 export default function ShopConfigPage() {
   const { shopSettings, saveShopSettings, isLoaded } = useShopSettings();
-  const { faqs, addFaq, deleteFaq, isLoaded: faqLoaded } = useFAQ();
+  const { faqs, addFaq, deleteFaq, updateFaq, reorderFaqs, isLoaded: faqLoaded } = useFAQ();
   
   const [formData, setFormData] = useState(shopSettings);
   const [showModal, setShowModal] = useState(false);
@@ -244,18 +244,63 @@ export default function ShopConfigPage() {
                       Aucune question n'a été ajoutée.
                     </div>
                   ) : (
-                    faqs.map(faq => (
-                      <div key={faq.id} className="group flex items-start justify-between gap-4 p-4 border border-slate-200 rounded-xl hover:border-slate-300 transition-colors bg-white">
-                        <div>
-                          <h4 className="font-semibold text-slate-800 text-sm">{faq.question}</h4>
-                          <p className="text-sm text-slate-600 mt-1">{faq.answer}</p>
+                    faqs.map((faq, index) => (
+                      <div key={faq.id} className={cn("group flex items-start justify-between gap-4 p-4 border rounded-xl transition-colors", faq.is_active !== false ? "bg-white border-slate-200 hover:border-slate-300" : "bg-slate-50 border-slate-100 opacity-70")}>
+                        <div className="flex items-start gap-3 flex-1">
+                          <div className="flex flex-col items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button 
+                              disabled={index === 0}
+                              onClick={() => {
+                                const newFaqs = [...faqs];
+                                const temp = newFaqs[index - 1];
+                                newFaqs[index - 1] = newFaqs[index];
+                                newFaqs[index] = temp;
+                                reorderFaqs(newFaqs);
+                              }}
+                              className="text-slate-400 hover:text-[#0b213f] disabled:opacity-30"
+                            >
+                              <ChevronUp size={16} />
+                            </button>
+                            <button 
+                              disabled={index === faqs.length - 1}
+                              onClick={() => {
+                                const newFaqs = [...faqs];
+                                const temp = newFaqs[index + 1];
+                                newFaqs[index + 1] = newFaqs[index];
+                                newFaqs[index] = temp;
+                                reorderFaqs(newFaqs);
+                              }}
+                              className="text-slate-400 hover:text-[#0b213f] disabled:opacity-30"
+                            >
+                              <ChevronDown size={16} />
+                            </button>
+                          </div>
+                          <div>
+                            <h4 className={cn("font-semibold text-sm", faq.is_active !== false ? "text-slate-800" : "text-slate-500 line-through decoration-slate-300")}>{faq.question}</h4>
+                            <p className="text-sm text-slate-600 mt-1">{faq.answer}</p>
+                          </div>
                         </div>
-                        <button 
-                          onClick={() => deleteFaq(faq.id)}
-                          className="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-                        >
-                          <Trash2 size={16} />
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <span className="text-xs font-medium text-slate-500">{faq.is_active !== false ? "Actif" : "Inactif"}</span>
+                            <div className="relative">
+                              <input 
+                                type="checkbox" 
+                                className="sr-only peer"
+                                checked={faq.is_active !== false}
+                                onChange={(e) => updateFaq(faq.id, { is_active: e.target.checked })}
+                              />
+                              <div className="w-9 h-5 bg-slate-200 rounded-full peer peer-focus:ring-2 peer-focus:ring-[#0b213f]/30 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-500"></div>
+                            </div>
+                          </label>
+                          <button 
+                            onClick={() => deleteFaq(faq.id)}
+                            className="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                            title="Supprimer"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </div>
                     ))
                   )}

@@ -585,7 +585,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
             <p className="text-slate-500 mt-2">Trouvez rapidement des réponses à vos questions.</p>
           </div>
           <div className="space-y-4">
-            {faqs.map((faq) => (
+            {faqs.filter(faq => faq.is_active !== false).map((faq) => (
               <details 
                 key={faq.id} 
                 className="group bg-white border border-slate-200 rounded-xl overflow-hidden [&_summary::-webkit-details-marker]:hidden"
