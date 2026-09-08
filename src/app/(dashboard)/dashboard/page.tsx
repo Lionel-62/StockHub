@@ -8,6 +8,8 @@ import { RecentOrders } from "@/components/dashboard/recent-orders";
 import { useOrders } from "@/hooks/orders";
 import { useProducts } from "@/hooks/products";
 
+import Link from "next/link";
+
 export default function DashboardPage() {
   const { orders, isLoaded: ordersLoaded } = useOrders();
   const { products, isLoaded: productsLoaded } = useProducts();
@@ -18,6 +20,8 @@ export default function DashboardPage() {
   
   const outOfStockCount = products.filter(p => p.stock === 0).length;
   const totalStockValue = products.reduce((sum, p) => sum + (p.stock * p.salePrice), 0);
+  
+  const alertsCount = products.filter(p => p.stock <= (p.alertThreshold ?? 5)).length;
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("fr-FR").format(Math.round(amount));
@@ -25,6 +29,18 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      {productsLoaded && alertsCount > 0 && (
+        <div className="bg-orange-50 border border-orange-200 text-orange-800 px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5 text-orange-600" />
+            <span className="text-sm font-medium">Attention : {alertsCount} produit(s) en rupture ou stock faible.</span>
+          </div>
+          <Link href="/dashboard/stock?filter=alert" className="text-xs font-bold bg-white text-orange-700 px-3 py-1.5 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors shadow-sm">
+            Voir
+          </Link>
+        </div>
+      )}
+
       <div className="flex overflow-x-auto pb-4 -mx-6 px-6 md:pb-0 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 snap-x snap-mandatory sm:snap-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {(!ordersLoaded || !productsLoaded) ? (
           <>

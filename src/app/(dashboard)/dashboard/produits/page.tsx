@@ -17,9 +17,27 @@ import {
 import { useProducts, Product } from "@/hooks/products";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
 import Image from "next/image";
+import { supabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 export default function ProductsPage() {
+  const uploadToSupabase = async (blob: Blob): Promise<string | null> => {
+    try {
+      const fileName = `product_${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
+      const { data, error } = await supabase.storage.from('products').upload(fileName, blob, {
+        contentType: 'image/jpeg',
+      });
+      if (error) {
+        console.error("Erreur upload:", error);
+        return null;
+      }
+      const { data: publicData } = supabase.storage.from('products').getPublicUrl(fileName);
+      return publicData.publicUrl;
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  };
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("Tous");
   const { products, addProduct, updateProduct, deleteProduct, isLoaded } = useProducts();
@@ -56,8 +74,14 @@ export default function ProductsPage() {
         ctx.filter = "brightness(1.1) contrast(1.15) saturate(1.2)";
         ctx.drawImage(img, 0, 0);
         
-        const enhancedUrl = canvas.toDataURL("image/jpeg", 0.9);
-        setCurrentProduct(prev => ({ ...prev, imageUrl: enhancedUrl }));
+        canvas.toBlob(async (blob) => {
+          if (blob) {
+            const url = await uploadToSupabase(blob);
+            if (url) {
+              setCurrentProduct(prev => ({ ...prev, imageUrl: url }));
+            }
+          }
+        }, "image/jpeg", 0.9);
       }
       setIsImprovingImage(false);
     };
@@ -82,10 +106,16 @@ export default function ProductsPage() {
         ctx.filter = "brightness(1.1) contrast(1.15) saturate(1.2)";
         ctx.drawImage(img, 0, 0);
         
-        const enhancedUrl = canvas.toDataURL("image/jpeg", 0.9);
-        const newGallery = [...(currentProduct.galleryUrls || [])];
-        newGallery[idx] = enhancedUrl;
-        setCurrentProduct(prev => ({ ...prev, galleryUrls: newGallery }));
+        canvas.toBlob(async (blob) => {
+          if (blob) {
+            const url = await uploadToSupabase(blob);
+            if (url) {
+              const newGallery = [...(currentProduct.galleryUrls || [])];
+              newGallery[idx] = url;
+              setCurrentProduct(prev => ({ ...prev, galleryUrls: newGallery }));
+            }
+          }
+        }, "image/jpeg", 0.9);
       }
       setImprovingGalleryIdx(null);
     };
@@ -178,6 +208,7 @@ export default function ProductsPage() {
       purchasePrice: 0, 
       salePrice: 0, 
       stock: 0, 
+      alertThreshold: 5,
       status: "Rupture",
       imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
       isPublishedOnStore: true
@@ -201,7 +232,8 @@ export default function ProductsPage() {
 
   const handleSave = () => {
     const stockNum = Number(currentProduct.stock) || 0;
-    const statusVal = stockNum === 0 ? "Rupture" : stockNum < 15 ? "Stock faible" : "En stock";
+    const alertThresholdNum = Number(currentProduct.alertThreshold) ?? 5;
+    const statusVal = stockNum === 0 ? "Rupture" : stockNum <= alertThresholdNum ? "Stock faible" : "En stock";
     
     if (modalMode === "add") {
       const newProduct = {
@@ -528,8 +560,14 @@ export default function ProductsPage() {
                                   canvas.height = height;
                                   const ctx = canvas.getContext("2d");
                                   ctx?.drawImage(img, 0, 0, width, height);
-                                  const dataUrl = canvas.toDataURL("image/jpeg", 0.9); // High quality
-                                  setCurrentProduct({...currentProduct, imageUrl: dataUrl});
+                                  canvas.toBlob(async (blob) => {
+                                    if (blob) {
+                                      const url = await uploadToSupabase(blob);
+                                      if (url) {
+                                        setCurrentProduct({...currentProduct, imageUrl: url});
+                                      }
+                                    }
+                                  }, "image/jpeg", 0.9);
                                 };
                                 img.src = event.target?.result as string;
                               };
@@ -659,8 +697,8 @@ export default function ProductsPage() {
                   <input 
                     type="number"
                     min="0"
-                    value={currentProduct.purchasePrice || ""}
-                    onChange={(e) => setCurrentProduct({...currentProduct, purchasePrice: Number(e.target.value)})}
+                    value={currentProduct.purchasePrice ?? ""}
+                    onChange={(e) => setCurrentProduct({...currentProduct, purchasePrice: e.target.value ? Number(e.target.value) : undefined})}
                     className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                   />
                 </div>
@@ -670,19 +708,29 @@ export default function ProductsPage() {
                   <input 
                     type="number"
                     min="0"
-                    value={currentProduct.salePrice || ""}
-                    onChange={(e) => setCurrentProduct({...currentProduct, salePrice: Number(e.target.value)})}
+                    value={currentProduct.salePrice ?? ""}
+                    onChange={(e) => setCurrentProduct({...currentProduct, salePrice: e.target.value ? Number(e.target.value) : undefined})}
                     className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                   />
                 </div>
 
-                <div className="space-y-1.5 md:col-span-2">
+                <div className="space-y-1.5 md:col-span-1">
                   <label className="text-sm font-medium text-slate-700">Stock initial *</label>
                   <input 
                     type="number"
                     min="0"
-                    value={currentProduct.stock || 0}
-                    onChange={(e) => setCurrentProduct({...currentProduct, stock: Number(e.target.value)})}
+                    value={currentProduct.stock ?? ""}
+                    onChange={(e) => setCurrentProduct({...currentProduct, stock: e.target.value ? Number(e.target.value) : undefined})}
+                    className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                  />
+                </div>
+                <div className="space-y-1.5 md:col-span-1">
+                  <label className="text-sm font-medium text-slate-700">Seuil d'alerte</label>
+                  <input 
+                    type="number"
+                    min="1"
+                    value={currentProduct.alertThreshold ?? ""}
+                    onChange={(e) => setCurrentProduct({...currentProduct, alertThreshold: e.target.value ? Number(e.target.value) : undefined})}
                     className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                   />
                 </div>

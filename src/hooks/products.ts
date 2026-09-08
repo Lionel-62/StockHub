@@ -18,6 +18,7 @@ export interface Product {
   galleryUrls?: string[];
   packOffers?: { quantity: number; price: number }[];
   options?: { name: string; values: string[] }[];
+  alertThreshold?: number;
 }
 
 export function useProducts(publicShopId?: string) {
@@ -71,11 +72,12 @@ export function useProducts(publicShopId?: string) {
         salePrice: d.sale_price,
         promotionalPrice: d.promotional_price || undefined,
         stock: d.stock,
-        status: d.status as any,
+        status: d.stock === 0 ? "Rupture" : (d.stock <= (d.alert_threshold ?? 5) ? "Stock faible" : "En stock"),
         imageUrl: d.image_url || "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
         galleryUrls: typeof d.gallery_urls === 'string' ? JSON.parse(d.gallery_urls) : d.gallery_urls || [],
         packOffers: typeof d.pack_offers === 'string' ? JSON.parse(d.pack_offers) : d.pack_offers,
-        isPublishedOnStore: d.is_published_on_store !== false
+        isPublishedOnStore: d.is_published_on_store !== false,
+        alertThreshold: d.alert_threshold ?? 5
       }));
       setProducts(mapped);
       localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(mapped));
@@ -101,10 +103,11 @@ export function useProducts(publicShopId?: string) {
       pack_offers: product.packOffers ?? null,
       description: product.description ?? null,
       barcode: product.sku,
-      status: product.status,
+      status: product.stock === 0 ? "Rupture" : (product.stock <= (product.alertThreshold ?? 5) ? "Stock faible" : "En stock"),
       image_url: product.imageUrl,
       gallery_urls: product.galleryUrls ?? null,
-      is_published_on_store: product.isPublishedOnStore
+      is_published_on_store: product.isPublishedOnStore,
+      alert_threshold: product.alertThreshold ?? 5
     });
 
     if (!result.success) {
@@ -132,10 +135,11 @@ export function useProducts(publicShopId?: string) {
       pack_offers: product.packOffers ?? null,
       description: product.description ?? null,
       barcode: product.sku,
-      status: product.status,
+      status: product.stock === 0 ? "Rupture" : (product.stock <= (product.alertThreshold ?? 5) ? "Stock faible" : "En stock"),
       image_url: product.imageUrl,
       gallery_urls: product.galleryUrls ?? null,
-      is_published_on_store: product.isPublishedOnStore
+      is_published_on_store: product.isPublishedOnStore,
+      alert_threshold: product.alertThreshold ?? 5
     });
 
     if (!result.success) {

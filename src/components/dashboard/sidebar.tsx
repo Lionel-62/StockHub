@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/auth";
+import { useProducts } from "@/hooks/products";
 import {
   LayoutDashboard,
   Package,
@@ -47,8 +48,11 @@ export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { currentUser, logout, isLoaded } = useAuth();
+  const { products } = useProducts();
   
   if (!isLoaded || !currentUser) return null;
+
+  const alertsCount = products.filter(p => p.stock <= (p.alertThreshold ?? 5)).length;
 
   // Filter menus based on role
   const isEmployee = currentUser.role === "employee";
@@ -109,6 +113,11 @@ export function Sidebar() {
               >
                 <item.icon size={18} className={cn(isActive ? "text-white" : "text-slate-400")} />
                 {item.name}
+                {item.name === "Stock" && alertsCount > 0 && (
+                  <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                    {alertsCount}
+                  </span>
+                )}
               </Link>
             );
           })}

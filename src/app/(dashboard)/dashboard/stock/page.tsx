@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Search, Filter, ArrowUpRight, ArrowDownRight, History, PackageMinus, ChevronLeft, ChevronRight } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +23,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function StockPage() {
   const [activeTab, setActiveTab] = useState<"inventaire" | "mouvements">("inventaire");
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("Tous");
+  const searchParams = useSearchParams();
+  const initialFilter = searchParams.get("filter") === "alert" ? "Rupture / Stock faible" : "Tous";
+  const [statusFilter, setStatusFilter] = useState(initialFilter);
   const { products, setProducts, isLoaded } = useProducts();
   const carouselRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -56,27 +59,29 @@ export default function StockPage() {
 
   // Calculs KPI
   const outOfStockCount = products.filter(p => p.stock === 0).length;
-  const lowStockCount = products.filter(p => p.stock > 0 && p.stock <= 15).length;
+  const lowStockCount = products.filter(p => p.stock > 0 && p.stock <= (p.alertThreshold ?? 5)).length;
   const totalItems = products.reduce((acc, curr) => acc + curr.stock, 0);
 
   // Filtrage Inventaire
   const filteredProducts = products.filter((p) => {
     const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           p.sku.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "Tous" || p.status === statusFilter;
+    const matchesStatus = statusFilter === "Tous" || 
+                          (statusFilter === "Rupture / Stock faible" ? (p.status === "Rupture" || p.status === "Stock faible") : p.status === statusFilter);
     return matchesSearch && matchesStatus;
   });
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const paginatedProducts = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const statuses = ["Tous", "En stock", "Stock faible", "Rupture"];
+  const statuses = ["Tous", "En stock", "Stock faible", "Rupture", "Rupture / Stock faible"];
 
   const handleAdjustStock = (id: string, amount: number) => {
     setProducts(products.map(p => {
       if (p.id === id) {
         const newStock = Math.max(0, p.stock + amount);
-        const newStatus = newStock === 0 ? "Rupture" : newStock <= 15 ? "Stock faible" : "En stock";
+        const alertThresh = p.alertThreshold ?? 5;
+        const newStatus = newStock === 0 ? "Rupture" : newStock <= alertThresh ? "Stock faible" : "En stock";
         return { ...p, stock: newStock, status: newStatus as any };
       }
       return p;
