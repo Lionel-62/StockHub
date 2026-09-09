@@ -157,7 +157,9 @@ export async function createShopAction(userId: string, shopName: string, categor
   try {
     const supabase = createAdminClient();
     
-    const shopSlug = `boutique-${Math.random().toString(36).substring(2, 6)}`;
+    // Créer un slug basé sur le nom de la boutique (ex: "Mega Store" -> "mega-store-a1b2")
+    const baseSlug = shopName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const shopSlug = `${baseSlug || 'boutique'}-${Math.random().toString(36).substring(2, 5)}`;
     
     const { data: shop, error: shopError } = await supabase
       .from('shops')
