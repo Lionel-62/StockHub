@@ -9,11 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@ai-sdk/google": "^0.0.21",
+    "@ai-sdk/google": "^4.0.66",
     "@ai-sdk/react": "^4.0.99",
     "@base-ui/react": "^1.7.0",
     "@supabase/supabase-js": "^2.112.4",
-    "ai": "^3.2.0",
+    "ai": "^7.0.96",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^13.2.0",
