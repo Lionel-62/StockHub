@@ -10,17 +10,21 @@ export default function DashboardLayout({
 }) {
   return (
     <AuthGuard>
-      <div className="flex h-screen overflow-hidden bg-slate-50">
-        <div className="hidden md:block">
+      <div className="flex h-screen overflow-hidden bg-slate-50 print:h-auto print:overflow-visible print:block print:bg-white">
+        <div className="hidden md:block print:hidden">
           <Sidebar />
         </div>
-        <div className="flex flex-1 flex-col overflow-hidden">
-          <Topbar />
-          <main className="flex-1 overflow-y-auto p-0 md:p-8">
+        <div className="flex flex-1 flex-col overflow-hidden print:block print:overflow-visible">
+          <div className="print:hidden">
+            <Topbar />
+          </div>
+          <main className="flex-1 overflow-y-auto p-0 md:p-8 print:overflow-visible print:block print:p-0">
             {children}
           </main>
         </div>
-        <AIAssistantButton />
+        <div className="print:hidden">
+          <AIAssistantButton />
+        </div>
       </div>
     </AuthGuard>
   );
