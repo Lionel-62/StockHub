@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { addProductAction, updateProductAction, deleteProductAction } from "@/app/actions/products.actions";
 
@@ -36,19 +36,7 @@ export function useProducts(publicShopId?: string) {
     return null;
   };
 
-  useEffect(() => {
-    const shopId = getShopId();
-    if (shopId) {
-      const cached = localStorage.getItem("stockhub_cache_products_" + shopId);
-      if (cached) {
-        setProducts(JSON.parse(cached));
-        setIsLoaded(true);
-      }
-    }
-    fetchProducts();
-  }, [publicShopId]);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     const shopId = getShopId();
     if (!shopId) {
       setIsLoaded(true);
@@ -83,7 +71,19 @@ export function useProducts(publicShopId?: string) {
       localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(mapped));
     }
     setIsLoaded(true);
-  };
+  }, [publicShopId]);
+
+  useEffect(() => {
+    const shopId = getShopId();
+    if (shopId) {
+      const cached = localStorage.getItem("stockhub_cache_products_" + shopId);
+      if (cached) {
+        setProducts(JSON.parse(cached));
+        setIsLoaded(true);
+      }
+    }
+    fetchProducts();
+  }, [publicShopId, fetchProducts]);
 
   const addProduct = async (product: Product) => {
     const shopId = getShopId();
