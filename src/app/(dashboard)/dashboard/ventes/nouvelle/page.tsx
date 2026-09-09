@@ -23,7 +23,7 @@ export default function PointOfSalePage() {
   const [paymentMethod, setPaymentMethod] = useState("Espèces");
   const [visibleCount, setVisibleCount] = useState(15);
 
-  const { products, setProducts, isLoaded: productsLoaded } = useProducts();
+  const { products, setProducts, updateProduct, isLoaded: productsLoaded } = useProducts();
   const { orders, addOrder } = useOrders();
   const { clients, isLoaded: clientsLoaded } = useClients();
   const router = useRouter();
@@ -116,18 +116,15 @@ export default function PointOfSalePage() {
       paymentMethod: paymentMethod as any,
     };
 
-    // 2. Mettre à jour les stocks
-    const updatedProducts = products.map(product => {
-      const cartItem = cart.find(item => item.id === product.id);
-      if (cartItem) {
+    // 2. Mettre à jour les stocks UNIQUEMENT pour les produits vendus
+    cart.forEach(cartItem => {
+      const product = products.find(p => p.id === cartItem.id);
+      if (product) {
         const newStock = Math.max(0, product.stock - cartItem.cartQuantity);
         const newStatus = newStock === 0 ? "Rupture" : newStock <= 15 ? "Stock faible" : "En stock";
-        return { ...product, stock: newStock, status: newStatus as any };
+        updateProduct({ ...product, stock: newStock, status: newStatus as any });
       }
-      return product;
     });
-
-    setProducts(updatedProducts);
     addOrder(newOrder);
     setCart([]);
 

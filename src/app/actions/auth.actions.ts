@@ -171,6 +171,7 @@ export async function createShopAction(userId: string, shopName: string, categor
         city: city || null,
         country_code: countryCode || null,
         is_active: true,
+        owner_id: userId,
       })
       .select()
       .single();

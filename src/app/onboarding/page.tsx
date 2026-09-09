@@ -35,7 +35,10 @@ export default function OnboardingPage() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    if (isLoaded && currentUser && currentUser.onboardingCompleted) {
+    const searchParams = new URLSearchParams(window.location.search);
+    const isNewShop = searchParams.get("action") === "new-shop";
+    
+    if (isLoaded && currentUser && currentUser.onboardingCompleted && !isNewShop) {
       // If user already finished onboarding, they shouldn't be here
       router.push("/dashboard");
     } else if (isLoaded && !currentUser) {
@@ -43,7 +46,7 @@ export default function OnboardingPage() {
     }
   }, [isLoaded, currentUser, router]);
 
-  if (!isLoaded || !currentUser || currentUser.onboardingCompleted) {
+  if (!isLoaded || !currentUser || (currentUser.onboardingCompleted && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get("action") !== "new-shop")) {
     return null; // Or a loader
   }
 

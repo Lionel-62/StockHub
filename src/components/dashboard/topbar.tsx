@@ -8,14 +8,20 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
+import { useAuth } from "@/hooks/auth";
+import { ChevronDown, Store } from "lucide-react";
+
 export function Topbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const pathname = usePathname();
   const isDashboardHome = pathname === "/dashboard";
+  const { currentUser } = useAuth();
 
   // Automatically close mobile menu when navigating to a new page
   useEffect(() => {
     setMobileMenuOpen(false);
+    setShopMenuOpen(false);
   }, [pathname]);
 
   return (
@@ -44,11 +50,55 @@ export function Topbar() {
               />
             </Link>
 
-            {/* Desktop Greeting (Only on Dashboard Home) */}
-            {isDashboardHome && (
-              <div className="hidden md:flex flex-col">
-                <h2 className="text-xl font-bold text-slate-900">Bonjour, Lionel</h2>
-                <p className="text-sm text-slate-500">Jeudi 27 août 2026 — Voici l'activité de votre boutique</p>
+            {/* Desktop Greeting & Shop Selector (Only on Dashboard Home) */}
+            {isDashboardHome && currentUser && (
+              <div className="hidden md:flex flex-col relative">
+                <h2 className="text-xl font-bold text-slate-900">Bonjour, {currentUser.name.split(' ')[0]}</h2>
+                <div className="relative mt-1">
+                  <button 
+                    onClick={() => setShopMenuOpen(!shopMenuOpen)}
+                    className="flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 font-medium bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors border border-slate-200"
+                  >
+                    <Store size={14} className="text-[#0b213f]" />
+                    {currentUser.shopName}
+                    <ChevronDown size={14} />
+                  </button>
+                  
+                  {/* Shop Dropdown */}
+                  {shopMenuOpen && (
+                    <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-slate-200 shadow-lg rounded-xl overflow-hidden z-50">
+                      <div className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider bg-slate-50 border-b">
+                        Vos Boutiques
+                      </div>
+                      <div className="max-h-60 overflow-y-auto">
+                        {currentUser.myShops?.map(shop => (
+                          <button
+                            key={shop.id}
+                            className={`w-full text-left px-4 py-3 text-sm hover:bg-slate-50 transition-colors flex flex-col ${shop.id === currentUser.shopId ? "bg-blue-50/50 border-l-4 border-[#0b213f]" : ""}`}
+                            onClick={() => {
+                              // Switch active shop in localStorage/session
+                              const newUser = { ...currentUser, shopId: shop.id, shopName: shop.name, shopSlug: shop.slug };
+                              localStorage.setItem("stockhub_session", JSON.stringify(newUser));
+                              window.location.reload();
+                            }}
+                          >
+                            <span className="font-semibold text-slate-800">{shop.name}</span>
+                            <span className="text-xs text-slate-500">/{shop.slug}</span>
+                          </button>
+                        ))}
+                      </div>
+                      {currentUser.role === 'owner' && (
+                        <div className="p-2 border-t bg-slate-50">
+                          <Link href="/onboarding?action=new-shop">
+                            <Button variant="outline" className="w-full h-8 text-xs font-semibold flex items-center justify-center gap-1.5 border-dashed border-slate-300 hover:border-slate-400 hover:bg-white text-slate-700">
+                              <Plus size={14} /> Nouvelle Boutique
+                            </Button>
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>

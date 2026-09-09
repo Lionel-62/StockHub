@@ -10,6 +10,7 @@ import { useInvoices, Invoice } from "@/hooks/invoices";
 import { useClients, Client } from "@/hooks/clients";
 import { useMessages } from "@/hooks/messages";
 import { useOrders, Order } from "@/hooks/orders";
+import { decreasePublicStockAction } from "@/app/actions/products.actions";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase/client";
@@ -410,6 +411,12 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
     // Auto-create a message in StockHub messages
     sendMessage(clientId, `Nouvelle commande passée en ligne : ${cart.length} article(s) pour un total de ${formatCurrency(cartTotal)}. Le client a été redirigé vers WhatsApp.`, clientId);
     
+    // Diminuer le stock automatiquement
+    decreasePublicStockAction(shopUuid, cart.map(item => ({
+      id: item.product.id,
+      quantity: item.quantity
+    }))).catch(err => console.error("Erreur diminution stock:", err));
+    
     // Clear cart and show success (optional, but good UX)
     setCart([]);
     setIsCartOpen(false);
@@ -488,7 +495,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                 placeholder="Rechercher un produit..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-2 w-64 bg-slate-100 border-transparent focus:bg-white focus:border-blue-500 rounded-full text-sm transition-all outline-none ring-0"
+                className="pl-9 pr-4 py-2 w-80 lg:w-96 bg-slate-100 border-transparent focus:bg-white focus:border-blue-500 rounded-full text-sm transition-all outline-none ring-0"
               />
             </div>
             <button 

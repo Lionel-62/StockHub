@@ -12,6 +12,7 @@ export interface User {
   shopId?: string;
   shopSlug?: string;
   shopName?: string;
+  myShops?: { id: string; name: string; slug: string }[];
   onboardingCompleted?: boolean;
   permissions: {
     canViewDashboard: boolean;
@@ -69,7 +70,7 @@ export function useAuth() {
         }
 
         // STEP 1: Check if the user has a profile in our database
-        let { data: profile } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
+        let { data: profile } = await supabase.from('profiles').select('shop_id, onboarding_completed, shops(slug, name)').eq('id', session.user.id).single();
 
         // STEP 2: If no profile and this is a SIGNUP flow, create the profile
         if (!profile && isSignupFlow) {
@@ -79,7 +80,7 @@ export function useAuth() {
             session.user.user_metadata?.full_name || ''
           );
           if (res.success) {
-            const { data: newProfile } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
+            const { data: newProfile } = await supabase.from('profiles').select('shop_id, onboarding_completed, shops(slug, name)').eq('id', session.user.id).single();
             profile = newProfile;
           }
         }
@@ -98,6 +99,15 @@ export function useAuth() {
 
         // STEP 4: Profile found → create session
         const needsOnboarding = !profile.onboarding_completed || !profile.shop_id;
+        
+        let myShops: { id: string; name: string; slug: string }[] = [];
+        if (!needsOnboarding) {
+          const { data: shops } = await supabase.from('shops').select('id, name, slug').eq('owner_id', session.user.id);
+          if (shops) {
+            myShops = shops;
+          }
+        }
+
         const user: User = {
           id: session.user.id,
           name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
@@ -105,6 +115,9 @@ export function useAuth() {
           pinCode: '0000',
           role: 'owner',
           shopId: profile.shop_id,
+          shopSlug: profile.shops?.slug,
+          shopName: profile.shops?.name,
+          myShops: myShops,
           onboardingCompleted: profile.onboarding_completed ?? false,
           permissions: { canViewDashboard: true },
           createdAt: session.user.created_at
