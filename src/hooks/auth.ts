@@ -117,15 +117,29 @@ export function useAuth() {
           }
         }
 
+        // Determine active shop from previous session if valid, otherwise default to profile's main shop
+        let activeShopId = profile.shop_id;
+        let activeShopSlug = Array.isArray(profile.shops) ? profile.shops[0]?.slug : (profile.shops as any)?.slug;
+        let activeShopName = Array.isArray(profile.shops) ? profile.shops[0]?.name : (profile.shops as any)?.name;
+
+        if (parsedSession && parsedSession.shopId && myShops.some(s => s.id === parsedSession.shopId)) {
+          const selectedShop = myShops.find(s => s.id === parsedSession.shopId);
+          if (selectedShop) {
+            activeShopId = selectedShop.id;
+            activeShopSlug = selectedShop.slug;
+            activeShopName = selectedShop.name;
+          }
+        }
+
         const user: User = {
           id: session.user.id,
           name: session.user.user_metadata?.full_name || session.user.email || 'Utilisateur Google',
           identifier: session.user.email || '',
           pinCode: '0000',
           role: 'owner',
-          shopId: profile.shop_id,
-          shopSlug: Array.isArray(profile.shops) ? profile.shops[0]?.slug : (profile.shops as any)?.slug,
-          shopName: Array.isArray(profile.shops) ? profile.shops[0]?.name : (profile.shops as any)?.name,
+          shopId: activeShopId,
+          shopSlug: activeShopSlug,
+          shopName: activeShopName,
           myShops: myShops,
           onboardingCompleted: profile.onboarding_completed ?? false,
           permissions: { canViewDashboard: true },

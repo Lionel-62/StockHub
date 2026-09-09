@@ -121,7 +121,14 @@ export function Topbar() {
                                 window.location.reload();
                               }}
                             >
-                              <span className="font-semibold text-slate-800 pr-8">{shop.name}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold text-slate-800">{shop.name}</span>
+                                {index === 0 && (
+                                  <span className="text-[10px] font-bold text-white bg-emerald-500 px-1.5 py-0.5 rounded-md uppercase tracking-wider">
+                                    Principale
+                                  </span>
+                                )}
+                              </div>
                               <span className="text-xs text-slate-500">/{shop.slug}</span>
                             </button>
                             
