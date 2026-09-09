@@ -97,13 +97,13 @@ export function Pricing() {
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Vitrine 100% à votre image
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Alertes rupture par SMS & WhatsApp
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Alertes de stock faible en temps réel
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Reçus PDF professionnels personnalisés
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Statistiques et graphiques détaillés
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Export comptable Excel / CSV
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Commandes directes via WhatsApp
                 </li>
               </ul>
             </div>
@@ -139,13 +139,13 @@ export function Pricing() {
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Multi-points de vente (jusqu'à 5)
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Vendeurs & livreurs illimités
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Vendeurs & collaborateurs illimités
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Gestion des permissions avancée
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Gestion des permissions (Propriétaire/Employé)
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Chargé de compte VIP dédié 7j/7
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Assistance VIP prioritaire 7j/7
                 </li>
               </ul>
             </div>
