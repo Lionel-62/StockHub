@@ -97,13 +97,19 @@ export function Pricing() {
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Vitrine 100% à votre image
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Alertes de stock faible en temps réel
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Commandes directes via WhatsApp
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Factures & Reçus PDF personnalisés
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Export comptable (Excel / CSV)
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Statistiques et graphiques détaillés
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Commandes directes via WhatsApp
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Alertes de stock faible en temps réel
                 </li>
               </ul>
             </div>
