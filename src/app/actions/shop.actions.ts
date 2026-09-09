@@ -48,3 +48,23 @@ export async function getShopBySlugAction(slug: string) {
   
   return { success: true, data };
 }
+
+export async function deleteShopAction(shopId: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'owner') return { success: false, error: 'Non autorisé' };
+
+  const supabase = createAdminClient();
+  
+  // Verify it's not their only shop and they own it
+  const { data: myShops } = await supabase.from('shops').select('id').eq('owner_id', session.id);
+  if (!myShops || myShops.length <= 1) {
+    return { success: false, error: 'Vous ne pouvez pas supprimer votre seule boutique.' };
+  }
+
+  const isOwner = myShops.some(s => s.id === shopId);
+  if (!isOwner) return { success: false, error: 'Vous ne possédez pas cette boutique.' };
+
+  const { error } = await supabase.from('shops').delete().eq('id', shopId);
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}

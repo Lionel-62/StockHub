@@ -9,7 +9,9 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 import { useAuth } from "@/hooks/auth";
-import { ChevronDown, Store } from "lucide-react";
+import { ChevronDown, Store, Trash2 } from "lucide-react";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
+import { deleteShopAction } from "@/app/actions/shop.actions";
 
 export function Topbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -17,6 +19,44 @@ export function Topbar() {
   const pathname = usePathname();
   const isDashboardHome = pathname === "/dashboard";
   const { currentUser } = useAuth();
+  const [shopToDelete, setShopToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteShop = async () => {
+    if (!shopToDelete || !currentUser) return;
+    setIsDeleting(true);
+    const res = await deleteShopAction(shopToDelete.id);
+    setIsDeleting(false);
+    
+    if (res.success) {
+      // Remove from session
+      const newShops = currentUser.myShops?.filter(s => s.id !== shopToDelete.id) || [];
+      
+      let nextActiveShopId = currentUser.shopId;
+      let nextActiveShopName = currentUser.shopName;
+      let nextActiveShopSlug = currentUser.shopSlug;
+      
+      // If we deleted the active shop, fallback to the first available shop
+      if (currentUser.shopId === shopToDelete.id && newShops.length > 0) {
+        nextActiveShopId = newShops[0].id;
+        nextActiveShopName = newShops[0].name;
+        nextActiveShopSlug = newShops[0].slug;
+      }
+
+      const newUser = { 
+        ...currentUser, 
+        myShops: newShops,
+        shopId: nextActiveShopId,
+        shopName: nextActiveShopName,
+        shopSlug: nextActiveShopSlug
+      };
+      
+      localStorage.setItem("stockhub_session", JSON.stringify(newUser));
+      window.location.reload();
+    } else {
+      alert(res.error || "Erreur lors de la suppression");
+    }
+  };
 
   // Automatically close mobile menu when navigating to a new page
   useEffect(() => {
@@ -71,20 +111,34 @@ export function Topbar() {
                         Vos Boutiques
                       </div>
                       <div className="max-h-60 overflow-y-auto">
-                        {currentUser.myShops?.map(shop => (
-                          <button
-                            key={shop.id}
-                            className={`w-full text-left px-4 py-3 text-sm hover:bg-slate-50 transition-colors flex flex-col ${shop.id === currentUser.shopId ? "bg-blue-50/50 border-l-4 border-[#0b213f]" : ""}`}
-                            onClick={() => {
-                              // Switch active shop in localStorage/session
-                              const newUser = { ...currentUser, shopId: shop.id, shopName: shop.name, shopSlug: shop.slug };
-                              localStorage.setItem("stockhub_session", JSON.stringify(newUser));
-                              window.location.reload();
-                            }}
-                          >
-                            <span className="font-semibold text-slate-800">{shop.name}</span>
-                            <span className="text-xs text-slate-500">/{shop.slug}</span>
-                          </button>
+                        {currentUser.myShops?.map((shop, index) => (
+                          <div key={shop.id} className="relative group flex items-center border-b border-slate-50 last:border-0">
+                            <button
+                              className={`w-full text-left px-4 py-3 text-sm hover:bg-slate-50 transition-colors flex flex-col ${shop.id === currentUser.shopId ? "bg-blue-50/50 border-l-4 border-[#0b213f]" : "pl-[20px]"}`}
+                              onClick={() => {
+                                const newUser = { ...currentUser, shopId: shop.id, shopName: shop.name, shopSlug: shop.slug };
+                                localStorage.setItem("stockhub_session", JSON.stringify(newUser));
+                                window.location.reload();
+                              }}
+                            >
+                              <span className="font-semibold text-slate-800 pr-8">{shop.name}</span>
+                              <span className="text-xs text-slate-500">/{shop.slug}</span>
+                            </button>
+                            
+                            {/* Actions (Delete only if not index 0) */}
+                            {index > 0 && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShopToDelete({ id: shop.id, name: shop.name });
+                                }}
+                                className="absolute right-3 p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-all opacity-0 group-hover:opacity-100"
+                                title="Supprimer la boutique"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            )}
+                          </div>
                         ))}
                       </div>
                       {currentUser.role === 'owner' && (
@@ -164,6 +218,15 @@ export function Topbar() {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={!!shopToDelete}
+        onClose={() => setShopToDelete(null)}
+        onConfirm={handleDeleteShop}
+        title="Supprimer la boutique"
+        message={`Êtes-vous sûr de vouloir supprimer définitivement la boutique "${shopToDelete?.name}" ? Tous les produits, ventes et clients associés seront perdus.`}
+        confirmText={isDeleting ? "Suppression..." : "Oui, supprimer"}
+      />
     </>
   );
 }
