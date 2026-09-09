@@ -70,9 +70,14 @@ export function useAuth() {
         }
 
         // STEP 1: Check if the user has a profile in our database
-        let { data: profile } = await supabase.from('profiles').select('shop_id, onboarding_completed, shops(slug, name)').eq('id', session.user.id).single();
-
-        // STEP 2: If no profile and this is a SIGNUP flow, create the profile
+        const { data: profileRow, error: profileErr } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
+        if (profileErr) console.error("Profile fetch error:", profileErr);
+        
+        let profile: any = profileRow;
+        if (profile && profile.shop_id) {
+          const { data: activeShop } = await supabase.from('shops').select('slug, name').eq('id', profile.shop_id).single();
+          profile.shops = activeShop;
+        }
         if (!profile && isSignupFlow) {
           const res = await completeGoogleSignupAction(
             session.user.id,
@@ -80,8 +85,12 @@ export function useAuth() {
             session.user.user_metadata?.full_name || ''
           );
           if (res.success) {
-            const { data: newProfile } = await supabase.from('profiles').select('shop_id, onboarding_completed, shops(slug, name)').eq('id', session.user.id).single();
-            profile = newProfile;
+            const { data: newProfileRow } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
+            profile = newProfileRow;
+            if (profile && profile.shop_id) {
+              const { data: activeShop } = await supabase.from('shops').select('slug, name').eq('id', profile.shop_id).single();
+              profile.shops = activeShop;
+            }
           }
         }
 
