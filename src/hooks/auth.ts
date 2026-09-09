@@ -142,7 +142,7 @@ export function useAuth() {
           const path = window.location.pathname;
           if (needsOnboarding && path !== '/onboarding') {
             window.location.href = '/onboarding';
-          } else if (!needsOnboarding && path !== '/dashboard' && (path.startsWith('/auth') || path === '/login')) {
+          } else if (!needsOnboarding && path !== '/dashboard' && (path.startsWith('/auth') || path === '/login' || path === '/')) {
             window.location.href = '/dashboard';
           }
         }
