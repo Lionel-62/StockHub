@@ -72,6 +72,18 @@ export default function InvoiceDetailPage() {
     }).format(Math.round(amount));
   };
 
+  const calculateValidity = (issue: string, due: string) => {
+    if (!issue || !due) return "30 jours";
+    const d1 = new Date(issue);
+    const d2 = new Date(due);
+    const diffTime = Math.abs(d2.getTime() - d1.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays >= 80 && diffDays <= 100) return "3 mois";
+    if (diffDays >= 50 && diffDays <= 70) return "2 mois";
+    if (diffDays >= 25 && diffDays <= 35) return "30 jours";
+    return `${diffDays} jours`;
+  };
+
   return (
     <div className="p-3 md:p-0 max-w-5xl mx-auto space-y-6">
       
@@ -200,86 +212,203 @@ export default function InvoiceDetailPage() {
         </div>
       )}
 
-      {/* Affichage de la Facture / Devis */}
-      <div className="bg-white w-full rounded-sm shadow-md p-8 md:p-12 text-slate-800 flex flex-col relative border border-slate-200 print:shadow-none print:border-none print:m-0 print:p-0">
-        
-        <div className="flex justify-between items-start mb-12">
-          <div>
-            <h1 className="text-4xl font-light text-slate-900 tracking-tight">{isDevis ? "DEVIS" : "FACTURE"}</h1>
-            <p className="text-sm font-semibold text-slate-500 mt-1 font-mono">{invoice.invoiceNumber}</p>
-          </div>
-          <div className="text-right">
-            <div className="h-12 w-12 bg-[#0b213f] text-white rounded-lg flex items-center justify-center font-bold text-xl ml-auto">
-              {settings.name.substring(0, 2).toUpperCase()}
-            </div>
-            <h3 className="font-bold text-slate-900 mt-2">{settings.name}</h3>
-            {settings.address.split('\n').map((line, idx) => (
-              <p key={idx} className="text-xs text-slate-500">{line}</p>
-            ))}
-            {settings.phone && <p className="text-xs text-slate-500">{settings.phone}</p>}
-            {settings.email && <p className="text-xs text-slate-500">{settings.email}</p>}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-8 mb-12">
-          <div>
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">{isDevis ? "Devis préparé pour" : "Facturé à"}</p>
-            <h3 className="font-bold text-slate-900">{invoice.clientName}</h3>
-            <p className="text-sm text-slate-500">{invoice.clientEmail}</p>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
+      {/* Affichage : MODÈLE DEVIS SPÉCIFIQUE OU FACTURE STANDARD */}
+      {isDevis ? (
+        /* MODÈLE DE DEVIS MODERNE & COMMERCIAL (Inspiré du modèle partagé) */
+        <div className="bg-[#f2f6f3] w-full rounded-2xl shadow-sm p-6 sm:p-10 md:p-14 text-slate-800 flex flex-col relative border border-[#d2ded5] print:shadow-none print:border-none print:m-0 print:p-8 print:bg-[#f2f6f3] print:[print-color-adjust:exact]">
+          
+          {/* En-tête : Titre "Devis" & Coordonnées Client / Dates */}
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-8">
             <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Date d'émission</p>
-              <p className="text-sm font-medium text-slate-900">{new Date(invoice.issueDate).toLocaleDateString("fr-FR")}</p>
+              <h1 className="text-4xl sm:text-5xl font-extrabold text-[#11313d] tracking-tight">Devis</h1>
+              <div className="mt-4 space-y-1 text-xs sm:text-sm">
+                <p className="font-bold text-[#11313d] text-base">Pour</p>
+                <p className="font-semibold text-slate-800 text-sm sm:text-base">{invoice.clientName}</p>
+                <p className="text-slate-600">{invoice.clientEmail}</p>
+                <p className="font-bold text-[#11313d] pt-1">
+                  ID client : <span className="font-mono">{invoice.clientId ? invoice.clientId.slice(0, 6) : "01234"}</span>
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">{isDevis ? "Validité de l'offre" : "Échéance"}</p>
-              <p className="text-sm font-medium text-slate-900">{new Date(invoice.dueDate).toLocaleDateString("fr-FR")}</p>
+
+            <div className="text-left sm:text-right space-y-1 text-xs sm:text-sm">
+              <p className="font-bold text-[#11313d]">
+                Date : <span className="font-normal">{new Date(invoice.issueDate).toLocaleDateString("fr-FR")}</span>
+              </p>
+              <p className="font-bold text-[#11313d]">
+                Validité : <span className="font-normal">{calculateValidity(invoice.issueDate, invoice.dueDate)}</span>
+              </p>
+              <p className="text-[11px] font-mono text-slate-500 pt-1">Réf : {invoice.invoiceNumber}</p>
             </div>
           </div>
-        </div>
 
-        <div className="mb-8 flex-1 min-h-[300px]">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-slate-200">
-                <th className="text-left font-semibold text-slate-500 py-3">Description</th>
-                <th className="text-center font-semibold text-slate-500 py-3 w-16">Qté</th>
-                <th className="text-right font-semibold text-slate-500 py-3 w-28">Prix U.</th>
-                <th className="text-right font-semibold text-slate-500 py-3 w-32">Montant</th>
-              </tr>
-            </thead>
-            <tbody>
-              {invoice.items.map((line, idx) => (
-                <tr key={idx} className="border-b border-slate-100 last:border-0">
-                  <td className="py-4 text-slate-800 font-medium">{line.description}</td>
-                  <td className="py-4 text-center text-slate-600">{line.quantity}</td>
-                  <td className="py-4 text-right text-slate-600"><span className="font-mono">{formatCurrency(line.unitPrice)}</span></td>
-                  <td className="py-4 text-right font-semibold text-slate-900"><span className="font-mono">{formatCurrency(line.total)}</span></td>
+          {/* Tableau Moderne avec En-tête Foncé (#11313d) */}
+          <div className="mb-6 overflow-x-auto rounded-lg border border-[#11313d]/20 bg-white shadow-xs">
+            <table className="w-full text-xs sm:text-sm">
+              <thead>
+                <tr className="bg-[#11313d] text-white">
+                  <th className="text-left font-semibold py-2.5 px-3">Détail / description</th>
+                  <th className="text-center font-semibold py-2.5 px-3 w-16 sm:w-20">Quantité</th>
+                  <th className="text-right font-semibold py-2.5 px-3 w-24 sm:w-32">Prix HT</th>
+                  <th className="text-right font-semibold py-2.5 px-3 w-28 sm:w-36">Total HT</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-[#11313d]/15">
+                {invoice.items.map((line, idx) => (
+                  <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                    <td className="py-3 px-3 text-slate-800 font-medium">{line.description}</td>
+                    <td className="py-3 px-3 text-center text-slate-700">{line.quantity}</td>
+                    <td className="py-3 px-3 text-right text-slate-700"><span className="font-mono">{formatCurrency(line.unitPrice)}</span></td>
+                    <td className="py-3 px-3 text-right font-semibold text-slate-900"><span className="font-mono">{formatCurrency(line.total)}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-        <div className="flex justify-end mb-12">
-          <div className="w-64 space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-500 font-medium">Sous-total</span>
-              <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(invoice.subtotal)}</span></span>
+          {/* Section Totaux et "Bon pour accord" */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-8">
+            {/* Remerciement à gauche */}
+            <div className="order-2 sm:order-1 pt-4">
+              <p className="text-sm font-semibold text-[#11313d]">Merci pour votre confiance !</p>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-500 font-medium">TVA (18%)</span>
-              <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(invoice.taxAmount)}</span></span>
-            </div>
-            <div className="flex justify-between text-lg pt-3 border-t border-slate-200">
-              <span className="font-bold text-slate-900">Total TTC</span>
-              <span className="font-bold text-slate-900"><span className="font-mono">{formatCurrency(invoice.total)}</span></span>
+
+            {/* Totaux & Signature à droite */}
+            <div className="order-1 sm:order-2 w-full sm:w-80 space-y-4 ml-auto">
+              {/* Tableau des Totaux */}
+              <div className="border border-[#11313d]/20 rounded-lg overflow-hidden bg-white text-xs sm:text-sm shadow-2xs">
+                <div className="flex justify-between py-2 px-3 border-b border-[#11313d]/10">
+                  <span className="text-slate-600 font-medium">Total Hors Taxe</span>
+                  <span className="font-semibold text-slate-900 font-mono">{formatCurrency(invoice.subtotal)}</span>
+                </div>
+                <div className="flex justify-between py-2 px-3 border-b border-[#11313d]/10">
+                  <span className="text-slate-600 font-medium">TVA ({invoice.taxAmount > 0 ? "18%" : "0%"})</span>
+                  <span className="font-semibold text-slate-900 font-mono">{formatCurrency(invoice.taxAmount)}</span>
+                </div>
+                <div className="flex justify-between py-2.5 px-3 bg-[#11313d]/5 font-bold text-slate-900 text-sm sm:text-base">
+                  <span>Total</span>
+                  <span className="font-mono">{formatCurrency(invoice.total)}</span>
+                </div>
+              </div>
+
+              {/* Encadré "Bon pour accord" */}
+              <div>
+                <p className="text-xs font-bold text-[#11313d] mb-1.5">Bon pour accord</p>
+                <div className="w-full h-24 bg-white border border-[#11313d]/20 rounded-lg flex flex-col justify-end p-2 shadow-inner">
+                  <div className="border-t border-dashed border-slate-300 pt-1 text-[10px] text-slate-400 text-right">
+                    Date et signature du client
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-500 italic mt-1 text-right">à retourner daté et signé</p>
+              </div>
             </div>
           </div>
+
+          {/* Pied de page : Bandeau distinctif de la Boutique / Agence */}
+          <div className="bg-[#cbd8d1]/80 border border-[#b8c9c0] rounded-xl sm:rounded-2xl p-5 sm:p-6 mt-4">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#11313d] mb-3">{settings.name}</h2>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[#11313d]/90">
+              <div className="space-y-1">
+                {settings.phone && <p className="font-medium">{settings.phone}</p>}
+                {settings.email && <p>{settings.email}</p>}
+                {settings.address && <p>{settings.address.replace(/\n/g, ', ')}</p>}
+              </div>
+
+              <div className="sm:border-l sm:border-[#11313d]/20 sm:pl-4 space-y-1 flex flex-col justify-center">
+                <p className="font-medium">www.stockhub.shop</p>
+                <p>WhatsApp : {settings.phone || "Contact direct"}</p>
+              </div>
+            </div>
+
+            <div className="border-t border-[#11313d]/15 mt-4 pt-3 text-center text-[10px] text-[#11313d]/70">
+              Infos administratives : RCCM / IFU • Enregistré au registre du commerce • Offre valable selon conditions indiquées
+            </div>
+          </div>
+
         </div>
-        
-      </div>
+      ) : (
+        /* MODÈLE FACTURE STANDARD */
+        <div className="bg-white w-full rounded-sm shadow-md p-8 md:p-12 text-slate-800 flex flex-col relative border border-slate-200 print:shadow-none print:border-none print:m-0 print:p-0">
+          
+          <div className="flex justify-between items-start mb-12">
+            <div>
+              <h1 className="text-4xl font-light text-slate-900 tracking-tight">FACTURE</h1>
+              <p className="text-sm font-semibold text-slate-500 mt-1 font-mono">{invoice.invoiceNumber}</p>
+            </div>
+            <div className="text-right">
+              <div className="h-12 w-12 bg-[#0b213f] text-white rounded-lg flex items-center justify-center font-bold text-xl ml-auto">
+                {settings.name.substring(0, 2).toUpperCase()}
+              </div>
+              <h3 className="font-bold text-slate-900 mt-2">{settings.name}</h3>
+              {settings.address.split('\n').map((line, idx) => (
+                <p key={idx} className="text-xs text-slate-500">{line}</p>
+              ))}
+              {settings.phone && <p className="text-xs text-slate-500 mt-1">{settings.phone}</p>}
+              {settings.email && <p className="text-xs text-slate-500">{settings.email}</p>}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8 mb-12">
+            <div>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Facturé à</p>
+              <h3 className="font-bold text-slate-900">{invoice.clientName}</h3>
+              <p className="text-sm text-slate-500">{invoice.clientEmail}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Date d'émission</p>
+                <p className="text-sm font-medium text-slate-900">{new Date(invoice.issueDate).toLocaleDateString("fr-FR")}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Échéance</p>
+                <p className="text-sm font-medium text-slate-900">{new Date(invoice.dueDate).toLocaleDateString("fr-FR")}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-8 flex-1 min-h-[300px]">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-slate-200">
+                  <th className="text-left font-semibold text-slate-500 py-3">Description</th>
+                  <th className="text-center font-semibold text-slate-500 py-3 w-16">Qté</th>
+                  <th className="text-right font-semibold text-slate-500 py-3 w-28">Prix U.</th>
+                  <th className="text-right font-semibold text-slate-500 py-3 w-32">Montant</th>
+                </tr>
+              </thead>
+              <tbody>
+                {invoice.items.map((line, idx) => (
+                  <tr key={idx} className="border-b border-slate-100 last:border-0">
+                    <td className="py-4 text-slate-800 font-medium">{line.description}</td>
+                    <td className="py-4 text-center text-slate-600">{line.quantity}</td>
+                    <td className="py-4 text-right text-slate-600"><span className="font-mono">{formatCurrency(line.unitPrice)}</span></td>
+                    <td className="py-4 text-right font-semibold text-slate-900"><span className="font-mono">{formatCurrency(line.total)}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="flex justify-end mb-12">
+            <div className="w-64 space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-500 font-medium">Sous-total</span>
+                <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(invoice.subtotal)}</span></span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-500 font-medium">TVA (18%)</span>
+                <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(invoice.taxAmount)}</span></span>
+              </div>
+              <div className="flex justify-between text-lg pt-3 border-t border-slate-200">
+                <span className="font-bold text-slate-900">Total TTC</span>
+                <span className="font-bold text-slate-900"><span className="font-mono">{formatCurrency(invoice.total)}</span></span>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      )}
     </div>
   );
 }

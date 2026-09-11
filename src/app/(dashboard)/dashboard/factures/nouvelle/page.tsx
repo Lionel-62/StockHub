@@ -232,6 +232,18 @@ export default function CreateInvoicePage() {
     window.print();
   };
 
+  const calculateValidity = (issue: string, due: string) => {
+    if (!issue || !due) return "30 jours";
+    const d1 = new Date(issue);
+    const d2 = new Date(due);
+    const diffTime = Math.abs(d2.getTime() - d1.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays >= 80 && diffDays <= 100) return "3 mois";
+    if (diffDays >= 50 && diffDays <= 70) return "2 mois";
+    if (diffDays >= 25 && diffDays <= 35) return "30 jours";
+    return `${diffDays} jours`;
+  };
+
   const clientOptions = clients.map(c => ({ value: c.id, label: c.name }));
   const productOptions = products.map(p => ({ value: p.id, label: `${p.name} (${p.stock} en stock)` }));
 
@@ -459,97 +471,216 @@ export default function CreateInvoicePage() {
         {/* COLONNE DROITE : PREVISUALISATION */}
         <div className="w-full lg:w-[55%] bg-slate-100 rounded-xl p-2 sm:p-4 lg:p-8 flex justify-center overflow-y-auto custom-scrollbar border border-slate-200 shadow-inner">
           
-          <div id="invoice-preview" className="bg-white w-full max-w-2xl rounded-sm shadow-md p-4 sm:p-6 md:p-12 min-h-[500px] md:min-h-[800px] text-slate-800 flex flex-col relative transition-all">
-            {/* Header Facture / Devis */}
-            <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-8 md:mb-12">
-              <div>
-                <h1 className="text-3xl md:text-4xl font-light text-slate-900 tracking-tight">{docType === "devis" ? "DEVIS" : "FACTURE"}</h1>
-                <p className="text-sm font-semibold text-slate-500 mt-1 font-mono">{invoiceNumber}</p>
-              </div>
-              <div className="text-left sm:text-right">
-                <div className="h-10 w-10 md:h-12 md:w-12 bg-[#0b213f] text-white rounded-lg flex items-center justify-center font-bold text-lg md:text-xl sm:ml-auto mb-2 sm:mb-0">
-                  {settings.name.substring(0, 2).toUpperCase()}
-                </div>
-                <h3 className="font-bold text-slate-900 mt-2">{settings.name}</h3>
-                {settings.address.split('\n').map((line, idx) => (
-                  <p key={idx} className="text-xs text-slate-500">{line}</p>
-                ))}
-                {settings.phone && <p className="text-xs text-slate-500 mt-1">{settings.phone}</p>}
-                {settings.email && <p className="text-xs text-slate-500">{settings.email}</p>}
-              </div>
-            </div>
-
-            {/* Adresses */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12">
-              <div className="order-2 sm:order-1">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">{docType === "devis" ? "Devis préparé pour" : "Facturé à"}</p>
-                <h3 className="font-bold text-slate-900">{selectedClient?.name || "Sélectionnez un client..."}</h3>
-                <p className="text-sm text-slate-500">{selectedClient?.email || "email@client.com"}</p>
-                <p className="text-sm text-slate-500">{selectedClient?.phone || "N/A"}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-4 order-1 sm:order-2">
-                <div>
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Date d'émission</p>
-                  <p className="text-sm font-medium text-slate-900">{issueDate ? new Date(issueDate).toLocaleDateString("fr-FR") : "-"}</p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">{docType === "devis" ? "Offre valable jusqu'au" : "Échéance"}</p>
-                  <p className="text-sm font-medium text-slate-900">{dueDate ? new Date(dueDate).toLocaleDateString("fr-FR") : "-"}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Tableau Articles */}
-            <div className="mb-8 md:mb-12 overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b-2 border-slate-900">
-                    <th className="text-left font-semibold text-slate-500 py-3">Description</th>
-                    <th className="text-center font-semibold text-slate-500 py-3 w-16">Qté</th>
-                    <th className="text-right font-semibold text-slate-500 py-3 w-28">Prix U.</th>
-                    <th className="text-right font-semibold text-slate-500 py-3 w-32">Montant</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {lines.map((line, idx) => (
-                    <tr key={idx} className="border-b border-slate-100 last:border-0">
-                      <td className="py-4 text-slate-800 font-medium">{line.description || <span className="text-slate-300 italic">Article sans nom</span>}</td>
-                      <td className="py-4 text-center text-slate-600">{line.quantity}</td>
-                      <td className="py-4 text-right text-slate-600"><span className="font-mono">{formatCurrency(typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0))}</span></td>
-                      <td className="py-4 text-right font-semibold text-slate-900"><span className="font-mono">{formatCurrency((typeof line.quantity === 'number' ? line.quantity : (parseFloat(line.quantity) || 0)) * (typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0)))}</span></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Totaux */}
-            <div className="flex justify-end mb-8 md:mb-12">
-              <div className="w-full sm:w-64 space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-500 font-medium">Sous-total</span>
-                  <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(subtotal)}</span></span>
-                </div>
-                {applyTax && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500 font-medium">TVA (18%)</span>
-                    <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(tax)}</span></span>
+          <div id="invoice-preview" className="w-full max-w-2xl transition-all">
+            {docType === "devis" ? (
+              /* MODÈLE DE DEVIS MODERNE & COMMERCIAL */
+              <div className="bg-[#f2f6f3] w-full rounded-2xl shadow-sm p-5 sm:p-8 md:p-12 text-slate-800 flex flex-col relative border border-[#d2ded5] print:shadow-none print:border-none print:m-0 print:p-8 print:bg-[#f2f6f3] print:[print-color-adjust:exact]">
+                
+                {/* En-tête : Titre "Devis" & Coordonnées Client / Dates */}
+                <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8">
+                  <div>
+                    <h1 className="text-4xl sm:text-5xl font-extrabold text-[#11313d] tracking-tight">Devis</h1>
+                    <div className="mt-4 space-y-1 text-xs sm:text-sm">
+                      <p className="font-bold text-[#11313d] text-base">Pour</p>
+                      <p className="font-semibold text-slate-800 text-sm sm:text-base">{selectedClient?.name || "Nom du client"}</p>
+                      <p className="text-slate-600">{selectedClient?.email || "email@client.com"}</p>
+                      {selectedClient?.phone && <p className="text-slate-600">{selectedClient.phone}</p>}
+                      <p className="font-bold text-[#11313d] pt-1">
+                        ID client : <span className="font-mono">{selectedClient?.id ? selectedClient.id.slice(0, 6) : "01234"}</span>
+                      </p>
+                    </div>
                   </div>
-                )}
-                <div className="flex justify-between text-lg pt-3 border-t border-slate-200">
-                  <span className="font-bold text-slate-900">Total TTC</span>
-                  <span className="font-bold text-slate-900"><span className="font-mono">{formatCurrency(total)}</span></span>
+
+                  <div className="text-left sm:text-right space-y-1 text-xs sm:text-sm">
+                    <p className="font-bold text-[#11313d]">
+                      Date : <span className="font-normal">{issueDate ? new Date(issueDate).toLocaleDateString("fr-FR") : "-"}</span>
+                    </p>
+                    <p className="font-bold text-[#11313d]">
+                      Validité : <span className="font-normal">{calculateValidity(issueDate, dueDate)}</span>
+                    </p>
+                    <p className="text-[11px] font-mono text-slate-500 pt-1">Réf : {invoiceNumber}</p>
+                  </div>
+                </div>
+
+                {/* Tableau Moderne avec En-tête Foncé (#11313d) */}
+                <div className="mb-6 overflow-x-auto rounded-lg border border-[#11313d]/20 bg-white shadow-xs">
+                  <table className="w-full text-xs sm:text-sm">
+                    <thead>
+                      <tr className="bg-[#11313d] text-white">
+                        <th className="text-left font-semibold py-2.5 px-3">Détail / description</th>
+                        <th className="text-center font-semibold py-2.5 px-3 w-16 sm:w-20">Quantité</th>
+                        <th className="text-right font-semibold py-2.5 px-3 w-24 sm:w-32">Prix HT</th>
+                        <th className="text-right font-semibold py-2.5 px-3 w-28 sm:w-36">Total HT</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#11313d]/15">
+                      {lines.map((line, idx) => (
+                        <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                          <td className="py-3 px-3 text-slate-800 font-medium">{line.description || <span className="text-slate-300 italic">Article sans nom</span>}</td>
+                          <td className="py-3 px-3 text-center text-slate-700">{line.quantity}</td>
+                          <td className="py-3 px-3 text-right text-slate-700"><span className="font-mono">{formatCurrency(typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0))}</span></td>
+                          <td className="py-3 px-3 text-right font-semibold text-slate-900"><span className="font-mono">{formatCurrency((typeof line.quantity === 'number' ? line.quantity : (parseFloat(line.quantity) || 0)) * (typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0)))}</span></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Section Totaux et "Bon pour accord" */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mb-8">
+                  {/* Remerciement à gauche */}
+                  <div className="order-2 sm:order-1 pt-4">
+                    <p className="text-sm font-semibold text-[#11313d]">Merci pour votre confiance !</p>
+                  </div>
+
+                  {/* Totaux & Signature à droite */}
+                  <div className="order-1 sm:order-2 w-full sm:w-80 space-y-4 ml-auto">
+                    {/* Tableau des Totaux */}
+                    <div className="border border-[#11313d]/20 rounded-lg overflow-hidden bg-white text-xs sm:text-sm shadow-2xs">
+                      <div className="flex justify-between py-2 px-3 border-b border-[#11313d]/10">
+                        <span className="text-slate-600 font-medium">Total Hors Taxe</span>
+                        <span className="font-semibold text-slate-900 font-mono">{formatCurrency(subtotal)}</span>
+                      </div>
+                      <div className="flex justify-between py-2 px-3 border-b border-[#11313d]/10">
+                        <span className="text-slate-600 font-medium">TVA ({applyTax ? "18%" : "0%"})</span>
+                        <span className="font-semibold text-slate-900 font-mono">{formatCurrency(tax)}</span>
+                      </div>
+                      <div className="flex justify-between py-2.5 px-3 bg-[#11313d]/5 font-bold text-slate-900 text-sm sm:text-base">
+                        <span>Total</span>
+                        <span className="font-mono">{formatCurrency(total)}</span>
+                      </div>
+                    </div>
+
+                    {/* Encadré "Bon pour accord" */}
+                    <div>
+                      <p className="text-xs font-bold text-[#11313d] mb-1.5">Bon pour accord</p>
+                      <div className="w-full h-24 bg-white border border-[#11313d]/20 rounded-lg flex flex-col justify-end p-2 shadow-inner">
+                        <div className="border-t border-dashed border-slate-300 pt-1 text-[10px] text-slate-400 text-right">
+                          Date et signature du client
+                        </div>
+                      </div>
+                      <p className="text-[11px] text-slate-500 italic mt-1 text-right">à retourner daté et signé</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pied de page : Bandeau Boutique / Agence */}
+                <div className="bg-[#cbd8d1]/80 border border-[#b8c9c0] rounded-xl sm:rounded-2xl p-5 sm:p-6 mt-4">
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[#11313d] mb-3">{settings.name}</h2>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[#11313d]/90">
+                    <div className="space-y-1">
+                      {settings.phone && <p className="font-medium">{settings.phone}</p>}
+                      {settings.email && <p>{settings.email}</p>}
+                      {settings.address && <p>{settings.address.replace(/\n/g, ', ')}</p>}
+                    </div>
+
+                    <div className="sm:border-l sm:border-[#11313d]/20 sm:pl-4 space-y-1 flex flex-col justify-center">
+                      <p className="font-medium">www.stockhub.shop</p>
+                      <p>WhatsApp : {settings.phone || "Contact direct"}</p>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-[#11313d]/15 mt-4 pt-3 text-center text-[10px] text-[#11313d]/70">
+                    Infos administratives : RCCM / IFU • Enregistré au registre du commerce • Offre valable selon conditions indiquées
+                  </div>
+                </div>
+
+              </div>
+            ) : (
+              /* MODÈLE FACTURE STANDARD */
+              <div className="bg-white w-full rounded-sm shadow-md p-4 sm:p-6 md:p-12 min-h-[500px] md:min-h-[800px] text-slate-800 flex flex-col relative transition-all">
+                {/* Header Facture */}
+                <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-8 md:mb-12">
+                  <div>
+                    <h1 className="text-3xl md:text-4xl font-light text-slate-900 tracking-tight">FACTURE</h1>
+                    <p className="text-sm font-semibold text-slate-500 mt-1 font-mono">{invoiceNumber}</p>
+                  </div>
+                  <div className="text-left sm:text-right">
+                    <div className="h-10 w-10 md:h-12 md:w-12 bg-[#0b213f] text-white rounded-lg flex items-center justify-center font-bold text-lg md:text-xl sm:ml-auto mb-2 sm:mb-0">
+                      {settings.name.substring(0, 2).toUpperCase()}
+                    </div>
+                    <h3 className="font-bold text-slate-900 mt-2">{settings.name}</h3>
+                    {settings.address.split('\n').map((line, idx) => (
+                      <p key={idx} className="text-xs text-slate-500">{line}</p>
+                    ))}
+                    {settings.phone && <p className="text-xs text-slate-500 mt-1">{settings.phone}</p>}
+                    {settings.email && <p className="text-xs text-slate-500">{settings.email}</p>}
+                  </div>
+                </div>
+
+                {/* Adresses */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12">
+                  <div className="order-2 sm:order-1">
+                    <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Facturé à</p>
+                    <h3 className="font-bold text-slate-900">{selectedClient?.name || "Sélectionnez un client..."}</h3>
+                    <p className="text-sm text-slate-500">{selectedClient?.email || "email@client.com"}</p>
+                    <p className="text-sm text-slate-500">{selectedClient?.phone || "N/A"}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 order-1 sm:order-2">
+                    <div>
+                      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Date d'émission</p>
+                      <p className="text-sm font-medium text-slate-900">{issueDate ? new Date(issueDate).toLocaleDateString("fr-FR") : "-"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Échéance</p>
+                      <p className="text-sm font-medium text-slate-900">{dueDate ? new Date(dueDate).toLocaleDateString("fr-FR") : "-"}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tableau Articles */}
+                <div className="mb-8 md:mb-12 overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b-2 border-slate-900">
+                        <th className="text-left font-semibold text-slate-500 py-3">Description</th>
+                        <th className="text-center font-semibold text-slate-500 py-3 w-16">Qté</th>
+                        <th className="text-right font-semibold text-slate-500 py-3 w-28">Prix U.</th>
+                        <th className="text-right font-semibold text-slate-500 py-3 w-32">Montant</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {lines.map((line, idx) => (
+                        <tr key={idx} className="border-b border-slate-100 last:border-0">
+                          <td className="py-4 text-slate-800 font-medium">{line.description || <span className="text-slate-300 italic">Article sans nom</span>}</td>
+                          <td className="py-4 text-center text-slate-600">{line.quantity}</td>
+                          <td className="py-4 text-right text-slate-600"><span className="font-mono">{formatCurrency(typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0))}</span></td>
+                          <td className="py-4 text-right font-semibold text-slate-900"><span className="font-mono">{formatCurrency((typeof line.quantity === 'number' ? line.quantity : (parseFloat(line.quantity) || 0)) * (typeof line.unitPrice === 'number' ? line.unitPrice : (parseFloat(line.unitPrice) || 0)))}</span></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Totaux */}
+                <div className="flex justify-end mb-8 md:mb-12">
+                  <div className="w-full sm:w-64 space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-500 font-medium">Sous-total</span>
+                      <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(subtotal)}</span></span>
+                    </div>
+                    {applyTax && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-500 font-medium">TVA (18%)</span>
+                        <span className="text-slate-900 font-semibold"><span className="font-mono">{formatCurrency(tax)}</span></span>
+                      </div>
+                    )}
+                    <div className="flex justify-between text-lg pt-3 border-t border-slate-200">
+                      <span className="font-bold text-slate-900">Total TTC</span>
+                      <span className="font-bold text-slate-900"><span className="font-mono">{formatCurrency(total)}</span></span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Facture */}
+                <div className="mt-auto pt-8 border-t border-slate-100 flex justify-between items-end">
+                  <p className="text-xs text-slate-400">
+                    Note : Tout retard de paiement pourra entraîner des pénalités de retard conformes à la législation en vigueur.
+                  </p>
                 </div>
               </div>
-            </div>
-
-            {/* Footer Facture */}
-            <div className="mt-auto pt-8 border-t border-slate-100 flex justify-between items-end">
-              <p className="text-xs text-slate-400">
-                Note : Tout retard de paiement pourra entraîner des pénalités de retard conformes à la législation en vigueur.
-              </p>
-            </div>
-            
+            )}
           </div>
         </div>
 
