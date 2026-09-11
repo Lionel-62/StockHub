@@ -1,5 +1,5 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { streamText } from 'ai';
+import { streamText, convertToModelMessages } from 'ai';
 
 export const maxDuration = 30;
 
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     if (!apiKey) {
       return new Response(
         JSON.stringify({
-          error: "Clé API introuvable. Veuillez ajouter GOOGLE_GENERATIVE_AI_API_KEY ou GEMINI_API_KEY dans les variables d'environnement Vercel."
+          error: "Clé API introuvable. Veuillez ajouter GEMINI_API_KEY dans votre fichier .env.local."
         }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
@@ -22,8 +22,15 @@ export async function POST(req: Request) {
     const google = createGoogleGenerativeAI({ apiKey });
 
     const body = await req.json();
-    const messages = body.messages ?? [];
+    const rawMessages = body.messages ?? [];
     const shopData = body.data ?? {};
+
+    let modelMessages;
+    try {
+      modelMessages = await convertToModelMessages(rawMessages);
+    } catch {
+      modelMessages = rawMessages;
+    }
 
     const systemPrompt = `Tu es l'Assistant IA expert de l'application StockHub. 
 Tu aides le commerçant avec enthousiasme et précision à analyser ses ventes, gérer son stock et piloter sa boutique.
@@ -37,9 +44,9 @@ Consignes :
 4. Formate tes réponses avec du Markdown propre (listes à puces, mise en gras des montants ou noms de produits).`;
 
     const result = streamText({
-      model: google('gemini-2.5-flash'),
+      model: google('gemini-3.6-flash'),
       system: systemPrompt,
-      messages,
+      messages: modelMessages,
     });
 
     return result.toUIMessageStreamResponse();
