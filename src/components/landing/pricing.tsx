@@ -111,6 +111,9 @@ export function Pricing() {
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Alertes de stock faible en temps réel
                 </li>
+                <li className="flex items-center gap-2 text-[#0b213f] font-bold bg-blue-50/70 px-2 py-1 rounded-lg border border-blue-100">
+                  <Check className="w-4 h-4 text-blue-600" /> Assistant IA StockHub (analyse & conseils)
+                </li>
               </ul>
             </div>
             <Link 
@@ -134,7 +137,7 @@ export function Pricing() {
               <div className="text-lg font-bold text-slate-900">Plan Business</div>
               <div className="text-xs text-slate-500 mt-1">Pour chaînes de magasins & franchises</div>
               <div className="my-6">
-                <span className="text-4xl font-extrabold text-slate-900">15 000</span>
+                <span className="text-4xl font-extrabold text-slate-900">8 000</span>
                 <span className="text-slate-500 font-medium"> FCFA /mois</span>
               </div>
               <ul className="space-y-3.5 text-xs sm:text-sm text-slate-600 mb-8">
@@ -146,6 +149,9 @@ export function Pricing() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Vendeurs & collaborateurs illimités
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Assistant IA illimité pour toute l'équipe
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Gestion des permissions (Propriétaire/Employé)
