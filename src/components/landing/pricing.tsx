@@ -52,7 +52,7 @@ export function Pricing() {
                   <Check className="w-4 h-4 text-[#0f9d58]" /> 1 compte utilisateur
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Vitrine e-commerce de base
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Gestion des prix de base
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Lien WhatsApp direct
@@ -94,13 +94,13 @@ export function Pricing() {
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Jusqu'à 3 comptes vendeurs
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Vitrine 100% à votre image
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Packs Produits & Promotions
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Commandes directes via WhatsApp
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Capture de leads clients sur boutique
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Factures & Reçus PDF personnalisés
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Devis, Factures & Reçus PDF
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Export comptable (Excel / CSV)

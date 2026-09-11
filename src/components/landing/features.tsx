@@ -36,10 +36,10 @@ export function Features() {
               <PackageSearch className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">
-              Stock & catalogue en temps réel
+              Catalogue, Packs & Promotions
             </h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Gérez votre catalogue (prix d'achat, prix de vente, promotions, photos, catégories) et vos quantités physiques au même endroit. Réapprovisionnements, ajustements d'inventaire et alertes de rupture automatiques : votre stock se met à jour à chaque vente.
+              Gérez votre catalogue avec des prix de vente simples, des promotions limitées dans le temps, ou créez des "Packs Produits" attractifs. Réapprovisionnements, ajustements et alertes de rupture automatiques : votre stock se met à jour à chaque vente.
             </p>
           </motion.div>
 
@@ -55,10 +55,10 @@ export function Features() {
               <Receipt className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">
-              Ventes, commandes & facturation
+              Ventes, devis & facturation
             </h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Toutes vos ventes en magasin et vos commandes en ligne réunies dans un seul historique, avec suivi du statut de préparation. Générez des factures professionnelles (TVA calculée automatiquement), changez leur statut (payée, en attente...) et envoyez-les en PDF par WhatsApp.
+              Toutes vos ventes en magasin et commandes en ligne dans un seul historique. Générez des devis et factures professionnelles (TVA automatique), changez leur statut (payée, en attente...) et envoyez-les en PDF sur WhatsApp.
             </p>
           </motion.div>
 
@@ -74,10 +74,10 @@ export function Features() {
               <Store className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">
-              Boutique en ligne connectée à WhatsApp
+              Boutique en ligne & Capture WhatsApp
             </h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Activez votre vitrine e-commerce en un clic, récupérez le lien à partager à vos clients, et recevez chaque commande directement sur le numéro WhatsApp de votre choix, déjà pré-remplie (articles, quantités, total).
+              Activez votre vitrine e-commerce en un clic. Vos clients s'identifient (Nom, Téléphone) avant de valider leur commande. Vous recevez chaque commande pré-remplie directement sur WhatsApp et constituez votre fichier client automatiquement.
             </p>
           </motion.div>
 
@@ -134,7 +134,7 @@ export function Features() {
               { icon: PackageSearch, name: "Produits", desc: "catalogue avec prix, photos, variantes et catégories" },
               { icon: Boxes, name: "Stock", desc: "réapprovisionnements, inventaires et alertes de rupture" },
               { icon: ShoppingCart, name: "Ventes & commandes", desc: "historique unifié magasin + en ligne" },
-              { icon: Receipt, name: "Factures", desc: "factures pro en PDF, envoi WhatsApp, suivi des paiements" },
+              { icon: Receipt, name: "Factures & Devis", desc: "création de devis et factures pro PDF, envoi WhatsApp" },
               { icon: Users, name: "Clients", desc: "carnet d'adresses et historique d'achat (mini-CRM)" },
               { icon: Truck, name: "Fournisseurs", desc: "carnet B2B pour vos réapprovisionnements" },
               { icon: Store, name: "Boutique en ligne", desc: "vitrine e-commerce publique connectée à WhatsApp" },

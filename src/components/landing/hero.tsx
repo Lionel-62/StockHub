@@ -87,7 +87,7 @@ export function Hero() {
             transition={{ delay: 0.2 }}
             className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed mb-10 font-normal"
           >
-            Gérez vos stocks, ventes et factures en temps réel, tout en offrant à vos clients une vitrine e-commerce connectée directement à votre WhatsApp en 2 minutes chrono.
+            Gérez vos stocks, ventes et factures en temps réel, tout en offrant à vos clients une vitrine e-commerce (avec promotions, packs et capture de leads) connectée directement à votre WhatsApp en 2 minutes chrono.
           </motion.p>
           
           {/* CTA Action Buttons */}
