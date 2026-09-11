@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { BarChart2, TrendingUp, DollarSign, Package, Clock } from "lucide-react";
+import { BarChart2, TrendingUp, DollarSign, Package, Clock, Download, Printer } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useOrders } from "@/hooks/orders";
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
@@ -172,34 +173,132 @@ export default function RapportsPage() {
     }).format(amount);
   };
 
+  const timeRangeLabels: Record<TimeRange, string> = {
+    today: "Aujourd'hui",
+    week: "Cette Semaine",
+    month: "Ce Mois",
+    year: "Cette Année",
+    all: "Tout le temps"
+  };
+
+  const exportReportToCSV = () => {
+    const escapeCsv = (val: string | number | undefined | null) => {
+      if (val === undefined || val === null) return '""';
+      const str = String(val).replace(/"/g, '""');
+      return `"${str}"`;
+    };
+
+    const summaryLines = [
+      ["RAPPORT D'ANALYSE COMMERCIALE - STOCKHUB"],
+      ["Periode analysee", escapeCsv(timeRangeLabels[timeRange])],
+      ["Date d'exportation", escapeCsv(new Date().toLocaleDateString("fr-FR") + " " + new Date().toLocaleTimeString("fr-FR"))],
+      [""],
+      ["INDICATEURS CLES DE PERFORMANCE"],
+      ["Chiffre d'affaires total (XOF)", stats.ca],
+      ["CA Ventes en ligne (XOF)", stats.caOnline],
+      ["CA Ventes sur place (XOF)", stats.caInStore],
+      ["Nombre total de ventes", stats.salesCount],
+      ["Total articles vendus", stats.itemsCount],
+      ["Panier moyen (XOF)", Math.round(stats.averageBasket)],
+      [""],
+      ["DETAIL DES VENTES SUR LA PERIODE"],
+      ["Numero Commande", "Date & Heure", "Client", "Canal / Source", "Statut", "Montant Total (XOF)"]
+    ];
+
+    const orderRows = filteredOrders.map(o => [
+      escapeCsv(o.orderNumber),
+      escapeCsv(new Date(o.date).toLocaleDateString("fr-FR") + " " + new Date(o.date).toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' })),
+      escapeCsv(o.clientName || "Client comptoir"),
+      escapeCsv(o.source || "Sur place"),
+      escapeCsv(o.status),
+      o.totalAmount
+    ]);
+
+    const csvContent = "\uFEFF" + [
+      ...summaryLines.map(r => r.join(";")),
+      ...orderRows.map(r => r.join(";"))
+    ].join("\r\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `rapport_financier_${timeRange}_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="p-3 md:p-0 max-w-7xl mx-auto space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      
+      {/* En-tête visible à l'écran */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Rapports & Analyses</h1>
-          <p className="text-slate-500 mt-1">Consultez les performances de votre activité.</p>
+          <p className="text-slate-500 mt-1">Consultez et exportez les performances de votre activité.</p>
         </div>
         
-        <div className="flex bg-white p-1 rounded-lg border border-slate-200 shadow-sm overflow-x-auto hide-scrollbar">
-          {[
-            { id: "today", label: "Aujourd'hui" },
-            { id: "week", label: "Cette Semaine" },
-            { id: "month", label: "Ce Mois" },
-            { id: "year", label: "Cette Année" },
-            { id: "all", label: "Tout le temps" }
-          ].map((range) => (
-            <button
-              key={range.id}
-              onClick={() => setTimeRange(range.id as TimeRange)}
-              className={`px-4 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-colors ${
-                timeRange === range.id 
-                  ? "bg-[#0b213f] text-white shadow-sm" 
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              }`}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {/* Sélecteur de période */}
+          <div className="flex bg-white p-1 rounded-xl border border-slate-200 shadow-sm overflow-x-auto hide-scrollbar">
+            {[
+              { id: "today", label: "Aujourd'hui" },
+              { id: "week", label: "Cette Semaine" },
+              { id: "month", label: "Ce Mois" },
+              { id: "year", label: "Cette Année" },
+              { id: "all", label: "Tout le temps" }
+            ].map((range) => (
+              <button
+                key={range.id}
+                onClick={() => setTimeRange(range.id as TimeRange)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap transition-colors ${
+                  timeRange === range.id 
+                    ? "bg-[#0b213f] text-white shadow-sm" 
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                }`}
+              >
+                {range.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Boutons d'export */}
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={exportReportToCSV}
+              variant="outline"
+              className="flex-1 sm:flex-initial text-slate-700 bg-white border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5 shadow-sm text-xs h-9 px-3"
             >
-              {range.label}
-            </button>
-          ))}
+              <Download size={14} className="text-slate-500" />
+              <span>Exporter CSV</span>
+            </Button>
+            <Button
+              onClick={() => window.print()}
+              variant="outline"
+              className="flex-1 sm:flex-initial text-blue-700 bg-white border-blue-200 hover:bg-blue-50 transition-all flex items-center justify-center gap-1.5 shadow-sm text-xs h-9 px-3"
+            >
+              <Printer size={14} className="text-blue-600" />
+              <span>Imprimer / PDF</span>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* En-tête exclusif à l'impression / export PDF */}
+      <div className="hidden print:block mb-8 border-b border-slate-300 pb-4">
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Rapport d'Activité & Bilan Financier</h1>
+            <p className="text-xs text-slate-600 mt-1">
+              Période : <span className="font-bold text-slate-800">{timeRangeLabels[timeRange]}</span> • Document édité le {new Date().toLocaleDateString("fr-FR")} à {new Date().toLocaleTimeString("fr-FR")}
+            </p>
+          </div>
+          <div className="text-right text-xs text-slate-500">
+            <p className="font-bold text-slate-900 text-sm">StockHub Business</p>
+            <p>Gestion commerciale & caisse</p>
+          </div>
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Search, Plus, Filter, MoreHorizontal, Edit, Trash2, X, Save, Camera, Upload, ChevronLeft, ChevronRight, Store as StoreIcon, Package, CheckSquare, Sparkles, Loader2 } from "lucide-react";
+import { Search, Plus, Filter, MoreHorizontal, Edit, Trash2, X, Save, Camera, Upload, ChevronLeft, ChevronRight, Store as StoreIcon, Package, CheckSquare, Sparkles, Loader2, Download, FileSpreadsheet, FileUp, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -259,6 +259,243 @@ export default function ProductsPage() {
     setIsModalOpen(false);
   };
 
+  // Import / Export CSV State
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [parsedProducts, setParsedProducts] = useState<Product[]>([]);
+  const [importError, setImportError] = useState<string | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importSuccessCount, setImportSuccessCount] = useState<number | null>(null);
+
+  // Exporter le catalogue en CSV
+  const exportProductsToCSV = () => {
+    if (products.length === 0) {
+      alert("Aucun produit à exporter.");
+      return;
+    }
+    const headers = [
+      "Code-barres / SKU",
+      "Nom du produit",
+      "Catégorie",
+      "Prix d'achat",
+      "Prix de vente",
+      "Prix promo",
+      "Stock",
+      "Statut",
+      "Publié en ligne",
+      "Description"
+    ];
+
+    const escapeCsv = (val: string | number | undefined | null) => {
+      if (val === undefined || val === null) return '""';
+      const str = String(val).replace(/"/g, '""');
+      return `"${str}"`;
+    };
+
+    const rows = products.map(p => [
+      escapeCsv(p.sku),
+      escapeCsv(p.name),
+      escapeCsv(p.category),
+      p.purchasePrice || 0,
+      p.salePrice || 0,
+      p.promotionalPrice || "",
+      p.stock || 0,
+      escapeCsv(p.status),
+      p.isPublishedOnStore ? "Oui" : "Non",
+      escapeCsv(p.description || "")
+    ].join(";"));
+
+    const csvContent = "\uFEFF" + [headers.join(";"), ...rows].join("\r\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `catalogue_produits_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  // Télécharger le modèle CSV exemple
+  const downloadCSVTemplate = () => {
+    const headers = [
+      "Nom du produit",
+      "Catégorie",
+      "Prix d'achat",
+      "Prix de vente",
+      "Stock",
+      "Code-barres / SKU",
+      "Prix promo",
+      "Description"
+    ];
+    const sampleRows = [
+      ["T-shirt Coton Bio Noir", "Vêtements", "3000", "6500", "25", "TSHIRT-BLK-01", "5500", "T-shirt 100% coton bio de qualité supérieure"],
+      ["Montre Connectée Pro", "Électronique", "15000", "28000", "10", "WATCH-PRO-02", "", "Montre étanche avec suivi cardiaque et podomètre"],
+      ["Sac à dos Voyageur", "Accessoires", "8000", "16000", "15", "SAC-VOY-03", "", "Sac imperméable avec compartiment pour ordinateur"]
+    ];
+    const csvContent = "\uFEFF" + [headers.join(";"), ...sampleRows.map(r => r.map(v => `"${v}"`).join(";"))].join("\r\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "modele_import_produits_stockhub.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  // Traitement du fichier CSV uploadé
+  const handleCSVFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImportFile(file);
+    setImportError(null);
+    setImportSuccessCount(null);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const text = event.target?.result as string;
+        if (!text || text.trim().length === 0) {
+          setImportError("Le fichier est vide.");
+          return;
+        }
+
+        // Découper les lignes
+        const lines = text.split(/\r\n|\n/).filter(line => line.trim().length > 0);
+        if (lines.length < 2) {
+          setImportError("Le fichier doit contenir au moins une ligne d'en-tête et un produit.");
+          return;
+        }
+
+        // Détecter le séparateur (, ou ;)
+        const headerLine = lines[0];
+        const separator = headerLine.includes(";") ? ";" : ",";
+
+        // Découper les colonnes en tenant compte des guillemets
+        const parseRow = (rowStr: string) => {
+          const result: string[] = [];
+          let current = "";
+          let inQuotes = false;
+          for (let i = 0; i < rowStr.length; i++) {
+            const char = rowStr[i];
+            if (char === '"') {
+              if (inQuotes && rowStr[i + 1] === '"') {
+                current += '"';
+                i++;
+              } else {
+                inQuotes = !inQuotes;
+              }
+            } else if (char === separator && !inQuotes) {
+              result.push(current.trim());
+              current = "";
+            } else {
+              current += char;
+            }
+          }
+          result.push(current.trim());
+          return result;
+        };
+
+        const headers = parseRow(headerLine).map(h => h.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim());
+        
+        // Identifier les index des colonnes
+        const nameIdx = headers.findIndex(h => h.includes("nom") || h.includes("produit") || h.includes("designation") || h.includes("article"));
+        const catIdx = headers.findIndex(h => h.includes("cat"));
+        const purchaseIdx = headers.findIndex(h => h.includes("achat"));
+        const saleIdx = headers.findIndex(h => h.includes("vente") || h.includes("prix"));
+        const stockIdx = headers.findIndex(h => h.includes("stock") || h.includes("quant"));
+        const skuIdx = headers.findIndex(h => h.includes("sku") || h.includes("barre") || h.includes("code") || h.includes("ref"));
+        const promoIdx = headers.findIndex(h => h.includes("promo"));
+        const descIdx = headers.findIndex(h => h.includes("desc"));
+
+        if (nameIdx === -1) {
+          setImportError("Colonne du nom de produit non reconnue. Veuillez utiliser le modèle fourni.");
+          return;
+        }
+
+        const validProducts: Product[] = [];
+
+        for (let i = 1; i < lines.length; i++) {
+          const cols = parseRow(lines[i]);
+          const name = cols[nameIdx]?.trim();
+          if (!name) continue;
+
+          const rawSalePrice = saleIdx !== -1 ? cols[saleIdx]?.replace(/[^0-9.]/g, "") : "0";
+          const salePrice = parseFloat(rawSalePrice) || 0;
+
+          const rawPurchasePrice = purchaseIdx !== -1 ? cols[purchaseIdx]?.replace(/[^0-9.]/g, "") : "0";
+          const purchasePrice = parseFloat(rawPurchasePrice) || 0;
+
+          const rawStock = stockIdx !== -1 ? cols[stockIdx]?.replace(/[^0-9]/g, "") : "0";
+          const stock = parseInt(rawStock, 10) || 0;
+
+          const sku = (skuIdx !== -1 && cols[skuIdx]?.trim()) ? cols[skuIdx].trim() : `SKU-${Math.floor(1000 + Math.random() * 9000)}`;
+          const category = (catIdx !== -1 && cols[catIdx]?.trim()) ? cols[catIdx].trim() : "Divers";
+          const rawPromo = promoIdx !== -1 ? cols[promoIdx]?.replace(/[^0-9.]/g, "") : "";
+          const promotionalPrice = rawPromo ? parseFloat(rawPromo) : undefined;
+          const description = descIdx !== -1 ? cols[descIdx]?.trim() : undefined;
+
+          const statusVal: Product["status"] = stock === 0 ? "Rupture" : stock <= 5 ? "Stock faible" : "En stock";
+
+          validProducts.push({
+            id: crypto.randomUUID(),
+            name,
+            sku,
+            category,
+            purchasePrice,
+            salePrice,
+            stock,
+            status: statusVal,
+            alertThreshold: 5,
+            promotionalPrice,
+            description,
+            imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
+            isPublishedOnStore: true
+          });
+        }
+
+        if (validProducts.length === 0) {
+          setImportError("Aucun produit valide trouvé dans ce fichier.");
+          return;
+        }
+
+        setParsedProducts(validProducts);
+      } catch (err: any) {
+        console.error("Erreur parsing CSV:", err);
+        setImportError("Impossible de lire ce fichier CSV. Assurez-vous qu'il est bien encodé en UTF-8.");
+      }
+    };
+    reader.readAsText(file, "UTF-8");
+  };
+
+  // Enregistrer les produits importés
+  const executeImport = async () => {
+    if (parsedProducts.length === 0) return;
+    setIsImporting(true);
+    setImportError(null);
+
+    try {
+      for (const prod of parsedProducts) {
+        await addProduct(prod);
+      }
+      setImportSuccessCount(parsedProducts.length);
+      setParsedProducts([]);
+      setImportFile(null);
+      setTimeout(() => {
+        setIsImportModalOpen(false);
+        setImportSuccessCount(null);
+      }, 1500);
+    } catch (err) {
+      console.error(err);
+      setImportError("Une erreur est survenue lors de l'enregistrement des produits.");
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   return (
     <div className="p-3 md:p-0 max-w-7xl mx-auto space-y-6 relative">
       
@@ -269,32 +506,61 @@ export default function ProductsPage() {
           <p className="text-slate-500 mt-1">Gérez votre catalogue d'articles et vos prix.</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-center gap-3">
-          <div className="relative w-full sm:w-auto">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-            <input 
-              type="text" 
-              placeholder="Rechercher par nom, SKU..." 
-              value={searchTerm}
-              onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-              className="pl-9 pr-4 py-2 w-full sm:w-64 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-            />
-          </div>
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <div className="relative w-full sm:w-auto">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+              <input 
+                type="text" 
+                placeholder="Rechercher par nom, SKU..." 
+                value={searchTerm}
+                onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                className="pl-9 pr-4 py-2 w-full border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+              />
+            </div>
+            <div className="relative w-full sm:w-[160px]">
               <CustomSelect
                 options={statuses.map(s => ({ value: s, label: s }))}
                 value={statusFilter}
                 onChange={(val) => { setStatusFilter(val); setCurrentPage(1); }}
                 placeholder="Tous les statuts"
                 searchable={false}
-                className="w-full sm:w-[160px]"
+                className="w-full"
               />
             </div>
+          </div>
+          
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
+            <Button 
+              onClick={exportProductsToCSV} 
+              variant="outline" 
+              className="flex-1 sm:flex-initial text-slate-700 bg-white border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5 shadow-sm text-xs sm:text-sm h-9 px-3"
+            >
+              <Download size={15} className="text-slate-500" />
+              <span>Exporter CSV</span>
+            </Button>
             
-            <Button onClick={handleOpenAdd} className="w-full sm:w-auto bg-[#0b213f] hover:bg-[#18355c] text-white transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm hover:shadow-md">
-              <Plus size={16} className="mr-2" />
-              Nouveau produit
+            <Button 
+              onClick={() => {
+                setImportFile(null);
+                setParsedProducts([]);
+                setImportError(null);
+                setImportSuccessCount(null);
+                setIsImportModalOpen(true);
+              }} 
+              variant="outline" 
+              className="flex-1 sm:flex-initial text-slate-700 bg-white border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5 shadow-sm text-xs sm:text-sm h-9 px-3"
+            >
+              <FileUp size={15} className="text-slate-500" />
+              <span>Importer CSV</span>
+            </Button>
+            
+            <Button 
+              onClick={handleOpenAdd} 
+              className="w-full sm:w-auto bg-[#0b213f] hover:bg-[#18355c] text-white transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm hover:shadow-md flex items-center justify-center gap-1.5 text-xs sm:text-sm h-9 px-3.5"
+            >
+              <Plus size={16} />
+              <span>Nouveau produit</span>
             </Button>
           </div>
         </div>
@@ -952,6 +1218,175 @@ export default function ProductsPage() {
               <Button onClick={handleSave} className="bg-[#0b213f] hover:bg-[#18355c] text-white">
                 <Save size={16} className="mr-2" />
                 Enregistrer
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal d'importation CSV */}
+      {isImportModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Entête */}
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0b213f]">
+                  <FileSpreadsheet size={20} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 text-lg">Importer des produits (CSV / Excel)</h3>
+                  <p className="text-xs text-slate-500">Ajoutez rapidement vos articles en masse dans votre catalogue.</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsImportModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-5">
+              {/* Étape 1 : Modèle CSV */}
+              <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h4 className="font-semibold text-amber-900 text-sm">Besoin d'un format prêt à remplir ?</h4>
+                  <p className="text-xs text-amber-700 mt-0.5">Téléchargez notre fichier modèle pré-formaté compatible Excel & Google Sheets.</p>
+                </div>
+                <Button 
+                  onClick={downloadCSVTemplate}
+                  variant="outline" 
+                  size="sm"
+                  className="bg-white hover:bg-amber-100 text-amber-900 border-amber-300 shadow-sm shrink-0 flex items-center gap-1.5"
+                >
+                  <Download size={14} />
+                  <span>Télécharger le modèle</span>
+                </Button>
+              </div>
+
+              {/* Étape 2 : Zone d'upload */}
+              <div>
+                <label className="block text-sm font-semibold text-slate-800 mb-2">
+                  Sélectionnez votre fichier CSV
+                </label>
+                <div className="border-2 border-dashed border-slate-200 hover:border-blue-400 rounded-2xl p-6 text-center transition-colors bg-slate-50/50 hover:bg-blue-50/30 relative">
+                  <input 
+                    type="file" 
+                    accept=".csv,text/csv" 
+                    onChange={handleCSVFileChange}
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  />
+                  <div className="flex flex-col items-center justify-center gap-2 pointer-events-none">
+                    <div className="w-12 h-12 rounded-full bg-white shadow-sm border border-slate-200 flex items-center justify-center text-slate-600">
+                      <FileUp size={24} />
+                    </div>
+                    {importFile ? (
+                      <div>
+                        <p className="text-sm font-bold text-slate-900">{importFile.name}</p>
+                        <p className="text-xs text-slate-500 mt-0.5">{(importFile.size / 1024).toFixed(1)} Ko • Cliquez pour remplacer</p>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="text-sm font-semibold text-slate-800">Glissez-déposez votre fichier ici, ou <span className="text-blue-600 underline">parcourir</span></p>
+                        <p className="text-xs text-slate-500 mt-1">Format supporté : .CSV encodé en UTF-8 (séparateur virgule ou point-virgule)</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Message d'erreur */}
+              {importError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2.5 text-xs text-red-700">
+                  <AlertCircle size={16} className="shrink-0 text-red-600" />
+                  <span>{importError}</span>
+                </div>
+              )}
+
+              {/* Succès */}
+              {importSuccessCount !== null && (
+                <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-sm text-emerald-800 font-semibold">
+                  <CheckCircle2 size={18} className="shrink-0 text-emerald-600" />
+                  <span>{importSuccessCount} produits importés avec succès dans votre catalogue !</span>
+                </div>
+              )}
+
+              {/* Prévisualisation des données */}
+              {parsedProducts.length > 0 && !importSuccessCount && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                      <CheckCircle2 size={14} className="text-emerald-600" />
+                      {parsedProducts.length} produit{parsedProducts.length > 1 ? "s" : ""} détecté{parsedProducts.length > 1 ? "s" : ""}
+                    </span>
+                    <span className="text-[11px] text-slate-400">Aperçu des 5 premiers articles</span>
+                  </div>
+
+                  <div className="border border-slate-200 rounded-xl overflow-hidden max-h-48 overflow-y-auto text-xs">
+                    <table className="w-full text-left">
+                      <thead className="bg-slate-100 text-slate-600 font-semibold sticky top-0">
+                        <tr>
+                          <th className="p-2">SKU</th>
+                          <th className="p-2">Nom</th>
+                          <th className="p-2">Catégorie</th>
+                          <th className="p-2 text-right">Prix vente</th>
+                          <th className="p-2 text-center">Stock</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {parsedProducts.slice(0, 5).map((p, idx) => (
+                          <tr key={idx} className="hover:bg-slate-50">
+                            <td className="p-2 font-mono text-slate-500">{p.sku}</td>
+                            <td className="p-2 font-medium text-slate-800">{p.name}</td>
+                            <td className="p-2 text-slate-600">{p.category}</td>
+                            <td className="p-2 text-right font-semibold text-slate-900">{formatCurrency(p.salePrice)}</td>
+                            <td className="p-2 text-center">
+                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                                p.stock > 5 ? "bg-emerald-100 text-emerald-700" :
+                                p.stock > 0 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700"
+                              }`}>
+                                {p.stock}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {parsedProducts.length > 5 && (
+                    <p className="text-[11px] text-slate-500 text-right italic">+ {parsedProducts.length - 5} autre(s) produit(s) dans le fichier</p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Pied de modal */}
+            <div className="p-5 border-t border-slate-100 flex items-center justify-end gap-3 bg-slate-50">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsImportModalOpen(false)}
+                disabled={isImporting}
+                className="bg-white"
+              >
+                Annuler
+              </Button>
+              <Button 
+                onClick={executeImport} 
+                disabled={parsedProducts.length === 0 || isImporting || importSuccessCount !== null}
+                className="bg-[#0b213f] hover:bg-[#18355c] text-white flex items-center gap-2"
+              >
+                {isImporting ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    <span>Importation en cours...</span>
+                  </>
+                ) : (
+                  <>
+                    <FileUp size={16} />
+                    <span>Importer {parsedProducts.length > 0 ? `(${parsedProducts.length})` : ""}</span>
+                  </>
+                )}
               </Button>
             </div>
           </div>

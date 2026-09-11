@@ -13,6 +13,7 @@ import { useOrders } from "@/hooks/orders";
 import { useSettings } from "@/hooks/settings";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 interface InvoiceLine {
   id: string;
@@ -23,6 +24,7 @@ interface InvoiceLine {
 }
 
 export default function CreateInvoicePage() {
+  const [docType, setDocType] = useState<"facture" | "devis">("facture");
   const [clientId, setClientId] = useState("");
   const [issueDate, setIssueDate] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -46,11 +48,20 @@ export default function CreateInvoicePage() {
 
   // Fix hydration mismatch en initialisant les valeurs aléatoires et temporelles au montage côté client
   useEffect(() => {
+    const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    const initialType = params?.get("type") === "devis" ? "devis" : "facture";
+    setDocType(initialType);
+    
     setIssueDate(new Date().toISOString().split('T')[0]);
-    setInvoiceNumber(`#INV-${Math.floor(Math.random() * 100000).toString().padStart(5, '0')}`);
+    const d = new Date();
+    d.setDate(d.getDate() + (initialType === "devis" ? 30 : 15));
+    setDueDate(d.toISOString().split('T')[0]);
+
+    const prefix = initialType === "devis" ? "#DEV" : "#INV";
+    setInvoiceNumber(`${prefix}-${Math.floor(Math.random() * 100000).toString().padStart(5, '0')}`);
   }, []);
 
-  // Pre-remplissage via orderId
+  // Pre-remplissage via orderId ou edit
   useEffect(() => {
     if (typeof window !== "undefined" && isOrdersLoaded) {
       const params = new URLSearchParams(window.location.search);
@@ -67,6 +78,8 @@ export default function CreateInvoicePage() {
         if (invoiceToEdit) {
           setEditId(invoiceToEdit.id);
           setInvoiceNumber(invoiceToEdit.invoiceNumber);
+          const isDev = invoiceToEdit.invoiceNumber.startsWith("#DEV-") || invoiceToEdit.invoiceNumber.startsWith("DEV-");
+          setDocType(isDev ? "devis" : "facture");
           setClientId(invoiceToEdit.clientId || "");
           setStatus(invoiceToEdit.status);
           setIssueDate(new Date(invoiceToEdit.issueDate).toISOString().split('T')[0]);
@@ -233,8 +246,8 @@ export default function CreateInvoicePage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-slate-900">Créer une facture</h1>
-            <p className="text-sm text-slate-500">Générez et envoyez instantanément.</p>
+            <h1 className="text-xl font-bold text-slate-900">{editId ? "Modifier le document" : docType === "devis" ? "Créer un devis" : "Créer une facture"}</h1>
+            <p className="text-sm text-slate-500">{docType === "devis" ? "Établissez une proposition commerciale claire pour votre client." : "Générez et envoyez instantanément."}</p>
           </div>
         </div>
         <div className="flex w-full md:w-auto items-center gap-3">
@@ -264,11 +277,45 @@ export default function CreateInvoicePage() {
         <div className="w-full lg:w-[45%] flex flex-col space-y-6 overflow-y-auto pr-2 custom-scrollbar pb-10">
           
           <div className="space-y-4">
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Informations</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Type de document & Infos</h2>
+            </div>
+
+            {/* Commutateur Facture / Devis */}
+            <div className="bg-slate-100 p-1 rounded-xl flex items-center gap-1 border border-slate-200">
+              <button
+                type="button"
+                onClick={() => {
+                  setDocType("facture");
+                  if (invoiceNumber.startsWith("#DEV-")) {
+                    setInvoiceNumber(invoiceNumber.replace("#DEV-", "#INV-"));
+                  }
+                }}
+                className={cn("flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2",
+                  docType === "facture" ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900"
+                )}
+              >
+                <span>📄 Facture</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setDocType("devis");
+                  if (invoiceNumber.startsWith("#INV-")) {
+                    setInvoiceNumber(invoiceNumber.replace("#INV-", "#DEV-"));
+                  }
+                }}
+                className={cn("flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2",
+                  docType === "devis" ? "bg-white text-amber-900 shadow-sm" : "text-slate-600 hover:text-slate-900"
+                )}
+              >
+                <span>📋 Devis commercial</span>
+              </button>
+            </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5 relative z-20">
-                <label className="text-xs font-semibold text-slate-600">Client Facturé *</label>
+                <label className="text-xs font-semibold text-slate-600">{docType === "devis" ? "Destinataire du devis *" : "Client Facturé *"}</label>
                 
                 <CustomSelect
                   options={clientOptions}
@@ -280,12 +327,12 @@ export default function CreateInvoicePage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-600">Numéro de Facture</label>
+                <label className="text-xs font-semibold text-slate-600">{docType === "devis" ? "Numéro de Devis" : "Numéro de Facture"}</label>
                 <input 
                   type="text" 
                   value={invoiceNumber}
                   onChange={(e) => setInvoiceNumber(e.target.value)}
-                  className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:outline-none"
+                  className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50 focus:outline-none font-mono"
                 />
               </div>
 
@@ -298,7 +345,7 @@ export default function CreateInvoicePage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-600">Date d'échéance *</label>
+                <label className="text-xs font-semibold text-slate-600">{docType === "devis" ? "Validité de l'offre *" : "Date d'échéance *"}</label>
                 <DatePicker 
                   value={dueDate}
                   onChange={setDueDate}
@@ -413,11 +460,11 @@ export default function CreateInvoicePage() {
         <div className="w-full lg:w-[55%] bg-slate-100 rounded-xl p-2 sm:p-4 lg:p-8 flex justify-center overflow-y-auto custom-scrollbar border border-slate-200 shadow-inner">
           
           <div id="invoice-preview" className="bg-white w-full max-w-2xl rounded-sm shadow-md p-4 sm:p-6 md:p-12 min-h-[500px] md:min-h-[800px] text-slate-800 flex flex-col relative transition-all">
-            {/* Header Facture */}
+            {/* Header Facture / Devis */}
             <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-8 md:mb-12">
               <div>
-                <h1 className="text-3xl md:text-4xl font-light text-slate-900 tracking-tight">FACTURE</h1>
-                <p className="text-sm font-semibold text-slate-500 mt-1">{invoiceNumber}</p>
+                <h1 className="text-3xl md:text-4xl font-light text-slate-900 tracking-tight">{docType === "devis" ? "DEVIS" : "FACTURE"}</h1>
+                <p className="text-sm font-semibold text-slate-500 mt-1 font-mono">{invoiceNumber}</p>
               </div>
               <div className="text-left sm:text-right">
                 <div className="h-10 w-10 md:h-12 md:w-12 bg-[#0b213f] text-white rounded-lg flex items-center justify-center font-bold text-lg md:text-xl sm:ml-auto mb-2 sm:mb-0">
@@ -435,7 +482,7 @@ export default function CreateInvoicePage() {
             {/* Adresses */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mb-8 md:mb-12">
               <div className="order-2 sm:order-1">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Facturé à</p>
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">{docType === "devis" ? "Devis préparé pour" : "Facturé à"}</p>
                 <h3 className="font-bold text-slate-900">{selectedClient?.name || "Sélectionnez un client..."}</h3>
                 <p className="text-sm text-slate-500">{selectedClient?.email || "email@client.com"}</p>
                 <p className="text-sm text-slate-500">{selectedClient?.phone || "N/A"}</p>
@@ -446,7 +493,7 @@ export default function CreateInvoicePage() {
                   <p className="text-sm font-medium text-slate-900">{issueDate ? new Date(issueDate).toLocaleDateString("fr-FR") : "-"}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Échéance</p>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">{docType === "devis" ? "Offre valable jusqu'au" : "Échéance"}</p>
                   <p className="text-sm font-medium text-slate-900">{dueDate ? new Date(dueDate).toLocaleDateString("fr-FR") : "-"}</p>
                 </div>
               </div>

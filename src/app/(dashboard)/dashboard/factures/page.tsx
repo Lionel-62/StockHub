@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Search, Filter, MoreHorizontal, Eye, FileEdit, Trash2, ChevronLeft, ChevronRight, CheckCircle, Send, XCircle } from "lucide-react";
+import { Plus, Search, Filter, MoreHorizontal, Eye, FileEdit, Trash2, ChevronLeft, ChevronRight, CheckCircle, Send, XCircle, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useInvoices } from "@/hooks/invoices";
+import { useInvoices, Invoice } from "@/hooks/invoices";
 import { cn } from "@/lib/utils";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 export default function InvoicesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("Tous");
+  const [docTypeFilter, setDocTypeFilter] = useState<"Tous" | "Facture" | "Devis">("Tous");
   const [currentPage, setCurrentPage] = useState(1);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -33,6 +34,10 @@ export default function InvoicesPage() {
   
   const itemsPerPage = 20;
   const router = useRouter();
+
+  const isDevis = (inv: Invoice) => {
+    return inv.invoiceNumber.startsWith("#DEV-") || inv.invoiceNumber.startsWith("DEV-");
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -58,13 +63,18 @@ export default function InvoicesPage() {
     const matchesSearch = inv.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           inv.clientName.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "Tous" || inv.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const devis = isDevis(inv);
+    const matchesType = docTypeFilter === "Tous" || (docTypeFilter === "Devis" ? devis : !devis);
+    return matchesSearch && matchesStatus && matchesType;
   });
 
   const totalPages = Math.ceil(filteredInvoices.length / itemsPerPage);
   const paginatedInvoices = filteredInvoices.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const statuses = ["Tous", "Brouillon", "Envoyée", "Payée", "En retard", "Annulée"];
+
+  const devisCount = invoices.filter(i => isDevis(i)).length;
+  const facturesCount = invoices.filter(i => !isDevis(i)).length;
 
   if (!isMounted) return null;
 
@@ -74,41 +84,77 @@ export default function InvoicesPage() {
       {/* En-tête de la page */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Factures</h1>
-          <p className="text-slate-500 mt-1">Gérez vos factures, suivez les paiements et relancez les retards.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Factures & Devis</h1>
+          <p className="text-slate-500 mt-1">Gérez vos facturations, devis commerciaux et suivez les règlements.</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-center gap-3">
-          <div className="relative w-full sm:w-auto">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-            <input 
-              type="text" 
-              placeholder="Rechercher (n° facture, client)..." 
-              value={searchTerm}
-              onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-              className="pl-9 pr-4 py-2 w-full sm:w-64 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-            />
-          </div>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-            <div className="relative w-full sm:w-auto">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+              <input 
+                type="text" 
+                placeholder="Rechercher (n° pièce, client)..." 
+                value={searchTerm}
+                onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                className="pl-9 pr-4 py-2 w-full border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+              />
+            </div>
+            <div className="relative w-full sm:w-[160px]">
               <CustomSelect
                 options={statuses.map(s => ({ value: s, label: s }))}
                 value={statusFilter}
                 onChange={(val) => { setStatusFilter(val); setCurrentPage(1); }}
                 placeholder="Tous les statuts"
                 searchable={false}
-                className="w-full sm:w-[160px]"
+                className="w-full"
               />
             </div>
-            
-            <Link href="/dashboard/factures/nouvelle" className="w-full sm:w-auto block">
-              <Button className="w-full bg-[#0b213f] hover:bg-[#18355c] text-white transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm hover:shadow-md">
-                <Plus size={16} className="mr-2" />
-                Créer une facture
+          </div>
+          
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
+            <Link href="/dashboard/factures/nouvelle?type=devis" className="flex-1 sm:flex-initial">
+              <Button variant="outline" className="w-full bg-white hover:bg-slate-50 text-slate-700 border-slate-200 transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm h-9 px-3">
+                <FileText size={15} className="text-amber-600" />
+                <span>Nouveau devis</span>
+              </Button>
+            </Link>
+            <Link href="/dashboard/factures/nouvelle?type=facture" className="flex-1 sm:flex-initial">
+              <Button className="w-full bg-[#0b213f] hover:bg-[#18355c] text-white transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm hover:shadow-md flex items-center justify-center gap-1.5 text-xs sm:text-sm h-9 px-3.5">
+                <Plus size={16} />
+                <span>Créer une facture</span>
               </Button>
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* Onglets de sélection de type de document */}
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-3 overflow-x-auto hide-scrollbar">
+        <button
+          onClick={() => { setDocTypeFilter("Tous"); setCurrentPage(1); }}
+          className={cn("px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap",
+            docTypeFilter === "Tous" ? "bg-[#0b213f] text-white shadow-sm" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+          )}
+        >
+          Tous les documents ({invoices.length})
+        </button>
+        <button
+          onClick={() => { setDocTypeFilter("Facture"); setCurrentPage(1); }}
+          className={cn("px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap",
+            docTypeFilter === "Facture" ? "bg-[#0b213f] text-white shadow-sm" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+          )}
+        >
+          Factures ({facturesCount})
+        </button>
+        <button
+          onClick={() => { setDocTypeFilter("Devis"); setCurrentPage(1); }}
+          className={cn("px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-1.5",
+            docTypeFilter === "Devis" ? "bg-[#0b213f] text-white shadow-sm" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+          )}
+        >
+          <span>Devis ({devisCount})</span>
+        </button>
       </div>
 
       {/* Tableau des factures */}
@@ -118,10 +164,10 @@ export default function InvoicesPage() {
             <Table>
               <TableHeader className="bg-slate-50/50">
                 <TableRow>
-                  <TableHead>N° Facture</TableHead>
+                  <TableHead>N° Document</TableHead>
                   <TableHead>Client</TableHead>
                   <TableHead>Date d'émission</TableHead>
-                  <TableHead>Échéance</TableHead>
+                  <TableHead>Échéance / Validité</TableHead>
                   <TableHead>Statut</TableHead>
                   <TableHead className="text-right">Montant TTC</TableHead>
                   <TableHead className="text-center w-16">Actions</TableHead>
@@ -151,7 +197,16 @@ export default function InvoicesPage() {
                       onClick={() => router.push(`/dashboard/factures/${inv.id}`)}
                     >
                       <TableCell>
-                        <div className="font-semibold text-slate-900"><span className="font-mono">{inv.invoiceNumber}</span></div>
+                        <div className="flex items-center gap-2">
+                          <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider border", 
+                            isDevis(inv) 
+                              ? "bg-amber-50 text-amber-800 border-amber-200" 
+                              : "bg-blue-50 text-blue-800 border-blue-200"
+                          )}>
+                            {isDevis(inv) ? "Devis" : "Facture"}
+                          </span>
+                          <span className="font-semibold text-slate-900 font-mono text-sm">{inv.invoiceNumber}</span>
+                        </div>
                       </TableCell>
                       <TableCell>
                         <div className="font-medium text-slate-700">{inv.clientName}</div>
