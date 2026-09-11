@@ -34,25 +34,37 @@ export default function HelpSupportPage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm border-slate-200 hover:border-blue-300 transition-colors cursor-pointer group">
-          <CardContent className="p-6 text-center space-y-3">
-            <div className="h-12 w-12 bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-xl flex items-center justify-center mx-auto">
-              <MessageCircle size={24} />
-            </div>
-            <h3 className="font-bold text-slate-900">Chat en direct</h3>
-            <p className="text-sm text-slate-500">Discutez avec notre équipe de support technique.</p>
-          </CardContent>
-        </Card>
+        <a 
+          href="https://wa.me/2290162579394?text=Bonjour%20StockHub%2C%20j%27ai%20besoin%20d%27aide%20sur%20mon%20compte." 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="block"
+        >
+          <Card className="shadow-sm border-slate-200 hover:border-emerald-400 hover:shadow-md transition-all cursor-pointer group h-full">
+            <CardContent className="p-6 text-center space-y-3">
+              <div className="h-12 w-12 bg-slate-100 text-slate-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors rounded-xl flex items-center justify-center mx-auto">
+                <MessageCircle size={24} />
+              </div>
+              <h3 className="font-bold text-slate-900">WhatsApp Direct</h3>
+              <p className="text-sm text-slate-500">Discutez en direct avec le support (+229 01 62 57 93 94).</p>
+            </CardContent>
+          </Card>
+        </a>
 
-        <Card className="shadow-sm border-slate-200 hover:border-blue-300 transition-colors cursor-pointer group">
-          <CardContent className="p-6 text-center space-y-3">
-            <div className="h-12 w-12 bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-xl flex items-center justify-center mx-auto">
-              <Mail size={24} />
-            </div>
-            <h3 className="font-bold text-slate-900">Nous écrire</h3>
-            <p className="text-sm text-slate-500">Envoyez-nous un email à support@stockhub.com.</p>
-          </CardContent>
-        </Card>
+        <a 
+          href="mailto:lgodjo62@gmail.com?subject=Support%20StockHub" 
+          className="block"
+        >
+          <Card className="shadow-sm border-slate-200 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer group h-full">
+            <CardContent className="p-6 text-center space-y-3">
+              <div className="h-12 w-12 bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-colors rounded-xl flex items-center justify-center mx-auto">
+                <Mail size={24} />
+              </div>
+              <h3 className="font-bold text-slate-900">Nous écrire</h3>
+              <p className="text-sm text-slate-500 font-medium text-slate-700">lgodjo62@gmail.com</p>
+            </CardContent>
+          </Card>
+        </a>
       </div>
       
       <div className="mt-12 bg-slate-50 rounded-2xl p-8 text-center border border-slate-100">

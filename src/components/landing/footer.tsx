@@ -12,9 +12,23 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-2 mb-4 group z-50">
               <img src="/logo.png" alt="StockHub Logo" className="h-14 sm:h-16 w-auto object-contain" />
             </Link>
-            <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-sm mb-6">
+            <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-sm mb-4">
               La plateforme tout-en-un de gestion de stocks, caisse enregistreuse et vitrine WhatsApp conçue sur-mesure pour les commerces d&apos;Afrique.
             </p>
+            <div className="space-y-1.5 text-xs text-slate-600">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-slate-800">Email :</span>
+                <a href="mailto:lgodjo62@gmail.com" className="hover:text-[#0b213f] hover:underline transition-colors font-mono text-slate-700">
+                  lgodjo62@gmail.com
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-slate-800">WhatsApp :</span>
+                <a href="https://wa.me/2290162579394" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-700 hover:underline transition-colors font-mono text-emerald-600 font-bold">
+                  +229 01 62 57 93 94
+                </a>
+              </div>
+            </div>
           </div>
 
           {/* Footer Column 2: Produit */}
