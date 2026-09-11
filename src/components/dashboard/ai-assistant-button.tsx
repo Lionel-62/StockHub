@@ -10,43 +10,33 @@ export function AIAssistantButton() {
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Charger les données de la boutique depuis le cache local
+  const [shopId, setShopId] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const sessionStr = localStorage.getItem("stockhub_session");
+        if (sessionStr) return JSON.parse(sessionStr).shopId || "";
+      } catch {}
+    }
+    return "";
+  });
+
   useEffect(() => {
-    if (!isOpen) return;
     try {
       const sessionStr = localStorage.getItem("stockhub_session");
       if (sessionStr) {
         const user = JSON.parse(sessionStr);
-        const shopId = user.shopId;
-        const products = JSON.parse(
-          localStorage.getItem(`stockhub_cache_products_${shopId}`) ?? "[]"
-        );
-        const orders = JSON.parse(
-          localStorage.getItem(`stockhub_cache_orders_${shopId}`) ?? "[]"
-        );
-        const clients = JSON.parse(
-          localStorage.getItem(`stockhub_cache_clients_${shopId}`) ?? "[]"
-        );
-        setShopData({
-          shopName: user.shopName,
-          totalProducts: products.length,
-          totalOrders: orders.length,
-          totalClients: clients.length,
-          recentOrders: orders.slice(0, 5),
-          lowStockProducts: products.filter(
-            (p: { stock: number; alertThreshold?: number }) =>
-              p.stock <= (p.alertThreshold ?? 5)
-          ),
-        });
+        if (user.shopId && user.shopId !== shopId) {
+          setShopId(user.shopId);
+        }
       }
     } catch (e) {
-      console.error("Erreur lors du chargement des données pour l'IA", e);
+      console.error("Erreur lecture session", e);
     }
-  }, [isOpen]);
+  }, [isOpen, shopId]);
 
   const { messages, sendMessage, status, error, regenerate } = useChat({
     api: "/api/chat",
-    body: { data: shopData },
+    body: { shopId },
   } as Parameters<typeof useChat>[0]);
 
   const isLoading = status === "submitted" || status === "streaming";
