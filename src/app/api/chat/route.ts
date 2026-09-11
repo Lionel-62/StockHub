@@ -37,7 +37,7 @@ Consignes :
 4. Formate tes réponses avec du Markdown propre (listes à puces, mise en gras des montants ou noms de produits).`;
 
     const result = streamText({
-      model: google('gemini-1.5-flash'),
+      model: google('gemini-2.5-flash'),
       system: systemPrompt,
       messages,
     });
