@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, Search, Filter, MoreHorizontal, Eye, ReceiptText, ChevronLeft, ChevronRight, Calendar, X, Trash2, Download } from "lucide-react";
+import { 
+  Plus, Search, Eye, ReceiptText, ChevronLeft, ChevronRight, X, Trash2, Download, 
+  Globe, CheckCircle2, Clock, Truck, Ban, ChevronDown, MessageCircle, Check, 
+  Store, AlertCircle, ShoppingBag
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -17,10 +21,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useOrders } from "@/hooks/orders";
+import { useOrders, Order } from "@/hooks/orders";
+import { useClients } from "@/hooks/clients";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import { useRouter } from "next/navigation";
 
 export default function SalesPage() {
@@ -28,39 +32,37 @@ export default function SalesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("Tous");
   const [dateFilter, setDateFilter] = useState("");
-  const [todayStr, setTodayStr] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  
+  const [openStatusDropdownId, setOpenStatusDropdownId] = useState<string | null>(null);
+  const [selectedOrderForDetail, setSelectedOrderForDetail] = useState<Order | null>(null);
+  const [notification, setNotification] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
-  const { orders, isLoaded } = useOrders();
+  const { orders, updateOrder, deleteOrder, isLoaded } = useOrders();
+  const { clients } = useClients();
   const itemsPerPage = 20;
 
+  // Fermer les dropdowns quand on clique ailleurs
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (!target.closest('.action-menu-btn') && !target.closest('.action-menu-content')) {
-        setActiveDropdown(null);
+      if (!target.closest('.status-dropdown-container')) {
+        setOpenStatusDropdownId(null);
       }
     };
     document.addEventListener("click", handleClickOutside);
-    
-    // Déterminer la date d'aujourd'hui en toute sécurité (hydratation)
-    const today = new Date().toISOString().split('T')[0];
-    setTodayStr(today);
-
-    // Vérifier si le paramètre filter=today est présent
-    if (typeof window !== "undefined") {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("filter") === "today") {
-        setDateFilter(today);
-      }
-    }
-    
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
+
+  // Auto-hide notification après 3 secondes
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => setNotification(null), 3500);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("fr-FR", {
@@ -68,6 +70,38 @@ export default function SalesPage() {
       currency: "XOF",
       minimumFractionDigits: 0,
     }).format(amount);
+  };
+
+  const handleStatusChange = async (order: Order, newStatus: Order["status"]) => {
+    if (order.status === newStatus) {
+      setOpenStatusDropdownId(null);
+      return;
+    }
+
+    try {
+      const updated = { ...order, status: newStatus };
+      await updateOrder(updated);
+
+      if (selectedOrderForDetail?.id === order.id) {
+        setSelectedOrderForDetail(updated);
+      }
+
+      setNotification({
+        message: `Commande ${order.orderNumber} passée en "${newStatus}"`,
+        type: "success"
+      });
+    } catch (err) {
+      setNotification({
+        message: "Erreur lors de la mise à jour du statut.",
+        type: "error"
+      });
+    }
+    setOpenStatusDropdownId(null);
+  };
+
+  const getClientPhone = (clientName: string) => {
+    const match = clients.find(c => c.name.toLowerCase().trim() === clientName.toLowerCase().trim());
+    return match?.phone || "";
   };
 
   const filteredOrders = orders.filter((order) => {
@@ -85,12 +119,13 @@ export default function SalesPage() {
   });
 
   const exportToCSV = () => {
-    const headers = ["N° Commande", "Date", "Client", "Statut", "Paiement", "Total (XOF)"];
+    const headers = ["N° Commande", "Source", "Date", "Client", "Statut", "Paiement", "Total (XOF)"];
     
     const csvContent = [
       headers.join(","),
       ...filteredOrders.map(order => [
         order.orderNumber,
+        order.source || "Sur place",
         new Date(order.date).toLocaleDateString("fr-FR"),
         `"${order.clientName}"`,
         order.status,
@@ -103,7 +138,7 @@ export default function SalesPage() {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", `export_commandes_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute("download", `commandes_${new Date().toISOString().split('T')[0]}.csv`);
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
@@ -113,16 +148,57 @@ export default function SalesPage() {
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
   const paginatedOrders = filteredOrders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const statuses = ["Tous", "Payée", "Livrée", "En attente", "Annulée"];
+  const statuses: ("Tous" | Order["status"])[] = ["Tous", "Payée", "Livrée", "En attente", "Annulée"];
+
+  const getStatusBadgeStyle = (status: Order["status"]) => {
+    switch (status) {
+      case "Payée":
+        return "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100/70";
+      case "Livrée":
+        return "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100/70";
+      case "En attente":
+        return "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100/70";
+      case "Annulée":
+        return "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100/70";
+      default:
+        return "bg-slate-50 text-slate-700 border-slate-200";
+    }
+  };
+
+  const getStatusIcon = (status: Order["status"]) => {
+    switch (status) {
+      case "Payée":
+        return <CheckCircle2 size={13} className="text-emerald-600" />;
+      case "Livrée":
+        return <Truck size={13} className="text-blue-600" />;
+      case "En attente":
+        return <Clock size={13} className="text-amber-600" />;
+      case "Annulée":
+        return <Ban size={13} className="text-rose-600" />;
+    }
+  };
 
   return (
     <div className="p-3 md:p-0 max-w-7xl mx-auto space-y-6">
       
+      {/* Toast Notification */}
+      {notification && (
+        <div className={cn(
+          "fixed top-5 right-5 z-50 flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg border text-sm font-medium transition-all animate-in fade-in slide-in-from-top-4",
+          notification.type === "success" 
+            ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+            : "bg-rose-50 border-rose-200 text-rose-800"
+        )}>
+          {notification.type === "success" ? <CheckCircle2 size={18} className="text-emerald-600" /> : <AlertCircle size={18} className="text-rose-600" />}
+          <span>{notification.message}</span>
+        </div>
+      )}
+
       {/* En-tête de la page */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Ventes & Commandes</h1>
-          <p className="text-slate-500 mt-1">Suivez les commandes de vos clients et les encaissements.</p>
+          <p className="text-slate-500 mt-1">Gérez vos commandes en ligne et sur place avec modification de statut instantanée.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -196,12 +272,12 @@ export default function SalesPage() {
               <TableHeader className="bg-slate-50/50">
                 <TableRow>
                   <TableHead>Commande</TableHead>
-                  <TableHead>Client</TableHead>
+                  <TableHead>Client & Source</TableHead>
                   <TableHead>Date</TableHead>
-                  <TableHead>Statut</TableHead>
+                  <TableHead>Statut (Cliquer pour changer)</TableHead>
                   <TableHead className="text-right">Montant</TableHead>
                   <TableHead className="text-right">Paiement</TableHead>
-                  <TableHead className="text-center w-16">Actions</TableHead>
+                  <TableHead className="text-center w-24">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -214,7 +290,7 @@ export default function SalesPage() {
                       </TableCell>
                       <TableCell><Skeleton className="h-4 w-32" /></TableCell>
                       <TableCell><Skeleton className="h-4 w-28" /></TableCell>
-                      <TableCell><Skeleton className="h-6 w-20 rounded-md" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-24 rounded-md" /></TableCell>
                       <TableCell className="text-right"><Skeleton className="h-4 w-24 ml-auto" /></TableCell>
                       <TableCell className="text-right"><Skeleton className="h-4 w-16 ml-auto" /></TableCell>
                       <TableCell className="text-center">
@@ -227,74 +303,126 @@ export default function SalesPage() {
                     </TableRow>
                   ))
                 ) : (
-                  paginatedOrders.map((order) => (
-                    <TableRow key={order.id} className="hover:bg-slate-50 transition-colors group">
-                      <TableCell>
-                        <div className="font-semibold text-slate-900"><span className="font-mono">{order.orderNumber}</span></div>
-                        <div className="text-xs text-slate-500 mt-0.5">{order.itemsCount} article(s)</div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="font-medium text-slate-700">{order.clientName}</div>
-                      </TableCell>
-                      <TableCell className="text-slate-500 text-sm">
-                        {new Date(order.date).toLocaleDateString("fr-FR", { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                      </TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant="outline"
-                          className={cn("font-medium", 
-                            order.status === "Payée" ? "bg-green-50 text-green-700 border-green-200" : 
-                            order.status === "Livrée" ? "bg-blue-50 text-blue-700 border-blue-200" : 
-                            order.status === "En attente" ? "bg-orange-50 text-orange-700 border-orange-200" :
-                            "bg-red-50 text-red-700 border-red-200"
-                          )}
-                        >
-                          {order.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right font-bold text-slate-900">
-                        <span className="font-mono">{formatCurrency(order.totalAmount)}</span>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="text-sm text-slate-600">{order.paymentMethod}</div>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <div className="flex items-center justify-center gap-2">
-                          <button 
-                            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-colors"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              alert(`Détails de la commande ${order.orderNumber}\n\nMontant : ${formatCurrency(order.totalAmount)}\nArticles : ${order.itemsCount}\nStatut : ${order.status}`);
-                            }}
-                            title="Voir détails"
-                          >
-                            <Eye size={16} />
-                          </button>
-                          <button 
-                            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              router.push(`/dashboard/factures/nouvelle?orderId=${order.id}`);
-                            }}
-                            title="Générer facture"
-                          >
-                            <ReceiptText size={16} />
-                          </button>
-                          <button 
-                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setItemToDelete(order.id);
-                              setDeleteModalOpen(true);
-                            }}
-                            title="Supprimer la vente"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  paginatedOrders.map((order) => {
+                    const isOnline = order.source === "En ligne";
+                    const isDropdownOpen = openStatusDropdownId === order.id;
+
+                    return (
+                      <TableRow 
+                        key={order.id} 
+                        className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                        onClick={() => setSelectedOrderForDetail(order)}
+                      >
+                        <TableCell>
+                          <div className="font-semibold text-slate-900 flex items-center gap-1.5">
+                            <span className="font-mono">{order.orderNumber}</span>
+                          </div>
+                          <div className="text-xs text-slate-500 mt-0.5">{order.itemsCount} article(s)</div>
+                        </TableCell>
+
+                        <TableCell>
+                          <div className="font-medium text-slate-800">{order.clientName}</div>
+                          <div className="mt-0.5">
+                            {isOnline ? (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200/80 px-2 py-0.5 rounded-full">
+                                <Globe size={10} /> Vitrine en ligne
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
+                                <Store size={10} /> Sur place
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+
+                        <TableCell className="text-slate-500 text-sm">
+                          {new Date(order.date).toLocaleDateString("fr-FR", { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </TableCell>
+
+                        {/* Cellule Statut avec Sélecteur interactif 1-clic */}
+                        <TableCell onClick={(e) => e.stopPropagation()}>
+                          <div className="relative inline-block status-dropdown-container">
+                            <button
+                              type="button"
+                              onClick={() => setOpenStatusDropdownId(isDropdownOpen ? null : order.id)}
+                              className={cn(
+                                "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-all duration-200 cursor-pointer shadow-xs",
+                                getStatusBadgeStyle(order.status)
+                              )}
+                              title="Cliquer pour changer de statut"
+                            >
+                              {getStatusIcon(order.status)}
+                              <span>{order.status}</span>
+                              <ChevronDown size={12} className={cn("transition-transform text-current opacity-70", isDropdownOpen && "rotate-180")} />
+                            </button>
+
+                            {/* Menu Déroulant Statuts */}
+                            {isDropdownOpen && (
+                              <div className="absolute left-0 top-full mt-1.5 z-40 w-44 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 text-xs font-medium animate-in fade-in zoom-in-95">
+                                <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-slate-400 border-b border-slate-100 mb-1">
+                                  Changer le statut
+                                </div>
+                                {(["Payée", "Livrée", "En attente", "Annulée"] as Order["status"][]).map((st) => (
+                                  <button
+                                    key={st}
+                                    type="button"
+                                    onClick={() => handleStatusChange(order, st)}
+                                    className={cn(
+                                      "w-full text-left px-3 py-2 flex items-center justify-between hover:bg-slate-50 transition-colors",
+                                      order.status === st && "font-bold text-[#0b213f] bg-blue-50/50"
+                                    )}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      {getStatusIcon(st)}
+                                      <span>{st}</span>
+                                    </div>
+                                    {order.status === st && <Check size={14} className="text-[#0b213f]" />}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
+
+                        <TableCell className="text-right font-bold text-slate-900">
+                          <span className="font-mono">{formatCurrency(order.totalAmount)}</span>
+                        </TableCell>
+
+                        <TableCell className="text-right">
+                          <div className="text-xs sm:text-sm text-slate-600 font-medium">{order.paymentMethod}</div>
+                        </TableCell>
+
+                        <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center justify-center gap-1.5">
+                            <button 
+                              className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              onClick={() => setSelectedOrderForDetail(order)}
+                              title="Voir les détails complets"
+                            >
+                              <Eye size={16} />
+                            </button>
+                            <button 
+                              className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                              onClick={() => router.push(`/dashboard/factures/nouvelle?orderId=${order.id}`)}
+                              title="Générer une facture"
+                            >
+                              <ReceiptText size={16} />
+                            </button>
+                            <button 
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                              onClick={() => {
+                                setItemToDelete(order.id);
+                                setDeleteModalOpen(true);
+                              }}
+                              title="Supprimer la commande"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
                 )}
                 
                 {isLoaded && paginatedOrders.length === 0 && (
@@ -349,19 +477,196 @@ export default function SalesPage() {
         </CardContent>
       </Card>
       
+      {/* Modal Détail Commande Complet */}
+      {selectedOrderForDetail && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200"
+          onClick={() => setSelectedOrderForDetail(null)}
+        >
+          <div 
+            className="bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 border border-slate-100"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header Modal */}
+            <div className="p-5 bg-gradient-to-r from-[#0b213f] to-blue-900 text-white flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-amber-300">
+                  <ShoppingBag size={20} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-lg font-bold font-mono">{selectedOrderForDetail.orderNumber}</h2>
+                    {selectedOrderForDetail.source === "En ligne" ? (
+                      <span className="text-[10px] font-bold bg-blue-500/30 text-blue-200 px-2 py-0.5 rounded-full border border-blue-400/40">
+                        🌐 En ligne
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-bold bg-white/10 text-slate-200 px-2 py-0.5 rounded-full">
+                        🏬 Sur place
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-blue-200 mt-0.5">
+                    {new Date(selectedOrderForDetail.date).toLocaleDateString("fr-FR", { 
+                      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' 
+                    })}
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setSelectedOrderForDetail(null)}
+                className="p-2 hover:bg-white/10 rounded-full transition-colors text-white/80 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Corps Modal */}
+            <div className="p-5 overflow-y-auto space-y-5 flex-1">
+              
+              {/* Carte Client */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center justify-between">
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Client</div>
+                  <div className="text-base font-bold text-slate-900 mt-0.5">{selectedOrderForDetail.clientName}</div>
+                  {getClientPhone(selectedOrderForDetail.clientName) ? (
+                    <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-1 font-mono">
+                      <span>WhatsApp : {getClientPhone(selectedOrderForDetail.clientName)}</span>
+                    </div>
+                  ) : (
+                    <div className="text-xs text-slate-400 mt-0.5 italic">Aucun numéro renseigné</div>
+                  )}
+                </div>
+
+                {getClientPhone(selectedOrderForDetail.clientName) && (
+                  <a
+                    href={`https://wa.me/${getClientPhone(selectedOrderForDetail.clientName).replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Bonjour ${selectedOrderForDetail.clientName}, concernant votre commande ${selectedOrderForDetail.orderNumber} sur notre boutique...`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors"
+                  >
+                    <MessageCircle size={14} />
+                    <span>WhatsApp</span>
+                  </a>
+                )}
+              </div>
+
+              {/* Sélecteur de Statut */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Statut de la commande :
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {(["Payée", "Livrée", "En attente", "Annulée"] as Order["status"][]).map((st) => {
+                    const isCurrent = selectedOrderForDetail.status === st;
+                    return (
+                      <button
+                        key={st}
+                        type="button"
+                        onClick={() => handleStatusChange(selectedOrderForDetail, st)}
+                        className={cn(
+                          "py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all",
+                          isCurrent 
+                            ? cn("ring-2 ring-offset-1", getStatusBadgeStyle(st), 
+                                st === "Payée" ? "ring-emerald-500 font-extrabold" :
+                                st === "Livrée" ? "ring-blue-500 font-extrabold" :
+                                st === "En attente" ? "ring-amber-500 font-extrabold" : "ring-rose-500 font-extrabold"
+                              )
+                            : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        )}
+                      >
+                        {getStatusIcon(st)}
+                        <span>{st}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Articles commandés */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Articles ({selectedOrderForDetail.itemsCount})</span>
+                  <span className="text-xs text-slate-500">Paiement : <strong>{selectedOrderForDetail.paymentMethod}</strong></span>
+                </div>
+
+                <div className="border border-slate-200 rounded-2xl overflow-hidden">
+                  <div className="divide-y divide-slate-100">
+                    {selectedOrderForDetail.items && selectedOrderForDetail.items.length > 0 ? (
+                      selectedOrderForDetail.items.map((it, idx) => (
+                        <div key={idx} className="p-3 bg-white flex items-center justify-between text-xs sm:text-sm">
+                          <div>
+                            <div className="font-semibold text-slate-900">{it.name}</div>
+                            <div className="text-slate-500 text-[11px]">
+                              {it.quantity} × {formatCurrency(it.unitPrice)}
+                            </div>
+                          </div>
+                          <div className="font-bold font-mono text-slate-900">
+                            {formatCurrency(it.quantity * it.unitPrice)}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-4 bg-white text-xs text-slate-500 italic text-center">
+                        Détail des articles non disponible (commande groupée)
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Total */}
+                  <div className="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+                    <span className="font-bold text-slate-900 text-sm">Montant Total :</span>
+                    <span className="font-extrabold text-base sm:text-lg text-[#0b213f] font-mono">
+                      {formatCurrency(selectedOrderForDetail.totalAmount)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Footer Modal Actions */}
+            <div className="p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  router.push(`/dashboard/factures/nouvelle?orderId=${selectedOrderForDetail.id}`);
+                }}
+                className="w-full sm:w-auto text-xs font-semibold flex items-center justify-center gap-1.5 border-slate-300 hover:bg-white"
+              >
+                <ReceiptText size={15} />
+                <span>Générer Facture / Reçu</span>
+              </Button>
+
+              <Button
+                onClick={() => setSelectedOrderForDetail(null)}
+                className="w-full sm:w-auto bg-[#0b213f] hover:bg-blue-900 text-white text-xs font-semibold px-6"
+              >
+                Fermer
+              </Button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* Modal Confirmation Suppression */}
       <ConfirmModal 
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
-        onConfirm={() => {
+        onConfirm={async () => {
           if (itemToDelete) {
-            // Logique de suppression ici
-            // setOrders(orders.filter(o => o.id !== itemToDelete));
+            await deleteOrder(itemToDelete);
             setItemToDelete(null);
             setDeleteModalOpen(false);
+            setNotification({
+              message: "Commande supprimée avec succès.",
+              type: "success"
+            });
           }
         }}
         title="Supprimer la vente"
-        message="Êtes-vous sûr de vouloir supprimer cette vente ? Les stocks associés pourraient devoir être ajustés manuellement."
+        message="Êtes-vous sûr de vouloir supprimer cette commande ? Cette action retirera la transaction de vos statistiques."
       />
     </div>
   );
