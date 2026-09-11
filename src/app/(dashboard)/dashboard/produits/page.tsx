@@ -218,7 +218,65 @@ export default function ProductsPage() {
 
   const handleOpenEdit = (product: Product) => {
     setModalMode("edit");
-    setCurrentProduct(product);
+    
+    // Parse / normalize packOffers safely
+    let safePackOffers: { quantity: number; price: number }[] | undefined = undefined;
+    if (product.packOffers) {
+      if (Array.isArray(product.packOffers)) {
+        safePackOffers = product.packOffers.length > 0 ? product.packOffers : undefined;
+      } else if (typeof product.packOffers === 'string') {
+        try {
+          const parsed = JSON.parse(product.packOffers);
+          if (Array.isArray(parsed) && parsed.length > 0) safePackOffers = parsed;
+        } catch {}
+      }
+    }
+
+    // Parse / normalize galleryUrls safely
+    let safeGalleryUrls: string[] = [];
+    if (product.galleryUrls) {
+      if (Array.isArray(product.galleryUrls)) {
+        safeGalleryUrls = product.galleryUrls;
+      } else if (typeof product.galleryUrls === 'string') {
+        try {
+          const parsed = JSON.parse(product.galleryUrls);
+          if (Array.isArray(parsed)) safeGalleryUrls = parsed;
+        } catch {}
+      }
+    }
+
+    // Parse / normalize options safely
+    let safeOptions: { name: string; values: string[] }[] | undefined = undefined;
+    if (product.options) {
+      if (Array.isArray(product.options)) {
+        safeOptions = product.options.length > 0 ? product.options.map(opt => ({
+          name: opt?.name || "",
+          values: Array.isArray(opt?.values) ? opt.values : []
+        })) : undefined;
+      }
+    }
+
+    const promoPrice = (product.promotionalPrice !== null && product.promotionalPrice !== undefined && Number(product.promotionalPrice) > 0)
+      ? Number(product.promotionalPrice)
+      : undefined;
+
+    setCurrentProduct({
+      ...product,
+      name: product.name || "",
+      category: product.category || "Alimentation",
+      sku: product.sku || "",
+      description: product.description || "",
+      purchasePrice: product.purchasePrice ?? 0,
+      salePrice: product.salePrice ?? 0,
+      stock: product.stock ?? 0,
+      alertThreshold: product.alertThreshold ?? 5,
+      promotionalPrice: promoPrice,
+      packOffers: safePackOffers,
+      galleryUrls: safeGalleryUrls,
+      options: safeOptions,
+      imageUrl: product.imageUrl || "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
+      isPublishedOnStore: product.isPublishedOnStore !== false
+    });
     setIsModalOpen(true);
   };
 
@@ -235,6 +293,19 @@ export default function ProductsPage() {
     const alertThresholdNum = Number(currentProduct.alertThreshold) ?? 5;
     const statusVal = stockNum === 0 ? "Rupture" : stockNum <= alertThresholdNum ? "Stock faible" : "En stock";
     
+    // Clean up empty/invalid arrays
+    const cleanPackOffers = Array.isArray(currentProduct.packOffers) && currentProduct.packOffers.length > 0 
+      ? currentProduct.packOffers.filter(p => Number(p.quantity) > 0)
+      : undefined;
+
+    const cleanOptions = Array.isArray(currentProduct.options) && currentProduct.options.length > 0
+      ? currentProduct.options.filter(o => o.name && o.name.trim() !== "")
+      : undefined;
+
+    const cleanPromoPrice = (currentProduct.promotionalPrice !== undefined && currentProduct.promotionalPrice !== null && Number(currentProduct.promotionalPrice) > 0)
+      ? Number(currentProduct.promotionalPrice)
+      : undefined;
+
     if (modalMode === "add") {
       const newProduct = {
         ...currentProduct,
@@ -243,6 +314,10 @@ export default function ProductsPage() {
         stock: stockNum,
         purchasePrice: Number(currentProduct.purchasePrice) || 0,
         salePrice: Number(currentProduct.salePrice) || 0,
+        promotionalPrice: cleanPromoPrice,
+        packOffers: cleanPackOffers,
+        options: cleanOptions,
+        galleryUrls: Array.isArray(currentProduct.galleryUrls) ? currentProduct.galleryUrls : [],
         status: statusVal
       } as Product;
       addProduct(newProduct);
@@ -252,6 +327,10 @@ export default function ProductsPage() {
         stock: stockNum,
         purchasePrice: Number(currentProduct.purchasePrice) || 0,
         salePrice: Number(currentProduct.salePrice) || 0,
+        promotionalPrice: cleanPromoPrice,
+        packOffers: cleanPackOffers,
+        options: cleanOptions,
+        galleryUrls: Array.isArray(currentProduct.galleryUrls) ? currentProduct.galleryUrls : [],
         status: statusVal
       } as Product;
       updateProduct(updatedProduct);
@@ -588,10 +667,11 @@ export default function ProductsPage() {
                     <TableCell>
                       <div className="h-12 w-12 rounded-md overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center relative shrink-0">
                         <Image 
-                          src={product.imageUrl} 
-                          alt={product.name} 
+                          src={product.imageUrl || "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop"} 
+                          alt={product.name || "Produit"} 
                           fill
                           className="object-cover"
+                          unoptimized
                         />
                       </div>
                     </TableCell>
@@ -785,8 +865,8 @@ export default function ProductsPage() {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="h-20 w-20 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center overflow-hidden shrink-0 relative group">
-                      {currentProduct.imageUrl && !currentProduct.imageUrl.startsWith("http") ? (
-                        <Image src={currentProduct.imageUrl} alt="Preview" fill className="object-cover" />
+                      {currentProduct.imageUrl ? (
+                        <Image src={currentProduct.imageUrl} alt="Preview" fill className="object-cover" unoptimized />
                       ) : (
                         <Camera size={24} className="text-slate-400 group-hover:text-blue-500 transition-colors" />
                       )}
@@ -851,14 +931,14 @@ export default function ProductsPage() {
                   <div className="space-y-1.5 md:col-span-2 pt-2 border-t border-slate-100">
                     <label className="text-sm font-medium text-slate-700">Images supplémentaires (jusqu'à 3)</label>
                     <div className="flex items-center gap-4 flex-wrap">
-                      {currentProduct.galleryUrls?.map((url, idx) => (
+                      {Array.isArray(currentProduct.galleryUrls) && currentProduct.galleryUrls.map((url, idx) => (
                         <div key={idx} className="h-16 w-16 rounded-xl border border-slate-200 bg-slate-50 relative group overflow-visible">
                           {improvingGalleryIdx === idx && (
                             <div className="absolute inset-0 z-20 bg-black/40 rounded-xl flex items-center justify-center backdrop-blur-[1px]">
                               <Loader2 size={16} className="text-white animate-spin" />
                             </div>
                           )}
-                          <Image src={url} alt={`Gallery ${idx}`} fill className="object-cover rounded-xl" />
+                          <Image src={url} alt={`Gallery ${idx}`} fill className="object-cover rounded-xl" unoptimized />
                           
                           <button 
                             type="button"
@@ -885,7 +965,7 @@ export default function ProductsPage() {
                         </div>
                       ))}
                       
-                      {(!currentProduct.galleryUrls || currentProduct.galleryUrls.length < 3) && (
+                      {(!Array.isArray(currentProduct.galleryUrls) || currentProduct.galleryUrls.length < 3) && (
                         <label className="cursor-pointer h-16 w-16 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center text-slate-400 hover:text-blue-500 hover:border-blue-300 transition-colors relative">
                           <Plus size={20} />
                           <input 
@@ -1033,20 +1113,20 @@ export default function ProductsPage() {
                         <input 
                           type="checkbox" 
                           className="sr-only peer"
-                          checked={currentProduct.promotionalPrice !== undefined}
-                          onChange={(e) => setCurrentProduct({...currentProduct, promotionalPrice: e.target.checked ? currentProduct.salePrice : undefined})}
+                          checked={currentProduct.promotionalPrice !== undefined && currentProduct.promotionalPrice !== null && Number(currentProduct.promotionalPrice) > 0}
+                          onChange={(e) => setCurrentProduct({...currentProduct, promotionalPrice: e.target.checked ? (Number(currentProduct.salePrice) || 0) : undefined})}
                         />
                         <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                       </div>
                     </label>
-                    {currentProduct.promotionalPrice !== undefined && (
+                    {currentProduct.promotionalPrice !== undefined && currentProduct.promotionalPrice !== null && Number(currentProduct.promotionalPrice) > 0 && (
                       <div className="mt-4 pt-4 border-t border-slate-100">
                         <label className="text-sm font-medium text-slate-700">Nouveau prix promotionnel</label>
                         <input 
                           type="number"
                           min="0"
                           value={currentProduct.promotionalPrice || ""}
-                          onChange={(e) => setCurrentProduct({...currentProduct, promotionalPrice: Number(e.target.value)})}
+                          onChange={(e) => setCurrentProduct({...currentProduct, promotionalPrice: e.target.value ? Number(e.target.value) : undefined})}
                           className="w-full mt-1.5 p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                           placeholder="Ex: 4500"
                         />
@@ -1070,13 +1150,13 @@ export default function ProductsPage() {
                         <input 
                           type="checkbox" 
                           className="sr-only peer"
-                          checked={currentProduct.packOffers !== undefined}
-                          onChange={(e) => setCurrentProduct({...currentProduct, packOffers: e.target.checked ? [{ quantity: 2, price: (currentProduct.salePrice || 0) * 1.8 }] : undefined})}
+                          checked={Array.isArray(currentProduct.packOffers) && currentProduct.packOffers.length > 0}
+                          onChange={(e) => setCurrentProduct({...currentProduct, packOffers: e.target.checked ? [{ quantity: 2, price: Math.round((Number(currentProduct.salePrice) || 0) * 1.8) }] : undefined})}
                         />
                         <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                       </div>
                     </label>
-                    {currentProduct.packOffers !== undefined && (
+                    {Array.isArray(currentProduct.packOffers) && currentProduct.packOffers.length > 0 && (
                       <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
                         {currentProduct.packOffers.map((pack, idx) => (
                           <div key={idx} className="flex gap-2 items-center">
@@ -1108,8 +1188,8 @@ export default function ProductsPage() {
                             </div>
                             <button 
                               onClick={() => {
-                                const newOffers = currentProduct.packOffers!.filter((_, i) => i !== idx);
-                                setCurrentProduct({...currentProduct, packOffers: newOffers.length ? newOffers : undefined});
+                                const newOffers = (currentProduct.packOffers || []).filter((_, i) => i !== idx);
+                                setCurrentProduct({...currentProduct, packOffers: newOffers.length > 0 ? newOffers : undefined});
                               }}
                               className="p-2.5 text-slate-400 hover:text-red-500 rounded-lg transition-colors"
                             >
@@ -1148,13 +1228,13 @@ export default function ProductsPage() {
                         <input 
                           type="checkbox" 
                           className="sr-only peer"
-                          checked={currentProduct.options !== undefined}
+                          checked={Array.isArray(currentProduct.options) && currentProduct.options.length > 0}
                           onChange={(e) => setCurrentProduct({...currentProduct, options: e.target.checked ? [{ name: "Taille", values: ["S", "M", "L"] }] : undefined})}
                         />
                         <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                       </div>
                     </label>
-                    {currentProduct.options !== undefined && (
+                    {Array.isArray(currentProduct.options) && currentProduct.options.length > 0 && (
                       <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
                         {currentProduct.options.map((opt, idx) => (
                           <div key={idx} className="space-y-2 p-3 bg-slate-50 rounded-lg border border-slate-100">
@@ -1162,7 +1242,7 @@ export default function ProductsPage() {
                               <input 
                                 type="text" 
                                 placeholder="Nom (ex: Taille)" 
-                                value={opt.name} 
+                                value={opt.name || ""} 
                                 onChange={(e) => {
                                   const newOpts = [...(currentProduct.options || [])];
                                   newOpts[idx].name = e.target.value;
@@ -1172,8 +1252,8 @@ export default function ProductsPage() {
                               />
                               <button 
                                 onClick={() => {
-                                  const newOpts = currentProduct.options!.filter((_, i) => i !== idx);
-                                  setCurrentProduct({...currentProduct, options: newOpts.length ? newOpts : undefined});
+                                  const newOpts = (currentProduct.options || []).filter((_, i) => i !== idx);
+                                  setCurrentProduct({...currentProduct, options: newOpts.length > 0 ? newOpts : undefined});
                                 }}
                                 className="p-2 text-slate-400 hover:text-red-500 rounded-lg transition-colors bg-white border border-slate-200"
                               >
@@ -1183,7 +1263,7 @@ export default function ProductsPage() {
                             <input 
                               type="text" 
                               placeholder="Valeurs séparées par des virgules (ex: S, M, L)" 
-                              value={opt.values.join(", ")} 
+                              value={Array.isArray(opt?.values) ? opt.values.join(", ") : ""} 
                               onChange={(e) => {
                                 const newOpts = [...(currentProduct.options || [])];
                                 newOpts[idx].values = e.target.value.split(",").map(s => s.trim()).filter(Boolean);

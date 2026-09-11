@@ -50,23 +50,56 @@ export function useProducts(publicShopId?: string) {
       .order('created_at', { ascending: false });
 
     if (!error && data) {
-      const mapped: Product[] = data.map(d => ({
-        id: d.id,
-        sku: d.barcode || "",
-        name: d.name,
-        description: d.description || undefined,
-        category: d.category || "",
-        purchasePrice: d.purchase_price,
-        salePrice: d.sale_price,
-        promotionalPrice: d.promotional_price || undefined,
-        stock: d.stock,
-        status: d.stock === 0 ? "Rupture" : (d.stock <= (d.alert_threshold ?? 5) ? "Stock faible" : "En stock"),
-        imageUrl: d.image_url || "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
-        galleryUrls: typeof d.gallery_urls === 'string' ? JSON.parse(d.gallery_urls) : d.gallery_urls || [],
-        packOffers: typeof d.pack_offers === 'string' ? JSON.parse(d.pack_offers) : d.pack_offers,
-        isPublishedOnStore: d.is_published_on_store !== false,
-        alertThreshold: d.alert_threshold ?? 5
-      }));
+      const mapped: Product[] = data.map(d => {
+        let safeGalleryUrls: string[] = [];
+        if (d.gallery_urls) {
+          if (Array.isArray(d.gallery_urls)) {
+            safeGalleryUrls = d.gallery_urls;
+          } else if (typeof d.gallery_urls === 'string') {
+            try {
+              const parsed = JSON.parse(d.gallery_urls);
+              if (Array.isArray(parsed)) safeGalleryUrls = parsed;
+            } catch {}
+          }
+        }
+
+        let safePackOffers: { quantity: number; price: number }[] | undefined = undefined;
+        if (d.pack_offers) {
+          if (Array.isArray(d.pack_offers)) {
+            safePackOffers = d.pack_offers.length > 0 ? d.pack_offers : undefined;
+          } else if (typeof d.pack_offers === 'string') {
+            try {
+              const parsed = JSON.parse(d.pack_offers);
+              if (Array.isArray(parsed) && parsed.length > 0) safePackOffers = parsed;
+            } catch {}
+          }
+        }
+
+        const promoPrice = (d.promotional_price !== null && d.promotional_price !== undefined && Number(d.promotional_price) > 0)
+          ? Number(d.promotional_price)
+          : undefined;
+
+        const stockNum = Number(d.stock) || 0;
+        const alertThresholdNum = d.alert_threshold ?? 5;
+
+        return {
+          id: d.id,
+          sku: d.barcode || "",
+          name: d.name || "",
+          description: d.description || undefined,
+          category: d.category || "",
+          purchasePrice: Number(d.purchase_price) || 0,
+          salePrice: Number(d.sale_price) || 0,
+          promotionalPrice: promoPrice,
+          stock: stockNum,
+          status: stockNum === 0 ? "Rupture" : (stockNum <= alertThresholdNum ? "Stock faible" : "En stock"),
+          imageUrl: d.image_url || "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
+          galleryUrls: safeGalleryUrls,
+          packOffers: safePackOffers,
+          isPublishedOnStore: d.is_published_on_store !== false,
+          alertThreshold: alertThresholdNum
+        };
+      });
       setProducts(mapped);
       localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(mapped));
     }
@@ -78,8 +111,22 @@ export function useProducts(publicShopId?: string) {
     if (shopId) {
       const cached = localStorage.getItem("stockhub_cache_products_" + shopId);
       if (cached) {
-        setProducts(JSON.parse(cached));
-        setIsLoaded(true);
+        try {
+          const raw = JSON.parse(cached);
+          if (Array.isArray(raw)) {
+            const sanitized: Product[] = raw.map((p: any) => ({
+              ...p,
+              promotionalPrice: (p.promotionalPrice !== null && p.promotionalPrice !== undefined && Number(p.promotionalPrice) > 0) ? Number(p.promotionalPrice) : undefined,
+              packOffers: Array.isArray(p.packOffers) && p.packOffers.length > 0 ? p.packOffers : undefined,
+              galleryUrls: Array.isArray(p.galleryUrls) ? p.galleryUrls : [],
+              options: Array.isArray(p.options) && p.options.length > 0 ? p.options : undefined,
+            }));
+            setProducts(sanitized);
+            setIsLoaded(true);
+          }
+        } catch {
+          // ignore corrupted cache
+        }
       }
     }
     fetchProducts();
