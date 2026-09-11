@@ -18,6 +18,40 @@ export default function DashboardPage() {
   const totalRevenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
   const totalSales = orders.length;
   
+  // Calculate trend
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  const currentMonthOrders = orders.filter(o => {
+    const d = new Date(o.date);
+    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+  });
+
+  const previousMonthOrders = orders.filter(o => {
+    const d = new Date(o.date);
+    const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+    return d.getMonth() === prevMonth && d.getFullYear() === prevYear;
+  });
+
+  const currentMonthRevenue = currentMonthOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+  const previousMonthRevenue = previousMonthOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+
+  let revenueTrend = 0;
+  if (previousMonthRevenue > 0) {
+    revenueTrend = ((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue) * 100;
+  } else if (currentMonthRevenue > 0) {
+    revenueTrend = 100; // Si pas de ventes le mois précédent mais ventes ce mois-ci
+  }
+
+  const formattedTrend = revenueTrend > 0 
+    ? `+${revenueTrend.toFixed(1).replace('.', ',')}%` 
+    : revenueTrend < 0 
+      ? `${revenueTrend.toFixed(1).replace('.', ',')}%` 
+      : "0%";
+  const trendType = revenueTrend >= 0 ? "up" : "down";
+  
   const outOfStockCount = products.filter(p => p.stock === 0).length;
   const totalStockValue = products.reduce((sum, p) => sum + (p.stock * p.salePrice), 0);
   
@@ -56,9 +90,9 @@ export default function DashboardPage() {
               title="Chiffre d'affaires (Total)" 
               value={formatCurrency(totalRevenue)} 
               subValue="FCFA"
-              trend="+12,4%"
-              trendText="Cumul total"
-              trendType="up"
+              trend={formattedTrend}
+              trendText="vs mois précédent"
+              trendType={trendType}
               icon={DollarSign} 
               iconColorClass="text-blue-600" 
               iconBgClass="bg-blue-100" 
