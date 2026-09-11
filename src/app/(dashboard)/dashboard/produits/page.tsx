@@ -205,9 +205,9 @@ export default function ProductsPage() {
       name: "", 
       sku: `SKU-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`, 
       category: "Alimentation", 
-      purchasePrice: 0, 
-      salePrice: 0, 
-      stock: 0, 
+      purchasePrice: undefined, 
+      salePrice: undefined, 
+      stock: undefined, 
       alertThreshold: 5,
       status: "Rupture",
       imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
@@ -1043,8 +1043,14 @@ export default function ProductsPage() {
                   <input 
                     type="number"
                     min="0"
+                    placeholder="0"
                     value={currentProduct.purchasePrice ?? ""}
-                    onChange={(e) => setCurrentProduct({...currentProduct, purchasePrice: e.target.value ? Number(e.target.value) : undefined})}
+                    onFocus={(e) => {
+                      if (currentProduct.purchasePrice === 0 || e.target.value === "0") {
+                        setCurrentProduct(prev => ({ ...prev, purchasePrice: undefined }));
+                      }
+                    }}
+                    onChange={(e) => setCurrentProduct({...currentProduct, purchasePrice: e.target.value !== "" ? Number(e.target.value) : undefined})}
                     className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                   />
                 </div>
@@ -1054,8 +1060,14 @@ export default function ProductsPage() {
                   <input 
                     type="number"
                     min="0"
+                    placeholder="0"
                     value={currentProduct.salePrice ?? ""}
-                    onChange={(e) => setCurrentProduct({...currentProduct, salePrice: e.target.value ? Number(e.target.value) : undefined})}
+                    onFocus={(e) => {
+                      if (currentProduct.salePrice === 0 || e.target.value === "0") {
+                        setCurrentProduct(prev => ({ ...prev, salePrice: undefined }));
+                      }
+                    }}
+                    onChange={(e) => setCurrentProduct({...currentProduct, salePrice: e.target.value !== "" ? Number(e.target.value) : undefined})}
                     className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                   />
                 </div>
@@ -1065,8 +1077,14 @@ export default function ProductsPage() {
                   <input 
                     type="number"
                     min="0"
+                    placeholder="0"
                     value={currentProduct.stock ?? ""}
-                    onChange={(e) => setCurrentProduct({...currentProduct, stock: e.target.value ? Number(e.target.value) : undefined})}
+                    onFocus={(e) => {
+                      if (currentProduct.stock === 0 || e.target.value === "0") {
+                        setCurrentProduct(prev => ({ ...prev, stock: undefined }));
+                      }
+                    }}
+                    onChange={(e) => setCurrentProduct({...currentProduct, stock: e.target.value !== "" ? Number(e.target.value) : undefined})}
                     className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                   />
                 </div>
@@ -1075,8 +1093,14 @@ export default function ProductsPage() {
                   <input 
                     type="number"
                     min="1"
+                    placeholder="5"
                     value={currentProduct.alertThreshold ?? ""}
-                    onChange={(e) => setCurrentProduct({...currentProduct, alertThreshold: e.target.value ? Number(e.target.value) : undefined})}
+                    onFocus={(e) => {
+                      if (currentProduct.alertThreshold === 0 || e.target.value === "0") {
+                        setCurrentProduct(prev => ({ ...prev, alertThreshold: undefined }));
+                      }
+                    }}
+                    onChange={(e) => setCurrentProduct({...currentProduct, alertThreshold: e.target.value !== "" ? Number(e.target.value) : undefined})}
                     className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                   />
                 </div>
@@ -1125,8 +1149,13 @@ export default function ProductsPage() {
                         <input 
                           type="number"
                           min="0"
-                          value={currentProduct.promotionalPrice || ""}
-                          onChange={(e) => setCurrentProduct({...currentProduct, promotionalPrice: e.target.value ? Number(e.target.value) : undefined})}
+                          value={currentProduct.promotionalPrice ?? ""}
+                          onFocus={(e) => {
+                            if (currentProduct.promotionalPrice === 0 || e.target.value === "0") {
+                              setCurrentProduct(prev => ({ ...prev, promotionalPrice: undefined }));
+                            }
+                          }}
+                          onChange={(e) => setCurrentProduct({...currentProduct, promotionalPrice: e.target.value !== "" ? Number(e.target.value) : undefined})}
                           className="w-full mt-1.5 p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                           placeholder="Ex: 4500"
                         />
@@ -1164,10 +1193,17 @@ export default function ProductsPage() {
                               <input 
                                 type="number" 
                                 placeholder="Quantité" 
-                                value={pack.quantity || ""} 
+                                value={pack.quantity ?? ""} 
+                                onFocus={(e) => {
+                                  if (pack.quantity === 0 || e.target.value === "0") {
+                                    const newOffers = [...(currentProduct.packOffers || [])];
+                                    newOffers[idx].quantity = undefined as any;
+                                    setCurrentProduct({...currentProduct, packOffers: newOffers});
+                                  }
+                                }}
                                 onChange={(e) => {
                                   const newOffers = [...(currentProduct.packOffers || [])];
-                                  newOffers[idx].quantity = Number(e.target.value);
+                                  newOffers[idx].quantity = e.target.value !== "" ? Number(e.target.value) : undefined as any;
                                   setCurrentProduct({...currentProduct, packOffers: newOffers});
                                 }}
                                 className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50"
@@ -1177,10 +1213,17 @@ export default function ProductsPage() {
                               <input 
                                 type="number" 
                                 placeholder="Prix total" 
-                                value={pack.price || ""} 
+                                value={pack.price ?? ""} 
+                                onFocus={(e) => {
+                                  if (pack.price === 0 || e.target.value === "0") {
+                                    const newOffers = [...(currentProduct.packOffers || [])];
+                                    newOffers[idx].price = undefined as any;
+                                    setCurrentProduct({...currentProduct, packOffers: newOffers});
+                                  }
+                                }}
                                 onChange={(e) => {
                                   const newOffers = [...(currentProduct.packOffers || [])];
-                                  newOffers[idx].price = Number(e.target.value);
+                                  newOffers[idx].price = e.target.value !== "" ? Number(e.target.value) : undefined as any;
                                   setCurrentProduct({...currentProduct, packOffers: newOffers});
                                 }}
                                 className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50"

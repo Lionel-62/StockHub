@@ -429,7 +429,13 @@ export default function CreateInvoicePage() {
                       <input 
                         type="number" 
                         min="1"
+                        placeholder="1"
                         value={line.quantity ?? ""}
+                        onFocus={(e) => {
+                          if (line.quantity === 0 || e.target.value === "0") {
+                            updateLine(line.id, "quantity", "");
+                          }
+                        }}
                         onChange={(e) => updateLine(line.id, "quantity", e.target.value)}
                         className="w-full p-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -439,7 +445,13 @@ export default function CreateInvoicePage() {
                       <input 
                         type="number" 
                         min="0"
+                        placeholder="0"
                         value={line.unitPrice ?? ""}
+                        onFocus={(e) => {
+                          if (line.unitPrice === 0 || e.target.value === "0") {
+                            updateLine(line.id, "unitPrice", "");
+                          }
+                        }}
                         onChange={(e) => updateLine(line.id, "unitPrice", e.target.value)}
                         className="w-full p-2 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />

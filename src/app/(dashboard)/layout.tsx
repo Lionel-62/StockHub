@@ -2,6 +2,7 @@ import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
 import { AIAssistantButton } from "@/components/dashboard/ai-assistant-button";
 import { AuthGuard } from "@/components/dashboard/auth-guard";
+import { AutoClearZero } from "@/components/dashboard/auto-clear-zero";
 
 export default function DashboardLayout({
   children,
@@ -24,6 +25,7 @@ export default function DashboardLayout({
         </div>
         <div className="print:hidden">
           <AIAssistantButton />
+          <AutoClearZero />
         </div>
       </div>
     </AuthGuard>
