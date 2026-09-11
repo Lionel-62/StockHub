@@ -169,8 +169,18 @@ export function useProducts(publicShopId?: string) {
 
   const updateProduct = async (product: Product) => {
     const shopId = getShopId();
-    // Optimistic update
-    setProducts(prev => prev.map(p => p.id === product.id ? product : p));
+    let prevProducts: Product[] = [];
+    setProducts(prev => {
+      prevProducts = prev;
+      return prev.map(p => p.id === product.id ? product : p);
+    });
+
+    if (shopId) {
+      try {
+        const cached = JSON.parse(localStorage.getItem("stockhub_cache_products_" + shopId) || "[]");
+        localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(cached.map((p: Product) => p.id === product.id ? product : p)));
+      } catch {}
+    }
 
     const result = await updateProductAction(product.id, {
       name: product.name,
@@ -191,9 +201,13 @@ export function useProducts(publicShopId?: string) {
 
     if (!result.success) {
       console.error("Erreur mise à jour produit:", result.error);
-    } else if (shopId) {
-      const cached = JSON.parse(localStorage.getItem("stockhub_cache_products_" + shopId) || "[]");
-      localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(cached.map((p: Product) => p.id === product.id ? product : p)));
+      // Rollback to previous state
+      setProducts(prevProducts);
+      if (shopId) {
+        try {
+          localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(prevProducts));
+        } catch {}
+      }
     }
   };
 
