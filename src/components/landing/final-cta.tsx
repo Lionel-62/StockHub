@@ -47,16 +47,21 @@ export function FinalCta() {
             </motion.button>
           </Link>
           
-          <Link href="#comment-ca-marche" className="w-full sm:w-auto">
+          <a 
+            href="https://wa.me/2290162579394?text=Bonjour%20StockHub%2C%20j%27aimerais%20poser%20une%20question%20sur%20la%20plateforme." 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="w-full sm:w-auto"
+          >
             <motion.button 
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.95 }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-800/80 border border-slate-700 hover:bg-slate-700 text-white font-semibold text-base px-6 py-4 rounded-full transition-all"
             >
-              <MessageSquare className="w-5 h-5" />
+              <MessageSquare className="w-5 h-5 text-emerald-400" />
               <span>Poser une question</span>
             </motion.button>
-          </Link>
+          </a>
         </motion.div>
         
         <motion.div 

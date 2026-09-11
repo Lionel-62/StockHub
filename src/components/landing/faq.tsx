@@ -92,6 +92,21 @@ export function Faq() {
             );
           })}
         </div>
+
+        {/* Support direct WhatsApp */}
+        <div className="mt-12 text-center">
+          <p className="text-slate-600 text-sm mb-3">Vous avez une autre question qui ne figure pas ici ?</p>
+          <a
+            href="https://wa.me/2290162579394?text=Bonjour%20StockHub%2C%20j%27ai%20une%20question%20sur%20votre%20plateforme."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-slate-800 hover:text-emerald-700 font-bold text-sm bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 px-5 py-2.5 rounded-full transition-all shadow-xs"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Discuter avec nous sur WhatsApp</span>
+            <span className="text-emerald-600 font-bold">→</span>
+          </a>
+        </div>
       </div>
     </section>
   );
