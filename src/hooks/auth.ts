@@ -111,7 +111,7 @@ export function useAuth() {
         
         let myShops: { id: string; name: string; slug: string }[] = [];
         if (!needsOnboarding) {
-          const { data: shops } = await supabase.from('shops').select('id, name, slug').eq('owner_id', session.user.id);
+          const { data: shops } = await supabase.from('shops').select('id, name, slug').eq('owner_id', session.user.id).order('created_at', { ascending: true });
           if (shops) {
             myShops = shops;
           }

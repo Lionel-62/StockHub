@@ -47,10 +47,10 @@ export function Footer() {
           <div>
             <div className="font-bold text-slate-900 mb-3 text-xs uppercase tracking-wider">Ressources</div>
             <ul className="space-y-2 text-xs">
-              <li><Link href="#" className="hover:text-[#0b213f] transition-colors">Guide du commerçant</Link></li>
-              <li><Link href="#" className="hover:text-[#0b213f] transition-colors">Intégrer Mobile Money</Link></li>
-              <li><Link href="#" className="hover:text-[#0b213f] transition-colors">Tutoriels vidéo</Link></li>
-              <li><Link href="#" className="hover:text-[#0b213f] transition-colors">Centre d&apos;aide 24/7</Link></li>
+              <li><Link href="/aide" className="hover:text-[#0b213f] transition-colors">Guide du commerçant</Link></li>
+              <li><Link href="/aide" className="hover:text-[#0b213f] transition-colors">Intégrer Mobile Money</Link></li>
+              <li><Link href="/aide" className="hover:text-[#0b213f] transition-colors">Tutoriels vidéo</Link></li>
+              <li><Link href="/aide" className="hover:text-[#0b213f] transition-colors">Centre d&apos;aide 24/7</Link></li>
             </ul>
           </div>
 

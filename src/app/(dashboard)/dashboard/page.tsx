@@ -11,7 +11,8 @@ import { useProducts } from "@/hooks/products";
 import Link from "next/link";
 
 export default function DashboardPage() {
-  const { orders, isLoaded: ordersLoaded } = useOrders();
+  const { orders: rawOrders, isLoaded: ordersLoaded } = useOrders();
+  const orders = rawOrders.filter(o => o.status !== "Annulée");
   const { products, isLoaded: productsLoaded } = useProducts();
 
   // Calculate real stats

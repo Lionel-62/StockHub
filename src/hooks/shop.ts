@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { updateShopSettingsAction } from "@/app/actions/shop.actions";
 
 export interface ShopSettings {
   id?: string;
@@ -12,6 +13,7 @@ export interface ShopSettings {
   metaApiEnabled?: boolean;
   metaPhoneNumberId?: string;
   metaAccessToken?: string;
+  logoUrl?: string;
 }
 
 const defaultShopSettings: ShopSettings = {
@@ -24,6 +26,7 @@ const defaultShopSettings: ShopSettings = {
   metaApiEnabled: false,
   metaPhoneNumberId: "",
   metaAccessToken: "",
+  logoUrl: "",
 };
 
 export function useShopSettings(publicShopId?: string) {
@@ -47,27 +50,38 @@ export function useShopSettings(publicShopId?: string) {
       return;
     }
 
-    const { data, error } = await supabase
-      .from('shops')
-      .select('*')
-      .eq('id', shopId)
-      .single();
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
 
-    if (!error && data) {
-      const newSettings = {
-        id: data.id,
-        name: data.name,
-        slug: data.slug,
-        description: data.description || "",
-        whatsappNumber: data.whatsapp_number || "",
-        isActive: data.is_active,
-        themeColor: data.theme_color || "blue",
-        metaApiEnabled: data.meta_api_enabled,
-        metaPhoneNumberId: data.meta_phone_number_id || "",
-        metaAccessToken: data.meta_access_token || ""
-      };
-      setShopSettings(newSettings);
-      localStorage.setItem("stockhub_settings_shop_" + shopId, JSON.stringify(newSettings));
+      const { data, error } = await supabase
+        .from('shops')
+        .select('*')
+        .eq('id', shopId)
+        .abortSignal(controller.signal)
+        .single();
+        
+      clearTimeout(timeoutId);
+
+      if (!error && data) {
+        const newSettings = {
+          id: data.id,
+          name: data.name,
+          slug: data.slug,
+          description: data.description || "",
+          whatsappNumber: data.whatsapp_number || "",
+          isActive: data.is_active,
+          themeColor: data.theme_color || "blue",
+          metaApiEnabled: data.meta_api_enabled,
+          metaPhoneNumberId: data.meta_phone_number_id || "",
+          metaAccessToken: data.meta_access_token || "",
+          logoUrl: data.logo_url || "",
+        };
+        setShopSettings(newSettings);
+        localStorage.setItem("stockhub_settings_shop_" + shopId, JSON.stringify(newSettings));
+      }
+    } catch (e) {
+      console.warn("Supabase fetch timeout or error for shop settings.");
     }
     setIsLoaded(true);
   };
@@ -90,8 +104,7 @@ export function useShopSettings(publicShopId?: string) {
 
     setShopSettings(newSettings);
     
-    await supabase.from('shops').upsert({
-      id: shopId,
+    await updateShopSettingsAction({
       name: newSettings.name,
       slug: newSettings.slug,
       description: newSettings.description,
@@ -100,8 +113,33 @@ export function useShopSettings(publicShopId?: string) {
       theme_color: newSettings.themeColor,
       meta_api_enabled: newSettings.metaApiEnabled,
       meta_phone_number_id: newSettings.metaPhoneNumberId,
-      meta_access_token: newSettings.metaAccessToken
+      meta_access_token: newSettings.metaAccessToken,
+      logo_url: newSettings.logoUrl
     });
+
+    // Update current session to keep shopName and shopSlug in sync
+    const sessionStr = localStorage.getItem("stockhub_session");
+    if (sessionStr) {
+      const session = JSON.parse(sessionStr);
+      let updated = false;
+      if (session.shopId === shopId && (session.shopName !== newSettings.name || session.shopSlug !== newSettings.slug)) {
+        session.shopName = newSettings.name;
+        session.shopSlug = newSettings.slug;
+        updated = true;
+      }
+      if (session.myShops && Array.isArray(session.myShops)) {
+        session.myShops = session.myShops.map((s: any) => {
+          if (s.id === shopId && (s.name !== newSettings.name || s.slug !== newSettings.slug)) {
+            updated = true;
+            return { ...s, name: newSettings.name, slug: newSettings.slug };
+          }
+          return s;
+        });
+      }
+      if (updated) {
+        localStorage.setItem("stockhub_session", JSON.stringify(session));
+      }
+    }
     
     // Dispatch event for other tabs just in case, though they should really listen to Supabase realtime
     window.dispatchEvent(new Event("shopSettingsUpdated"));

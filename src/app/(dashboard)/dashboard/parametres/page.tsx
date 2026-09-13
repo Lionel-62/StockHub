@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { 
   Save, Building2, Bell, Shield, Wallet, 
   Upload, Check, CreditCard, Lock, Mail, 
-  Smartphone, Globe, Paintbrush, FileText
+  Smartphone, Globe, Paintbrush, FileText 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -14,6 +14,9 @@ import { useSettings } from "@/hooks/settings";
 import { useAuth } from "@/hooks/auth";
 import { SuccessModal } from "@/components/ui/success-modal";
 import { updateProfileNameAction, syncSessionAction } from "@/app/actions/auth.actions";
+import { supabase } from "@/lib/supabase/client";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 const TABS = [
   { id: "general", label: "Général", icon: Building2 },
@@ -23,8 +26,10 @@ const TABS = [
   { id: "notifications", label: "Notifications", icon: Bell },
 ];
 
-export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState("general");
+function SettingsContent() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState(tabParam || "general");
   const [currency, setCurrency] = useState("XOF");
   const [language, setLanguage] = useState("FR");
   const [timezone, setTimezone] = useState("GMT+1");
@@ -36,6 +41,12 @@ export default function SettingsPage() {
   const [formData, setFormData] = useState(settings);
   const [ownerName, setOwnerName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
 
   useEffect(() => {
     if (isLoaded) {
@@ -51,7 +62,36 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     setIsSaving(true);
-    saveSettings(formData);
+    
+    let finalFormData = { ...formData };
+
+    if (finalFormData.logo && finalFormData.logo.startsWith("data:")) {
+      try {
+        const base64Data = finalFormData.logo.split(",")[1];
+        const byteCharacters = atob(base64Data);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: "image/jpeg" });
+        const fileName = `logo_${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
+        
+        const { error } = await supabase.storage.from('shop_logos').upload(fileName, blob, {
+          contentType: 'image/jpeg',
+          upsert: true
+        });
+        
+        if (!error) {
+          const { data: publicData } = supabase.storage.from('shop_logos').getPublicUrl(fileName);
+          finalFormData.logo = publicData.publicUrl;
+        }
+      } catch (err) {
+        console.error("Erreur lors de l'upload du logo:", err);
+      }
+    }
+
+    await saveSettings(finalFormData);
     
     if (currentUser && ownerName !== currentUser.name) {
       const res = await updateProfileNameAction(currentUser.id, ownerName);
@@ -180,38 +220,6 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
                   
-                  <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
-                    <input 
-                      type="file" 
-                      ref={fileInputRef} 
-                      onChange={handleLogoUpload} 
-                      accept="image/*" 
-                      className="hidden" 
-                    />
-                    <div 
-                      onClick={() => fileInputRef.current?.click()}
-                      className="h-24 w-24 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 flex flex-col items-center justify-center text-slate-400 hover:bg-slate-100 hover:border-blue-400 hover:text-blue-500 cursor-pointer transition-colors group overflow-hidden relative"
-                    >
-                      {formData.logo ? (
-                        <img src={formData.logo} alt="Logo" className="w-full h-full object-contain p-2" />
-                      ) : (
-                        <>
-                          <Upload size={24} className="mb-2 group-hover:-translate-y-1 transition-transform" />
-                          <span className="text-[10px] font-bold uppercase tracking-wider">Logo</span>
-                        </>
-                      )}
-                    </div>
-                    <div className="flex-1 space-y-1.5 w-full">
-                      <label className="text-sm font-semibold text-slate-700">Nom de l'entreprise *</label>
-                      <input 
-                        type="text" 
-                        value={formData.name} 
-                        onChange={e => setFormData({...formData, name: e.target.value})}
-                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white transition-colors" 
-                      />
-                    </div>
-                  </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1.5">
                       <label className="text-sm font-semibold text-slate-700">Email de contact</label>
@@ -296,17 +304,6 @@ export default function SettingsPage() {
                         <option value="autre">Autre / Général</option>
                       </select>
                     </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-semibold text-slate-700">Description de la boutique</label>
-                    <textarea 
-                      rows={3} 
-                      value={formData.description || ""} 
-                      onChange={e => setFormData({...formData, description: e.target.value})}
-                      className="w-full p-3 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
-                      placeholder="Petite description de votre activité..."
-                    />
                   </div>
 
                   <div className="space-y-1.5">
@@ -527,5 +524,13 @@ export default function SettingsPage() {
       </div>
     </div>
     </>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <SettingsContent />
+    </Suspense>
   );
 }

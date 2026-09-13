@@ -34,17 +34,6 @@ export async function addTeamMemberAction(userData: any) {
   const supabase = createAdminClient();
   
   if (userData.role === 'employee') {
-    // Check limit
-    const { count, error: countError } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true })
-      .eq('shop_id', session.shopId)
-      .eq('role', 'employee');
-      
-    if (count !== null && count >= 2) {
-      return { success: false, error: 'Limite atteinte : Vous ne pouvez pas ajouter plus de 2 employés.' };
-    }
-    
     // Use random UUID for employees
     const crypto = require('crypto');
     userData.id = crypto.randomUUID();

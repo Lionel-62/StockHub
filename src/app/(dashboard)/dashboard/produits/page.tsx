@@ -210,7 +210,7 @@ export default function ProductsPage() {
       stock: undefined, 
       alertThreshold: 5,
       status: "Rupture",
-      imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
+      imageUrl: "",
       isPublishedOnStore: true
     });
     setIsModalOpen(true);
@@ -274,7 +274,7 @@ export default function ProductsPage() {
       packOffers: safePackOffers,
       galleryUrls: safeGalleryUrls,
       options: safeOptions,
-      imageUrl: product.imageUrl || "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
+      imageUrl: product.imageUrl || "",
       isPublishedOnStore: product.isPublishedOnStore !== false
     });
     setIsModalOpen(true);
@@ -531,7 +531,7 @@ export default function ProductsPage() {
             alertThreshold: 5,
             promotionalPrice,
             description,
-            imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop",
+            imageUrl: "",
             isPublishedOnStore: true
           });
         }
@@ -666,13 +666,17 @@ export default function ProductsPage() {
                   <TableRow key={product.id} className="hover:bg-slate-50 transition-colors group">
                     <TableCell>
                       <div className="h-12 w-12 rounded-md overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center relative shrink-0">
-                        <Image 
-                          src={product.imageUrl || "https://images.unsplash.com/photo-1586201375761-83865001e8ac?q=80&w=200&auto=format&fit=crop"} 
-                          alt={product.name || "Produit"} 
-                          fill
-                          className="object-cover"
-                          unoptimized
-                        />
+                        {product.imageUrl ? (
+                          <Image 
+                            src={product.imageUrl} 
+                            alt={product.name || "Produit"} 
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <Package size={20} className="text-slate-400" />
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>

@@ -231,7 +231,10 @@ export default function InvoiceDetailPage() {
               </div>
             </div>
 
-            <div className="text-left sm:text-right space-y-1 text-xs sm:text-sm">
+            <div className="text-left sm:text-right space-y-1 text-xs sm:text-sm flex flex-col sm:items-end">
+              {settings.logo && (
+                <img src={settings.logo} alt="Logo" className="h-12 w-auto object-contain mb-2" />
+              )}
               <p className="font-bold text-[#11313d]">
                 Date : <span className="font-normal">{new Date(invoice.issueDate).toLocaleDateString("fr-FR")}</span>
               </p>
@@ -306,7 +309,11 @@ export default function InvoiceDetailPage() {
 
           {/* Pied de page : Bandeau distinctif de la Boutique / Agence */}
           <div className="bg-[#cbd8d1]/80 border border-[#b8c9c0] rounded-xl sm:rounded-2xl p-5 sm:p-6 mt-4">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#11313d] mb-3">{settings.name}</h2>
+            {settings.logo ? (
+              <img src={settings.logo} alt="Logo" className="h-12 object-contain mb-3" />
+            ) : (
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#11313d] mb-3">{settings.name}</h2>
+            )}
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[#11313d]/90">
               <div className="space-y-1">
@@ -337,9 +344,15 @@ export default function InvoiceDetailPage() {
               <p className="text-sm font-semibold text-slate-500 mt-1 font-mono">{invoice.invoiceNumber}</p>
             </div>
             <div className="text-right">
-              <div className="h-12 w-12 bg-[#0b213f] text-white rounded-lg flex items-center justify-center font-bold text-xl ml-auto">
-                {settings.name.substring(0, 2).toUpperCase()}
-              </div>
+              {settings.logo ? (
+                <div className="flex justify-end mb-2">
+                  <img src={settings.logo} alt="Logo" className="h-10 md:h-12 w-auto object-contain sm:ml-auto mb-2 sm:mb-0" />
+                </div>
+              ) : (
+                <div className="h-10 w-10 md:h-12 md:w-12 bg-[#0b213f] text-white rounded-lg flex items-center justify-center font-bold text-lg md:text-xl sm:ml-auto mb-2 sm:mb-0">
+                  {settings.name.substring(0, 2).toUpperCase()}
+                </div>
+              )}
               <h3 className="font-bold text-slate-900 mt-2">{settings.name}</h3>
               {settings.address.split('\n').map((line, idx) => (
                 <p key={idx} className="text-xs text-slate-500">{line}</p>

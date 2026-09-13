@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useProducts, Product } from "@/hooks/products";
-import { mockStockMovements } from "@/hooks/stock";
+import { useStockMovements } from "@/hooks/stock";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -26,7 +26,9 @@ export default function StockPage() {
   const searchParams = useSearchParams();
   const initialFilter = searchParams.get("filter") === "alert" ? "Rupture / Stock faible" : "Tous";
   const [statusFilter, setStatusFilter] = useState(initialFilter);
-  const { products, setProducts, isLoaded } = useProducts();
+  const { products, setProducts, isLoaded: productsLoaded } = useProducts();
+  const { movements: mockStockMovements, isLoaded: movementsLoaded } = useStockMovements();
+  const isLoaded = productsLoaded && movementsLoaded;
   const carouselRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   

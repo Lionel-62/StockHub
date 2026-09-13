@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 export interface StockMovement {
   id: string;
   productId: string;
@@ -9,7 +11,7 @@ export interface StockMovement {
   reason?: string;
 }
 
-export const mockStockMovements: StockMovement[] = [
+const initialMovements: StockMovement[] = [
   {
     id: "mov-1",
     productId: "prod-1",
@@ -51,3 +53,33 @@ export const mockStockMovements: StockMovement[] = [
     reason: "Produit endommagé",
   }
 ];
+
+export function useStockMovements() {
+  const [movements, setMovements] = useState<StockMovement[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("stockhub_stock_movements");
+    if (saved) {
+      try {
+        setMovements(JSON.parse(saved));
+      } catch (e) {
+        setMovements(initialMovements);
+      }
+    } else {
+      setMovements(initialMovements);
+      localStorage.setItem("stockhub_stock_movements", JSON.stringify(initialMovements));
+    }
+    setIsLoaded(true);
+  }, []);
+
+  const addMovement = (movement: StockMovement) => {
+    setMovements(prev => {
+      const updated = [movement, ...prev];
+      localStorage.setItem("stockhub_stock_movements", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  return { movements, setMovements, addMovement, isLoaded };
+}

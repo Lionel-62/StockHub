@@ -24,6 +24,12 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       return;
     }
     
+    // Monetization stub: Check subscription plan status
+    if (currentUser.role === "owner" && (currentUser as any).planStatus === "expired") {
+      // router.push("/dashboard/parametres/facturation"); // Prepare for future redirection
+      console.warn("Abonnement expiré. Redirection vers la facturation (stub).");
+    }
+
     // Check permissions
     if (currentUser.role === "employee") {
       // Employee shouldn't see dashboard root by default unless permitted

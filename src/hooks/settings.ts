@@ -13,6 +13,7 @@ export interface CompanySettings {
   countryCode?: string;
   category?: string;
   description?: string;
+  slug?: string;
 }
 
 export const defaultSettings: CompanySettings = {
@@ -21,11 +22,13 @@ export const defaultSettings: CompanySettings = {
   phone: "",
   address: "",
   website: "",
+  logo: "",
   country: "Bénin",
   city: "",
   countryCode: "+229",
   category: "autre",
-  description: ""
+  description: "",
+  slug: ""
 };
 
 export function useSettings(publicShopId?: string) {
@@ -66,6 +69,8 @@ export function useSettings(publicShopId?: string) {
           country: dbShop.country || initialSettings.country,
           city: dbShop.city || initialSettings.city,
           countryCode: dbShop.country_code || initialSettings.countryCode,
+          logo: dbShop.logo_url || initialSettings.logo,
+          slug: dbShop.slug || initialSettings.slug,
         };
       }
     }
@@ -102,7 +107,6 @@ export function useSettings(publicShopId?: string) {
       const cleanPhone = finalPhone.replace(/\s+/g, "");
       finalPhone = `${newSettings.countryCode}${cleanPhone.startsWith("0") ? cleanPhone.substring(1) : cleanPhone}`;
     }
-    
     // Update local state with the potentially modified phone
     const settingsToSave = { ...newSettings, phone: finalPhone };
     setSettings(settingsToSave);
@@ -117,8 +121,33 @@ export function useSettings(publicShopId?: string) {
         description: settingsToSave.description,
         country: settingsToSave.country,
         city: settingsToSave.city,
-        country_code: settingsToSave.countryCode
+        country_code: settingsToSave.countryCode,
+        logo_url: settingsToSave.logo,
+        slug: settingsToSave.slug
       });
+
+      // Update current session to keep shopName in sync
+      const sessionStr = localStorage.getItem("stockhub_session");
+      if (sessionStr) {
+        const session = JSON.parse(sessionStr);
+        let updated = false;
+        if (session.shopId === shopId && session.shopName !== settingsToSave.name) {
+          session.shopName = settingsToSave.name;
+          updated = true;
+        }
+        if (session.myShops && Array.isArray(session.myShops)) {
+          session.myShops = session.myShops.map((s: any) => {
+            if (s.id === shopId && s.name !== settingsToSave.name) {
+              updated = true;
+              return { ...s, name: settingsToSave.name };
+            }
+            return s;
+          });
+        }
+        if (updated) {
+          localStorage.setItem("stockhub_session", JSON.stringify(session));
+        }
+      }
     }
     
     window.dispatchEvent(new Event("settingsUpdated"));

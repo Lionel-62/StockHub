@@ -353,7 +353,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
         id: clientId,
         name: customerName,
         email: "",
-        phone: "",
+        phone: customerPhone ? `${customerPhoneCode} ${customerPhone}` : "",
         address: customerAddress || "",
         status: "Actif",
         type: "Client",
@@ -481,9 +481,13 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
       <header className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-gradient-to-br from-[#0b213f] to-blue-800 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
-              {shopSettings.name.charAt(0).toUpperCase()}
-            </div>
+            {shopSettings.logoUrl ? (
+              <img src={shopSettings.logoUrl} alt="Logo" className="h-10 w-10 object-contain rounded-xl shadow-md" />
+            ) : (
+              <div className="h-10 w-10 bg-gradient-to-br from-[#0b213f] to-blue-800 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
+                {shopSettings.name.charAt(0).toUpperCase()}
+              </div>
+            )}
             <h1 className="text-xl font-bold text-slate-900 hidden sm:block">{shopSettings.name}</h1>
           </div>
           
@@ -993,17 +997,27 @@ export default function PublicShopPage({ params }: { params: Promise<{ shopId: s
 
   useEffect(() => {
     async function fetchShopId() {
-      // 1. Try Supabase first
-      const { data, error } = await supabase
-        .from('shops')
-        .select('id')
-        .eq('slug', shopId)
-        .single();
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3500);
         
-      if (data && !error) {
-        setShopUuid(data.id);
-        setLoading(false);
-        return;
+        // 1. Try Supabase first
+        const { data, error } = await supabase
+          .from('shops')
+          .select('id')
+          .eq('slug', shopId)
+          .abortSignal(controller.signal)
+          .single();
+          
+        clearTimeout(timeoutId);
+          
+        if (data && !error) {
+          setShopUuid(data.id);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        console.warn("Supabase fetch timeout or error, falling back...");
       }
       
       // 2. Fallback to localStorage (utile si la bdd n'est pas encore peuplée)
