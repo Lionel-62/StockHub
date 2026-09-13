@@ -205,7 +205,8 @@ export default function BoutiquePage() {
                   type="button"
                   onClick={() => {
                     if (formData.slug) {
-                      navigator.clipboard.writeText(`stockhub.com/b/${formData.slug}`);
+                      const baseUrl = window.location.origin;
+                      navigator.clipboard.writeText(`${baseUrl}/b/${formData.slug}`);
                       alert("Lien copié dans le presse-papier !");
                     }
                   }}
