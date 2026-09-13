@@ -43,7 +43,20 @@ export default function BoutiquePage() {
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value;
-    const newSlug = newName.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/(^-|-$)+/g, '');
+    const baseSlug = newName.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/(^-|-$)+/g, '');
+    
+    let suffix = "";
+    try {
+      const session = localStorage.getItem("stockhub_session");
+      if (session) {
+        const user = JSON.parse(session);
+        if (user.shopId && typeof user.shopId === 'string') {
+          suffix = user.shopId.split('-')[0];
+        }
+      }
+    } catch (err) {}
+
+    const newSlug = baseSlug ? (suffix ? `${baseSlug}-${suffix}` : baseSlug) : "";
     setFormData({ ...formData, name: newName, slug: newSlug });
   };
 
