@@ -38,6 +38,44 @@ export default function ProductsPage() {
       return null;
     }
   };
+
+  const handleImageUpload = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+        const MAX = 1600;
+        if (width > height) {
+          if (width > MAX) {
+            height *= MAX / width;
+            width = MAX;
+          }
+        } else {
+          if (height > MAX) {
+            width *= MAX / height;
+            width = MAX;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(async (blob) => {
+          if (blob) {
+            const url = await uploadToSupabase(blob);
+            if (url) {
+              setCurrentProduct(prev => ({ ...prev, imageUrl: url }));
+            }
+          }
+        }, "image/jpeg", 0.9);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("Tous");
   const { products, addProduct, updateProduct, deleteProduct, isLoaded } = useProducts();
@@ -876,57 +914,36 @@ export default function ProductsPage() {
                       )}
                     </div>
                     <div className="flex-1">
-                      <label className="cursor-pointer inline-flex items-center justify-center px-4 py-2.5 bg-white border border-slate-200 text-sm font-semibold text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all w-full">
-                        <Upload size={16} className="mr-2 text-slate-500" />
-                        Importer ou Prendre une photo
-                        <input 
-                          type="file" 
-                          accept="image/*"
-                          capture="environment"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              const reader = new FileReader();
-                              reader.onload = (event) => {
-                                const img = new window.Image();
-                                img.onload = () => {
-                                  const canvas = document.createElement("canvas");
-                                  let width = img.width;
-                                  let height = img.height;
-                                  const MAX = 1600; // Resize to max 1600px for high quality
-                                  if (width > height) {
-                                    if (width > MAX) {
-                                      height *= MAX / width;
-                                      width = MAX;
-                                    }
-                                  } else {
-                                    if (height > MAX) {
-                                      width *= MAX / height;
-                                      height = MAX;
-                                    }
-                                  }
-                                  canvas.width = width;
-                                  canvas.height = height;
-                                  const ctx = canvas.getContext("2d");
-                                  ctx?.drawImage(img, 0, 0, width, height);
-                                  canvas.toBlob(async (blob) => {
-                                    if (blob) {
-                                      const url = await uploadToSupabase(blob);
-                                      if (url) {
-                                        setCurrentProduct({...currentProduct, imageUrl: url});
-                                      }
-                                    }
-                                  }, "image/jpeg", 0.9);
-                                };
-                                img.src = event.target?.result as string;
-                              };
-                              reader.readAsDataURL(file);
-                            }
-                          }}
-                        />
-                      </label>
-                      <p className="text-xs text-slate-500 mt-2">Format JPG, PNG ou capture directe via caméra.</p>
+                      <div className="flex flex-col sm:flex-row gap-2 w-full">
+                        <label className="cursor-pointer flex-1 inline-flex items-center justify-center px-3 py-2 bg-white border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all">
+                          <Upload size={15} className="mr-1.5 text-slate-500" />
+                          Importer (Galerie)
+                          <input 
+                            type="file" 
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) handleImageUpload(file);
+                            }}
+                          />
+                        </label>
+                        <label className="cursor-pointer flex-1 inline-flex items-center justify-center px-3 py-2 bg-white border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all">
+                          <Camera size={15} className="mr-1.5 text-slate-500" />
+                          Prendre photo
+                          <input 
+                            type="file" 
+                            accept="image/*"
+                            capture="environment"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) handleImageUpload(file);
+                            }}
+                          />
+                        </label>
+                      </div>
+                      <p className="text-xs text-slate-500 mt-2">Choisissez dans vos fichiers ou prenez une photo en direct.</p>
                     </div>
                   </div>
                 </div>
