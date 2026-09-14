@@ -85,7 +85,7 @@ export function Topbar() {
 
   return (
     <>
-      <header className={`flex flex-col md:flex-row items-center justify-between border-b bg-white px-3 py-2.5 sm:px-4 sm:py-3 shrink-0 gap-2.5 ${isDashboardHome ? "md:h-20 md:px-8 md:py-0 md:gap-0" : "md:hidden"}`}>
+      <header className={`flex flex-col md:flex-row items-center justify-between border-b bg-white px-3 py-2.5 sm:px-4 sm:py-3 shrink-0 gap-2.5 ${isDashboardHome ? "md:h-20 md:px-8 md:py-0 md:gap-0" : "md:h-16 md:px-6 md:py-0 md:gap-0"}`}>
         
         {/* Top Row (Mobile) / Left Section (Desktop) */}
         <div className="flex items-center justify-between w-full md:w-auto gap-2">
