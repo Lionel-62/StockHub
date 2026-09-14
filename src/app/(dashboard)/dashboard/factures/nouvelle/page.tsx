@@ -505,7 +505,7 @@ export default function CreateInvoicePage() {
 
                   <div className="text-left sm:text-right space-y-1 text-xs sm:text-sm flex flex-col sm:items-end">
                     {settings.logo && (
-                      <img src={settings.logo} alt="Logo" className="h-12 w-auto object-contain mb-2" />
+                      <img src={settings.logo} alt="Logo" className="h-20 w-auto object-contain mb-2" />
                     )}
                     <p className="font-bold text-[#11313d]">
                       Date : <span className="font-normal">{issueDate ? new Date(issueDate).toLocaleDateString("fr-FR") : "-"}</span>
@@ -582,7 +582,7 @@ export default function CreateInvoicePage() {
                 {/* Pied de page : Bandeau Boutique / Agence */}
                 <div className="bg-[#cbd8d1]/80 border border-[#b8c9c0] rounded-xl sm:rounded-2xl p-5 sm:p-6 mt-4">
                   {settings.logo ? (
-                    <img src={settings.logo} alt="Logo" className="h-12 object-contain mb-3" />
+                    <img src={settings.logo} alt="Logo" className="h-20 object-contain mb-3" />
                   ) : (
                     <h2 className="text-2xl sm:text-3xl font-extrabold text-[#11313d] mb-3">{settings.name}</h2>
                   )}
@@ -617,7 +617,7 @@ export default function CreateInvoicePage() {
                   </div>
                   <div className="text-left sm:text-right">
                     {settings.logo ? (
-                      <img src={settings.logo} alt="Logo" className="h-10 md:h-12 w-auto object-contain sm:ml-auto mb-2 sm:mb-0" />
+                      <img src={settings.logo} alt="Logo" className="h-16 md:h-20 w-auto object-contain sm:ml-auto mb-2 sm:mb-0" />
                     ) : (
                       <div className="h-10 w-10 md:h-12 md:w-12 bg-[#0b213f] text-white rounded-lg flex items-center justify-center font-bold text-lg md:text-xl sm:ml-auto mb-2 sm:mb-0">
                         {settings.name.substring(0, 2).toUpperCase()}
