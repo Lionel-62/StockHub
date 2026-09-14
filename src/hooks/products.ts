@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { addProductAction, updateProductAction, deleteProductAction } from "@/app/actions/products.actions";
+import { addProductAction, updateProductAction, deleteProductAction, getProductsAction } from "@/app/actions/products.actions";
 
 export interface Product {
   id: string;
@@ -43,11 +43,27 @@ export function useProducts(publicShopId?: string) {
       return;
     }
 
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .eq('shop_id', shopId)
-      .order('created_at', { ascending: false });
+    let data = null;
+    let error = null;
+
+    if (publicShopId) {
+      // Public store: Use the secure public view (anonymously)
+      const result = await supabase
+        .from('public_store_products')
+        .select('*')
+        .eq('shop_id', publicShopId)
+        .order('created_at', { ascending: false });
+      data = result.data;
+      error = result.error;
+    } else {
+      // Dashboard: Use the Server Action (which uses Custom JWT for RLS)
+      const result = await getProductsAction();
+      if (result.success) {
+        data = result.data;
+      } else {
+        error = new Error(result.error);
+      }
+    }
 
     if (!error && data) {
       const mapped: Product[] = data.map(d => {

@@ -85,7 +85,7 @@ export default function InvoiceDetailPage() {
   };
 
   return (
-    <div className="p-3 md:p-0 max-w-5xl mx-auto space-y-6">
+    <div className="p-3 md:p-0 max-w-5xl mx-auto space-y-6 print:block print:p-0 print:m-0 print:max-w-none print:w-full print:space-y-0">
       
       {/* Barre d'actions */}
       <div className="print:hidden flex flex-col md:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
@@ -215,7 +215,7 @@ export default function InvoiceDetailPage() {
       {/* Affichage : MODÈLE DEVIS SPÉCIFIQUE OU FACTURE STANDARD */}
       {isDevis ? (
         /* MODÈLE DE DEVIS MODERNE & COMMERCIAL (Inspiré du modèle partagé) */
-        <div className="bg-[#f2f6f3] w-full rounded-2xl shadow-sm p-6 sm:p-10 md:p-14 text-slate-800 flex flex-col relative border border-[#d2ded5] print:shadow-none print:border-none print:m-0 print:p-8 print:bg-[#f2f6f3] print:[print-color-adjust:exact]">
+        <div id="invoice-preview" className="bg-[#f2f6f3] w-full rounded-2xl shadow-sm p-6 sm:p-10 md:p-14 text-slate-800 flex flex-col relative border border-[#d2ded5] print:shadow-none print:border-none print:m-0 print:p-8 print:bg-[#f2f6f3] print:[print-color-adjust:exact]">
           
           {/* En-tête : Titre "Devis" & Coordonnées Client / Dates */}
           <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-8">
@@ -336,7 +336,7 @@ export default function InvoiceDetailPage() {
         </div>
       ) : (
         /* MODÈLE FACTURE STANDARD */
-        <div className="bg-white w-full rounded-sm shadow-md p-8 md:p-12 text-slate-800 flex flex-col relative border border-slate-200 print:shadow-none print:border-none print:m-0 print:p-0">
+        <div id="invoice-preview" className="bg-white w-full rounded-sm shadow-md p-8 md:p-12 text-slate-800 flex flex-col relative border border-slate-200 print:shadow-none print:border-none print:m-0 print:p-0">
           
           <div className="flex justify-between items-start mb-12">
             <div>

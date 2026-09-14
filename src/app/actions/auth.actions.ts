@@ -75,29 +75,18 @@ export async function registerOwnerAction(payload: {
   try {
     const supabase = createAdminClient();
 
-    // Check if profile already exists (e.g. created by Supabase DB Trigger)
-    const { data: existingProfile } = await supabase.from('profiles').select('id').eq('id', payload.userId).single();
-    if (existingProfile) {
-      return { success: true };
+    // Attendre un peu et vérifier si le profil a été créé par le trigger Supabase
+    let retries = 0;
+    while (retries < 3) {
+      const { data: existingProfile } = await supabase.from('profiles').select('id, shop_id').eq('id', payload.userId).single();
+      if (existingProfile && existingProfile.shop_id) {
+        return { success: true };
+      }
+      await new Promise(r => setTimeout(r, 500));
+      retries++;
     }
 
-    const { error: profileError } = await supabase.from('profiles').insert({
-      id: payload.userId,
-      name: payload.name,
-      identifier: payload.email,
-      pin_code: '0000',
-      role: 'owner',
-      permissions: { canViewDashboard: true },
-      created_at: new Date().toISOString()
-      // shop_id is null for now
-    });
-    
-    if (profileError) {
-      console.error("Profile creation error:", profileError);
-      return { success: false, error: "Erreur lors de la création du profil." };
-    }
-
-    return { success: true };
+    return { success: false, error: "Erreur lors de la création du profil par le système." };
   } catch (err: any) {
     console.error("Register Error:", err);
     return { success: false, error: err.message || "Erreur interne lors de l'inscription." };
@@ -125,28 +114,18 @@ export async function completeGoogleSignupAction(userId: string, email: string, 
   try {
     const supabase = createAdminClient();
     
-    // Check if profile already exists to prevent duplicate insertion
-    const { data: existingProfile } = await supabase.from('profiles').select('id').eq('id', userId).single();
-    if (existingProfile) {
-      return { success: true };
+    // Attendre un peu et vérifier si le profil a été créé par le trigger Supabase
+    let retries = 0;
+    while (retries < 3) {
+      const { data: existingProfile } = await supabase.from('profiles').select('id, shop_id').eq('id', userId).single();
+      if (existingProfile && existingProfile.shop_id) {
+        return { success: true };
+      }
+      await new Promise(r => setTimeout(r, 500));
+      retries++;
     }
 
-    // 1. Create the profile (shop_id is null for now)
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .insert({
-        id: userId,
-        name: name || email,
-        identifier: email,
-        role: 'owner',
-        permissions: { canViewDashboard: true },
-      });
-
-    if (profileError) {
-      throw profileError;
-    }
-
-    return { success: true };
+    return { success: false, error: "Erreur lors de la création du profil par le système." };
   } catch (err: any) {
     console.error("Google Signup Complete Error:", err);
     return { success: false, error: err.message || "Erreur lors de la création du compte Google." };

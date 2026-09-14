@@ -1,17 +1,16 @@
 'use server';
 
-import { createAdminClient } from '@/lib/supabase/server';
+import { createAdminClient, createAuthenticatedClient } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
 
 export async function getInvoicesAction() {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('invoices')
     .select('*')
-    .eq('shop_id', session.shopId)
     .order('issue_date', { ascending: false });
 
   if (error) return { success: false, error: error.message };
@@ -22,7 +21,7 @@ export async function addInvoiceAction(invoiceData: any) {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('invoices')
     .insert({ ...invoiceData, shop_id: session.shopId })
@@ -37,12 +36,11 @@ export async function updateInvoiceAction(id: string, invoiceData: any) {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('invoices')
     .update(invoiceData)
     .eq('id', id)
-    .eq('shop_id', session.shopId)
     .select()
     .single();
 
@@ -54,12 +52,11 @@ export async function deleteInvoiceAction(id: string) {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { error } = await supabase
     .from('invoices')
     .delete()
-    .eq('id', id)
-    .eq('shop_id', session.shopId);
+    .eq('id', id);
 
   if (error) return { success: false, error: error.message };
   return { success: true };

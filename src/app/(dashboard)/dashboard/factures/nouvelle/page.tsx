@@ -248,9 +248,9 @@ export default function CreateInvoicePage() {
   const productOptions = products.map(p => ({ value: p.id, label: `${p.name} (${p.stock} en stock)` }));
 
   return (
-    <div className="p-3 md:p-0 h-full flex flex-col space-y-4">
+    <div className="p-3 md:p-0 h-full flex flex-col space-y-4 print:block print:p-0 print:h-auto">
       {/* Header compact */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm print:hidden">
         <div className="flex items-center gap-4">
           <Link href="/dashboard/factures">
             <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:bg-slate-100">
@@ -283,10 +283,10 @@ export default function CreateInvoicePage() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
+      <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0 print:block print:min-h-0">
         
         {/* COLONNE GAUCHE : FORMULAIRE */}
-        <div className="w-full lg:w-[45%] flex flex-col space-y-6 overflow-y-auto pr-2 custom-scrollbar pb-10">
+        <div className="w-full lg:w-[45%] flex flex-col space-y-6 overflow-y-auto pr-2 custom-scrollbar pb-10 print:hidden">
           
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -481,7 +481,7 @@ export default function CreateInvoicePage() {
         </div>
 
         {/* COLONNE DROITE : PREVISUALISATION */}
-        <div className="w-full lg:w-[55%] bg-slate-100 rounded-xl p-2 sm:p-4 lg:p-8 flex justify-center overflow-y-auto custom-scrollbar border border-slate-200 shadow-inner">
+        <div className="w-full lg:w-[55%] bg-slate-100 rounded-xl p-2 sm:p-4 lg:p-8 flex justify-center overflow-y-auto custom-scrollbar border border-slate-200 shadow-inner print:block print:w-full print:bg-white print:border-none print:shadow-none print:p-0 print:overflow-visible">
           
           <div id="invoice-preview" className="w-full max-w-2xl transition-all">
             {docType === "devis" ? (
