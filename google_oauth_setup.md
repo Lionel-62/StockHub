@@ -16,7 +16,7 @@ Voici la démarche étape par étape (cela prend environ 5 minutes).
    - Cliquez en haut sur **+ CRÉER DES IDENTIFIANTS** > **ID client OAuth**.
    - Type d'application : **Application Web**.
    - Nom : `StockHub Web`.
-   - Dans **Origines JavaScript autorisées**, ajoutez les URL de votre site (ex: `http://localhost:3000` pour les tests, et votre URL Vercel finale `https://votre-site.vercel.app`).
+   - Dans **Origines JavaScript autorisées**, ajoutez les URL de votre site (ex: `` pour les tests, et votre URL Vercel finale `https://votre-site.vercel.app`).
    - Dans **URI de redirection autorisés**, copiez et collez EXACTEMENT cette URL fournie par votre Supabase :
      👉 `https://yqklqmheftloijgwtxkr.supabase.co/auth/v1/callback`
    - Cliquez sur **Créer**.

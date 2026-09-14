@@ -28,7 +28,10 @@ export async function addProductAction(productData: any) {
     .select()
     .single();
 
-  if (error) return { success: false, error: error.message };
+  if (error) {
+    console.error("ADD_PRODUCT_DB_ERROR:", error);
+    return { success: false, error: error.message };
+  }
   return { success: true, data };
 }
 
@@ -44,7 +47,10 @@ export async function updateProductAction(id: string, productData: any) {
     .select()
     .single();
 
-  if (error) return { success: false, error: error.message };
+  if (error) {
+    console.error("UPDATE_PRODUCT_DB_ERROR:", error);
+    return { success: false, error: error.message };
+  }
   return { success: true, data };
 }
 
