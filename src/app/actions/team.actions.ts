@@ -32,7 +32,7 @@ export async function addTeamMemberAction(userData: any) {
        return { success: false, error: 'Non autorisé: Seul le gérant (owner) peut ajouter un employé' };
     }
 
-    const supabase = await createAuthenticatedClient(session);
+    const supabase = createAdminClient();
     
     if (userData.role === 'employee') {
       userData.id = globalThis.crypto.randomUUID();
@@ -67,7 +67,7 @@ export async function deleteTeamMemberAction(id: string) {
   const session = await getSession();
   if (!session?.shopId || session.role !== 'owner') return { success: false, error: 'Non autorisé' };
 
-  const supabase = await createAuthenticatedClient(session);
+  const supabase = createAdminClient();
   const { error } = await supabase
     .from('profiles')
     .delete()
