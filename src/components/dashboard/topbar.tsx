@@ -163,28 +163,26 @@ export function Topbar() {
       </header>
 
       {/* Menu Overlay (Mobile + Desktop) */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 flex">
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity" 
+      <div className={`fixed inset-0 z-50 flex transition-all duration-200 ${mobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}`}>
+        {/* Backdrop */}
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity" 
+          onClick={() => setMobileMenuOpen(false)}
+        />
+        
+        {/* Sidebar Drawer */}
+        <div className={`relative w-72 max-w-[85vw] h-full bg-[#0b213f] shadow-2xl transition-transform duration-300 ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>
+          <Sidebar />
+          <button 
+            type="button"
+            className="absolute top-5 right-3 text-white/60 hover:text-white transition-colors bg-white/10 rounded-full p-1.5"
             onClick={() => setMobileMenuOpen(false)}
-          />
-          
-          {/* Sidebar Drawer */}
-          <div className="relative w-72 max-w-[85vw] h-full bg-[#0b213f] shadow-2xl animate-in slide-in-from-left duration-200">
-            <Sidebar />
-            <button 
-              type="button"
-              className="absolute top-5 right-3 text-white/60 hover:text-white transition-colors bg-white/10 rounded-full p-1.5"
-              onClick={() => setMobileMenuOpen(false)}
-              aria-label="Fermer le menu"
-            >
-              <X size={18} />
-            </button>
-          </div>
+            aria-label="Fermer le menu"
+          >
+            <X size={18} />
+          </button>
         </div>
-      )}
+      </div>
 
       <ConfirmModal
         isOpen={!!shopToDelete}
