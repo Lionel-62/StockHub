@@ -1,13 +1,13 @@
 'use server';
 
-import { createAdminClient } from '@/lib/supabase/server';
+import { createAuthenticatedClient, createAdminClient } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
 
 export async function getTeamMembersAction() {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('profiles')
     .select('*')
@@ -31,7 +31,7 @@ export async function addTeamMemberAction(userData: any) {
      return { success: false, error: 'Non autorisé: Seul le gérant (owner) peut ajouter un employé' };
   }
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   
   if (userData.role === 'employee') {
     // Use random UUID for employees
@@ -66,7 +66,7 @@ export async function deleteTeamMemberAction(id: string) {
   const session = await getSession();
   if (!session?.shopId || session.role !== 'owner') return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { error } = await supabase
     .from('profiles')
     .delete()

@@ -1,13 +1,13 @@
 'use server';
 
-import { createAdminClient } from '@/lib/supabase/server';
+import { createAuthenticatedClient, createAdminClient } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
 
 export async function getProductsAction() {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('products')
     .select('*')
@@ -22,7 +22,7 @@ export async function addProductAction(productData: any) {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('products')
     .insert({ ...productData, shop_id: session.shopId })
@@ -37,7 +37,7 @@ export async function updateProductAction(id: string, productData: any) {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('products')
     .update(productData)
@@ -54,7 +54,7 @@ export async function deleteProductAction(id: string) {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { error } = await supabase
     .from('products')
     .delete()

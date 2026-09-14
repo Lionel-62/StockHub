@@ -1,13 +1,13 @@
 'use server';
 
-import { createAdminClient } from '@/lib/supabase/server';
+import { createAuthenticatedClient, createAdminClient } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
 
 export async function getInvoicesAction() {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('invoices')
     .select('*')
@@ -22,7 +22,7 @@ export async function addInvoiceAction(invoiceData: any) {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('invoices')
     .insert({ ...invoiceData, shop_id: session.shopId })
@@ -37,7 +37,7 @@ export async function updateInvoiceAction(id: string, invoiceData: any) {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('invoices')
     .update(invoiceData)
@@ -54,7 +54,7 @@ export async function deleteInvoiceAction(id: string) {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { error } = await supabase
     .from('invoices')
     .delete()

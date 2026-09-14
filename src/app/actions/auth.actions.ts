@@ -95,7 +95,11 @@ export async function registerOwnerAction(payload: {
 
 export async function updateProfileNameAction(userId: string, newName: string) {
   try {
-    const supabase = createAdminClient();
+    const session = await getSession();
+    if (!session || session.id !== userId) return { success: false, error: 'Non autorisé' };
+
+    const { createAuthenticatedClient } = require('@/lib/supabase/server');
+    const supabase = await createAuthenticatedClient(session);
     
     const { error } = await supabase
       .from('profiles')

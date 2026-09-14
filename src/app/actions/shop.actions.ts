@@ -1,13 +1,13 @@
 'use server';
 
-import { createAdminClient } from '@/lib/supabase/server';
+import { createAuthenticatedClient, createAdminClient } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
 
 export async function getShopSettingsAction() {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('shops')
     .select('*')
@@ -22,7 +22,7 @@ export async function updateShopSettingsAction(shopData: any) {
   const session = await getSession();
   if (!session?.shopId || session.role !== 'owner') return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('shops')
     .update(shopData)
@@ -53,7 +53,7 @@ export async function deleteShopAction(shopId: string) {
   const session = await getSession();
   if (!session || session.role !== 'owner') return { success: false, error: 'Non autorisé' };
 
-  const supabase = createAdminClient();
+  const supabase = await createAuthenticatedClient(session);
   
   // Verify it's not their only shop and they own it
   const { data: myShops } = await supabase.from('shops').select('id').eq('owner_id', session.id);
