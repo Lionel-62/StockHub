@@ -1,7 +1,7 @@
 'use server';
 
-import { createAdminClient } from '@/lib/supabase/server';
-import { setSession, deleteSession } from '@/lib/auth/session';
+import { createAdminClient, createAuthenticatedClient } from '@/lib/supabase/server';
+import { setSession, deleteSession, getSession } from '@/lib/auth/session';
 import { checkRateLimit, incrementRateLimit, resetRateLimit } from '@/lib/auth/rate-limit';
 
 export async function loginAction(identifier: string, pinCode: string, allowedRole?: "owner" | "employee", shopSlug?: string) {
@@ -98,7 +98,6 @@ export async function updateProfileNameAction(userId: string, newName: string) {
     const session = await getSession();
     if (!session || session.id !== userId) return { success: false, error: 'Non autorisé' };
 
-    const { createAuthenticatedClient } = require('@/lib/supabase/server');
     const supabase = await createAuthenticatedClient(session);
     
     const { error } = await supabase
