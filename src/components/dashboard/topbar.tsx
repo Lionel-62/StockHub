@@ -93,7 +93,7 @@ export function Topbar() {
             {/* Hamburger Button */}
             <button 
               type="button"
-              className="md:hidden text-slate-600 hover:bg-slate-100 p-2 rounded-xl transition-all duration-200 active:scale-95 border border-slate-200 shrink-0"
+              className="text-slate-600 hover:bg-slate-100 p-2 rounded-xl transition-all duration-200 active:scale-95 border border-slate-200 shrink-0"
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Ouvrir le menu"
             >
@@ -162,9 +162,9 @@ export function Topbar() {
         </div>
       </header>
 
-      {/* Menu Mobile Overlay */}
+      {/* Menu Overlay (Mobile + Desktop) */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden flex">
+        <div className="fixed inset-0 z-50 flex">
           {/* Backdrop */}
           <div 
             className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity" 
