@@ -26,7 +26,7 @@ export default function StockPage() {
   const searchParams = useSearchParams();
   const initialFilter = searchParams.get("filter") === "alert" ? "Rupture / Stock faible" : "Tous";
   const [statusFilter, setStatusFilter] = useState(initialFilter);
-  const { products, setProducts, isLoaded: productsLoaded } = useProducts();
+  const { products, setProducts, updateProduct, isLoaded: productsLoaded } = useProducts();
   const { movements: mockStockMovements, isLoaded: movementsLoaded } = useStockMovements();
   const isLoaded = productsLoaded && movementsLoaded;
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -79,15 +79,14 @@ export default function StockPage() {
   const statuses = ["Tous", "En stock", "Stock faible", "Rupture", "Rupture / Stock faible"];
 
   const handleAdjustStock = (id: string, amount: number) => {
-    setProducts(products.map(p => {
-      if (p.id === id) {
-        const newStock = Math.max(0, p.stock + amount);
-        const alertThresh = p.alertThreshold ?? 5;
-        const newStatus = newStock === 0 ? "Rupture" : newStock <= alertThresh ? "Stock faible" : "En stock";
-        return { ...p, stock: newStock, status: newStatus as any };
-      }
-      return p;
-    }));
+    const target = products.find(p => p.id === id);
+    if (!target) return;
+    const newStock = Math.max(0, target.stock + amount);
+    const alertThresh = target.alertThreshold ?? 5;
+    const newStatus = newStock === 0 ? "Rupture" : newStock <= alertThresh ? "Stock faible" : "En stock";
+    const updated = { ...target, stock: newStock, status: newStatus as any };
+    setProducts(products.map(p => p.id === id ? updated : p));
+    updateProduct(updated);
   };
 
   return (
