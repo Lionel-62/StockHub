@@ -711,7 +711,7 @@ export default function CreateInvoicePage() {
 
       {/* Success Modal */}
       {showSuccessModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm transition-opacity">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm transition-opacity print:hidden">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden border border-slate-200 transform scale-100 animate-in fade-in zoom-in-95 duration-200">
             <div className="p-6 text-center space-y-6">
               <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
