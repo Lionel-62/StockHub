@@ -78,7 +78,7 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right text-slate-500 text-sm">
-                    {new Date(order.date).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                    {order.date ? new Date(order.date).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "-"}
                   </TableCell>
                 </TableRow>
               ))

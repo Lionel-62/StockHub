@@ -25,15 +25,17 @@ export default function DashboardPage() {
   const currentYear = now.getFullYear();
 
   const currentMonthOrders = orders.filter(o => {
+    if (!o?.date) return false;
     const d = new Date(o.date);
-    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    return !isNaN(d.getTime()) && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
   });
 
   const previousMonthOrders = orders.filter(o => {
+    if (!o?.date) return false;
     const d = new Date(o.date);
     const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
     const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
-    return d.getMonth() === prevMonth && d.getFullYear() === prevYear;
+    return !isNaN(d.getTime()) && d.getMonth() === prevMonth && d.getFullYear() === prevYear;
   });
 
   const currentMonthRevenue = currentMonthOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);

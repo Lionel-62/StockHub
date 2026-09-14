@@ -23,7 +23,7 @@ export function SalesChart({ orders }: SalesChartProps) {
       d.setDate(now.getDate() - i);
       
       const dayStr = d.toISOString().split('T')[0];
-      const ordersForDay = orders.filter(o => o.date.startsWith(dayStr) && o.status !== "Annulée");
+      const ordersForDay = orders.filter(o => o?.date && typeof o.date === 'string' && o.date.startsWith(dayStr) && o.status !== "Annulée");
       const ventes = ordersForDay.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
       
       result.push({

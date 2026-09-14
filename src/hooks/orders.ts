@@ -60,26 +60,30 @@ export function useOrders(publicShopId?: string) {
        return;
     }
 
-    // Use server action for Dashboard (handles employees & owners via cookie)
-    const res = await getOrdersAction();
-    if (res.success && res.data) {
-      const mapped: Order[] = res.data.map((d: any) => ({
-        id: d.id,
-        orderNumber: d.order_number,
-        clientName: d.client_name,
-        totalAmount: d.total_amount,
-        itemsCount: d.items_count,
-        status: d.status,
-        paymentMethod: d.payment_method,
-        source: d.source,
-        items: typeof d.items === 'string' ? JSON.parse(d.items) : d.items,
-        date: d.date,
-        clientId: undefined
-      }));
-      setOrders(mapped);
-      localStorage.setItem("stockhub_cache_orders_" + shopId, JSON.stringify(mapped));
+    try {
+      const res = await getOrdersAction();
+      if (res.success && res.data) {
+        const mapped: Order[] = res.data.map((d: any) => ({
+          id: d.id,
+          orderNumber: d.order_number,
+          clientName: d.client_name,
+          totalAmount: Number(d.total_amount) || 0,
+          itemsCount: Number(d.items_count) || 0,
+          status: d.status || "En attente",
+          paymentMethod: d.payment_method || "Espèces",
+          source: d.source || "Sur place",
+          items: typeof d.items === 'string' ? JSON.parse(d.items) : (Array.isArray(d.items) ? d.items : []),
+          date: d.date || new Date().toISOString(),
+          clientId: undefined
+        }));
+        setOrders(mapped);
+        localStorage.setItem("stockhub_cache_orders_" + shopId, JSON.stringify(mapped));
+      }
+    } catch (err) {
+      console.error("fetchOrders error:", err);
+    } finally {
+      setIsLoaded(true);
     }
-    setIsLoaded(true);
   };
 
   const addOrder = async (order: Order) => {
