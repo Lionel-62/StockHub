@@ -482,7 +482,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {shopSettings.logoUrl ? (
-              <img src={shopSettings.logoUrl} alt="Logo" className="h-16 w-16 md:h-20 md:w-20 object-contain rounded-xl shadow-md bg-white" />
+              <img src={shopSettings.logoUrl} alt="Logo" className="h-10 w-10 object-contain rounded-xl shadow-md" />
             ) : (
               <div className="h-10 w-10 bg-gradient-to-br from-[#0b213f] to-blue-800 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
                 {shopSettings.name.charAt(0).toUpperCase()}
