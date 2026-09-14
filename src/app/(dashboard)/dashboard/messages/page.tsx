@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function MessagesPage() {
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-slate-50 items-center justify-center p-4">
+    <div className="flex h-[calc(100dvh-4rem)] bg-slate-50 items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-6">
         <div className="mx-auto w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center relative">
           <MessageSquare className="h-10 w-10 text-[#0b213f]" />

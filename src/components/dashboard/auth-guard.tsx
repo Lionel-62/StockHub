@@ -54,7 +54,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (!isLoaded || !currentUser) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-slate-50">
+      <div className="h-dvh w-full flex items-center justify-center bg-slate-50">
         <div className="animate-pulse flex flex-col items-center">
           <div className="h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
           <p className="text-slate-500 font-medium">Chargement de votre session...</p>

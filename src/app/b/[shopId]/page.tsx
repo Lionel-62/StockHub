@@ -476,13 +476,13 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
   if (!shopLoaded || !productsLoaded) return null;
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-24">
+    <div className="min-h-dvh bg-slate-50 font-sans pb-24">
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {shopSettings.logoUrl ? (
-              <img src={shopSettings.logoUrl} alt="Logo" className="h-10 w-10 object-contain rounded-xl shadow-md" />
+              <img src={shopSettings.logoUrl} alt="Logo" width="40" height="40" className="h-10 w-10 object-contain rounded-xl shadow-md" />
             ) : (
               <div className="h-10 w-10 bg-gradient-to-br from-[#0b213f] to-blue-800 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
                 {shopSettings.name.charAt(0).toUpperCase()}
@@ -1039,7 +1039,7 @@ export default function PublicShopPage({ params }: { params: Promise<{ shopId: s
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+      <div className="min-h-dvh flex items-center justify-center bg-slate-50 p-4">
         <div className="animate-pulse flex flex-col items-center">
           <div className="h-16 w-16 bg-slate-200 rounded-full mb-4"></div>
           <div className="h-4 w-32 bg-slate-200 rounded"></div>
@@ -1050,7 +1050,7 @@ export default function PublicShopPage({ params }: { params: Promise<{ shopId: s
 
   if (!shopUuid) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 text-center">
+      <div className="min-h-dvh flex items-center justify-center bg-slate-50 p-4 text-center">
         <div>
           <div className="h-16 w-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
              <span className="text-2xl">🏪</span>

@@ -139,7 +139,7 @@ function LoginForm() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-dvh flex items-center justify-center bg-slate-50">
         <LogoLoader message="Préparation de l'interface..." />
       </div>
     );
@@ -148,7 +148,7 @@ function LoginForm() {
   if (currentUser) return null;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-4 relative overflow-hidden">
+    <div className="min-h-dvh bg-slate-50 flex flex-col justify-center items-center p-4 relative overflow-hidden">
       
       {/* Animated Glassmorphism Background Blobs */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 blur-[100px] pointer-events-none"></div>
@@ -356,7 +356,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="h-screen flex items-center justify-center bg-slate-50"><LogoLoader /></div>}>
+    <Suspense fallback={<div className="h-dvh flex items-center justify-center bg-slate-50"><LogoLoader /></div>}>
       <LoginForm />
     </Suspense>
   );

@@ -10,12 +10,12 @@ export default function DashboardLayout({
 }) {
   return (
     <AuthGuard>
-      <div className="flex h-screen overflow-hidden bg-slate-50 print:h-auto print:overflow-visible print:block print:bg-white">
+      <div className="flex h-dvh overflow-hidden bg-slate-50 print:h-auto print:overflow-visible print:block print:bg-white">
         <div className="flex flex-1 flex-col overflow-hidden print:block print:overflow-visible">
           <div className="print:hidden">
             <Topbar />
           </div>
-          <main className="flex-1 overflow-y-auto p-0 md:p-8 print:overflow-visible print:block print:p-0">
+          <main className="flex-1 overflow-y-auto px-0 pt-0 pb-24 md:p-8 print:overflow-visible print:block print:p-0">
             {children}
           </main>
         </div>

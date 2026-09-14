@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export default function AidePage() {
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-dvh bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-sm">
         <Link href="/" className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 mb-6">
           <ArrowLeft className="w-4 h-4 mr-1" /> Retour à l'accueil

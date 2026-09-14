@@ -133,7 +133,7 @@ export default function PointOfSalePage() {
   };
 
   return (
-    <div className="p-3 md:p-0 max-w-[1600px] mx-auto min-h-screen">
+    <div className="p-3 md:p-0 max-w-[1600px] mx-auto min-h-dvh">
       
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -274,7 +274,7 @@ export default function PointOfSalePage() {
         </div>
 
         {/* Right Column: Ticket / Cart */}
-        <div id="ticket-section" className="w-full lg:w-[420px] xl:w-[450px] lg:sticky lg:top-6 flex flex-col bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 shrink-0 overflow-hidden lg:max-h-[calc(100vh-100px)] mb-20 lg:mb-0">
+        <div id="ticket-section" className="w-full lg:w-[420px] xl:w-[450px] lg:sticky lg:top-6 flex flex-col bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 shrink-0 overflow-hidden lg:max-h-[calc(100dvh-100px)] mb-20 lg:mb-0">
           
           {/* Cart Header */}
           <div className="p-3 bg-[#0b213f] text-white flex items-center justify-between shrink-0">

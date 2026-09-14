@@ -87,7 +87,7 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-center items-center p-4 selection:bg-[#0d9488] selection:text-white">
+    <div className="min-h-dvh bg-[#f8fafc] flex flex-col justify-center items-center p-4 selection:bg-[#0d9488] selection:text-white">
       {/* Background shapes */}
       <div className="absolute top-0 w-full h-96 bg-gradient-to-b from-[#161726] to-[#f8fafc] -z-10 overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[150%] bg-[#25273b] rotate-12 opacity-30 blur-3xl"></div>

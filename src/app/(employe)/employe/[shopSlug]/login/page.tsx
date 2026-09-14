@@ -65,7 +65,7 @@ export default function EmployeLoginPage({ params }: { params: { shopSlug: strin
 
   if (!isLoaded) {
     return (
-      <div className="min-h-[calc(100vh-4rem)] bg-slate-50 flex items-center justify-center">
+      <div className="min-h-[calc(100dvh-4rem)] bg-slate-50 flex items-center justify-center">
         <LogoLoader message="Chargement de l'espace vendeur..." />
       </div>
     );
@@ -74,7 +74,7 @@ export default function EmployeLoginPage({ params }: { params: { shopSlug: strin
   if (currentUser && currentUser.role === "employee") return null; // Avoid flicker before redirect
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-slate-50 flex flex-col justify-center items-center p-4">
+    <div className="min-h-[calc(100dvh-4rem)] bg-slate-50 flex flex-col justify-center items-center p-4">
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
         <div className="p-8 text-center flex flex-col items-center">
           <img src="/logo.png" alt="StockHub Logo" className="h-14 sm:h-16 w-auto object-contain mx-auto mb-6" />
