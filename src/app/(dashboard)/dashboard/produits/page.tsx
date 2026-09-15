@@ -344,6 +344,10 @@ export default function ProductsPage() {
       ? Number(currentProduct.promotionalPrice)
       : undefined;
 
+    const fallbackImageUrl = currentProduct.imageUrl && currentProduct.imageUrl.trim() !== "" 
+      ? currentProduct.imageUrl 
+      : `https://ui-avatars.com/api/?name=${encodeURIComponent(currentProduct.name || "Produit")}&background=0b213f&color=fff&size=512&font-size=0.33`;
+
     if (modalMode === "add") {
       const newProduct = {
         ...currentProduct,
@@ -356,6 +360,7 @@ export default function ProductsPage() {
         packOffers: cleanPackOffers,
         options: cleanOptions,
         galleryUrls: Array.isArray(currentProduct.galleryUrls) ? currentProduct.galleryUrls : [],
+        imageUrl: fallbackImageUrl,
         status: statusVal
       } as Product;
       addProduct(newProduct);
@@ -369,6 +374,7 @@ export default function ProductsPage() {
         packOffers: cleanPackOffers,
         options: cleanOptions,
         galleryUrls: Array.isArray(currentProduct.galleryUrls) ? currentProduct.galleryUrls : [],
+        imageUrl: fallbackImageUrl,
         status: statusVal
       } as Product;
       updateProduct(updatedProduct);
