@@ -196,11 +196,12 @@ export default function PointOfSalePage() {
 
                   {/* Product Image */}
                   <div className="relative w-full aspect-[4/3] rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 mb-2">
-                    {product.imageUrl ? (
+                    {product.imageUrl && product.imageUrl.trim() !== "" && product.imageUrl !== "undefined" && product.imageUrl !== "null" ? (
                       <Image 
                         src={product.imageUrl} 
                         alt={product.name} 
                         fill 
+                        unoptimized
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                         sizes="(max-width: 768px) 50vw, 25vw"
                       />

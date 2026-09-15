@@ -49,8 +49,8 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
             PROMO
           </div>
         )}
-        {currentImage ? (
-          <Image src={currentImage} alt={product.name} fill className="object-cover group-hover/image:scale-105 transition-transform duration-300" />
+        {currentImage && currentImage.trim() !== "" && currentImage !== "undefined" && currentImage !== "null" ? (
+          <Image src={currentImage} alt={product.name} fill unoptimized className="object-cover group-hover/image:scale-105 transition-transform duration-300" />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <StoreIcon className="h-12 w-12 text-slate-300" />
@@ -648,8 +648,8 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                 cart.map(item => (
                   <div key={item.id} className="flex gap-4 bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
                     <div className="h-20 w-20 bg-slate-100 rounded-xl overflow-hidden relative flex-shrink-0">
-                      {item.product.imageUrl ? (
-                        <Image src={item.product.imageUrl} alt={item.product.name} fill className="object-cover" />
+                      {item.product.imageUrl && item.product.imageUrl.trim() !== "" && item.product.imageUrl !== "undefined" && item.product.imageUrl !== "null" ? (
+                        <Image src={item.product.imageUrl} alt={item.product.name} fill unoptimized className="object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
                           <StoreIcon className="h-6 w-6 text-slate-300" />
