@@ -833,9 +833,9 @@ export default function ProductsPage() {
       
       {/* Modal Ajouter/Modifier Produit */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm transition-opacity p-4">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-lg overflow-hidden border border-slate-200 transform scale-100 animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex justify-between items-center p-5 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-slate-900/40 backdrop-blur-sm transition-opacity p-2 pt-12 sm:p-4 sm:pt-4 overflow-hidden">
+          <div className="bg-white flex flex-col rounded-xl shadow-lg w-full max-w-lg overflow-hidden border border-slate-200 transform scale-100 animate-in fade-in zoom-in-95 duration-200 max-h-[85vh] sm:max-h-[90vh]">
+            <div className="flex justify-between items-center p-4 sm:p-5 border-b border-slate-100 shrink-0">
               <h2 className="text-lg font-bold text-slate-900">
                 {modalMode === "add" ? "Nouveau Produit" : "Modifier le Produit"}
               </h2>
@@ -844,7 +844,7 @@ export default function ProductsPage() {
               </button>
             </div>
             
-            <div className="p-5 max-h-[70vh] overflow-y-auto custom-scrollbar space-y-4">
+            <div className="p-4 sm:p-5 flex-1 overflow-y-auto custom-scrollbar space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5 md:col-span-2">
                   <label className="text-sm font-medium text-slate-700">Nom du produit *</label>
@@ -1355,7 +1355,7 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            <div className="p-5 border-t border-slate-100 flex justify-end gap-3 bg-slate-50">
+            <div className="p-4 sm:p-5 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
               <Button variant="outline" onClick={() => setIsModalOpen(false)} className="bg-white">
                 Annuler
               </Button>
@@ -1370,10 +1370,10 @@ export default function ProductsPage() {
 
       {/* Modal d'importation CSV */}
       {isImportModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-slate-900/50 backdrop-blur-sm p-2 pt-12 sm:p-4 sm:pt-4 overflow-hidden">
+          <div className="bg-white flex flex-col rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[85vh] sm:max-h-[90vh]">
             {/* Entête */}
-            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0b213f]">
                   <FileSpreadsheet size={20} />
@@ -1391,7 +1391,7 @@ export default function ProductsPage() {
               </button>
             </div>
 
-            <div className="p-6 space-y-5">
+            <div className="p-4 sm:p-6 space-y-5 overflow-y-auto custom-scrollbar flex-1">
               {/* Étape 1 : Modèle CSV */}
               <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
@@ -1506,7 +1506,7 @@ export default function ProductsPage() {
             </div>
 
             {/* Pied de modal */}
-            <div className="p-5 border-t border-slate-100 flex items-center justify-end gap-3 bg-slate-50">
+            <div className="p-4 sm:p-5 border-t border-slate-100 flex items-center justify-end gap-3 bg-slate-50 shrink-0">
               <Button 
                 variant="outline" 
                 onClick={() => setIsImportModalOpen(false)}
