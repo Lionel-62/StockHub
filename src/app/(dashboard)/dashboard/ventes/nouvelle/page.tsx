@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Plus, Minus, Trash2, ArrowLeft, Save, Banknote, CreditCard, ChevronRight, Calculator, User, ShoppingCart, CheckCircle2, Package, Smartphone, Building } from "lucide-react";
+import { Search, Plus, Minus, Trash2, ArrowLeft, Save, Banknote, CreditCard, ChevronRight, Calculator, User, ShoppingCart, CheckCircle2, Package, Smartphone, Building, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CustomSelect } from "@/components/ui/custom-select";
 import Link from "next/link";
@@ -22,6 +22,7 @@ export default function PointOfSalePage() {
   const [selectedClient, setSelectedClient] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Espèces");
   const [visibleCount, setVisibleCount] = useState(15);
+  const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
 
   const { products, setProducts, updateProduct, isLoaded: productsLoaded } = useProducts();
   const { orders, addOrder } = useOrders();
@@ -127,6 +128,7 @@ export default function PointOfSalePage() {
     });
     addOrder(newOrder);
     setCart([]);
+    setIsMobileCartOpen(false);
 
     // 3. Rediriger
     router.push("/dashboard/ventes");
@@ -273,11 +275,43 @@ export default function PointOfSalePage() {
           </div>
         </div>
 
+      {/* Mobile Cart Overlay */}
+      {isMobileCartOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[55] transition-opacity"
+          onClick={() => setIsMobileCartOpen(false)}
+        />
+      )}
+
         {/* Right Column: Ticket / Cart */}
-        <div id="ticket-section" className="w-full lg:w-[420px] xl:w-[450px] lg:sticky lg:top-6 flex flex-col bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/50 shrink-0 overflow-hidden lg:max-h-[calc(100dvh-100px)] mb-20 lg:mb-0">
+        <div className={cn(
+          "lg:w-[420px] xl:w-[450px] lg:sticky lg:top-6 flex-col bg-white border-slate-200 lg:shadow-xl lg:shadow-slate-200/50 shrink-0 overflow-hidden lg:max-h-[calc(100dvh-100px)]",
+          "lg:flex lg:rounded-2xl lg:border lg:mb-0", // Desktop visibility
+          isMobileCartOpen 
+            ? "fixed inset-x-0 bottom-0 z-[60] flex rounded-t-2xl max-h-[90dvh] shadow-[0_-10px_40px_rgba(0,0,0,0.2)] animate-in slide-in-from-bottom-full duration-300" 
+            : "hidden lg:flex" // Hide on mobile if not open
+        )}>
           
-          {/* Cart Header */}
-          <div className="p-3 bg-[#0b213f] text-white flex items-center justify-between shrink-0">
+          {/* Mobile Cart Close Header */}
+          <div className="lg:hidden flex items-center justify-between p-3 bg-white border-b border-slate-100 shrink-0 rounded-t-2xl">
+            <h2 className="font-bold text-slate-800 flex items-center gap-2">
+              <ShoppingCart size={18} className="text-[#0b213f]" />
+              Ticket en cours
+            </h2>
+            <div className="flex items-center gap-2">
+              {cart.length > 0 && (
+                <button onClick={() => { clearCart(); setIsMobileCartOpen(false); }} className="text-red-500 hover:bg-red-50 text-xs font-bold transition-colors px-2 py-1.5 rounded-md">
+                  Vider
+                </button>
+              )}
+              <button onClick={() => setIsMobileCartOpen(false)} className="p-1.5 rounded-full hover:bg-slate-100 text-slate-500 transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+          </div>
+
+          {/* Cart Header (Desktop only) */}
+          <div className="hidden lg:flex p-3 bg-[#0b213f] text-white items-center justify-between shrink-0">
             <h2 className="font-bold text-base flex items-center gap-2">
               <ShoppingCart size={18} />
               Ticket en cours
@@ -439,14 +473,14 @@ export default function PointOfSalePage() {
       </div>
 
       {/* Mobile Cart Floating Bar */}
-      {cart.length > 0 && (
+      {cart.length > 0 && !isMobileCartOpen && (
         <div className="lg:hidden fixed bottom-[60px] md:bottom-0 left-0 right-0 p-3 bg-white border-t border-slate-200 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.1)] z-40 flex items-center justify-between animate-in slide-in-from-bottom-10">
           <div className="flex flex-col">
             <span className="text-xs text-slate-500 font-medium">Total ({cart.reduce((a, b) => a + b.cartQuantity, 0)} articles)</span>
             <span className="font-black text-lg text-[#0b213f] leading-none"><span className="font-mono">{formatCurrency(total)}</span></span>
           </div>
           <Button 
-            onClick={() => document.getElementById('ticket-section')?.scrollIntoView({ behavior: 'smooth' })} 
+            onClick={() => setIsMobileCartOpen(true)} 
             className="bg-[#0f9d58] hover:bg-[#0d8a4d] text-white px-6 shadow-md"
           >
             <ShoppingCart size={18} className="mr-2" />
