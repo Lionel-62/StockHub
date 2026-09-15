@@ -917,24 +917,10 @@ export default function ProductsPage() {
                       <div className="flex flex-col sm:flex-row gap-2 w-full">
                         <label className="cursor-pointer flex-1 inline-flex items-center justify-center px-3 py-2 bg-white border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all">
                           <Upload size={15} className="mr-1.5 text-slate-500" />
-                          Importer (Galerie)
+                          Ajouter une image
                           <input 
                             type="file" 
                             accept="image/*"
-                            className="hidden"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) handleImageUpload(file);
-                            }}
-                          />
-                        </label>
-                        <label className="cursor-pointer flex-1 inline-flex items-center justify-center px-3 py-2 bg-white border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all">
-                          <Camera size={15} className="mr-1.5 text-slate-500" />
-                          Prendre photo
-                          <input 
-                            type="file" 
-                            accept="image/*"
-                            capture="environment"
                             className="hidden"
                             onChange={(e) => {
                               const file = e.target.files?.[0];
@@ -943,7 +929,7 @@ export default function ProductsPage() {
                           />
                         </label>
                       </div>
-                      <p className="text-xs text-slate-500 mt-2">Choisissez dans vos fichiers ou prenez une photo en direct.</p>
+                      <p className="text-xs text-slate-500 mt-2">Formats supportés : JPG, PNG, WEBP.</p>
                     </div>
                   </div>
                 </div>
