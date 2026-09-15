@@ -14,7 +14,7 @@ export async function loginAction(identifier: string, pinCode: string, allowedRo
   
   let query = supabase
     .from('profiles')
-    .select('*, shops!inner(slug, name)')
+    .select('*, shops!profiles_shop_id_fkey!inner(slug, name)')
     .eq('identifier', identifier)
     .eq('pin_code', pinCode);
     
