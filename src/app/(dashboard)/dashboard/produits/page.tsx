@@ -1158,13 +1158,13 @@ export default function ProductsPage() {
                         <input 
                           type="checkbox" 
                           className="sr-only peer"
-                          checked={currentProduct.promotionalPrice !== undefined && currentProduct.promotionalPrice !== null && Number(currentProduct.promotionalPrice) > 0}
+                          checked={currentProduct.promotionalPrice !== undefined && currentProduct.promotionalPrice !== null}
                           onChange={(e) => setCurrentProduct({...currentProduct, promotionalPrice: e.target.checked ? (Number(currentProduct.salePrice) || 0) : undefined})}
                         />
                         <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                       </div>
                     </label>
-                    {currentProduct.promotionalPrice !== undefined && currentProduct.promotionalPrice !== null && Number(currentProduct.promotionalPrice) > 0 && (
+                    {currentProduct.promotionalPrice !== undefined && currentProduct.promotionalPrice !== null && (
                       <div className="mt-4 pt-4 border-t border-slate-100">
                         <label className="text-sm font-medium text-slate-700">Nouveau prix promotionnel</label>
                         <input 
@@ -1173,10 +1173,10 @@ export default function ProductsPage() {
                           value={currentProduct.promotionalPrice ?? ""}
                           onFocus={(e) => {
                             if (currentProduct.promotionalPrice === 0 || e.target.value === "0") {
-                              setCurrentProduct(prev => ({ ...prev, promotionalPrice: undefined }));
+                              setCurrentProduct(prev => ({ ...prev, promotionalPrice: "" as any }));
                             }
                           }}
-                          onChange={(e) => setCurrentProduct({...currentProduct, promotionalPrice: e.target.value !== "" ? Number(e.target.value) : undefined})}
+                          onChange={(e) => setCurrentProduct({...currentProduct, promotionalPrice: e.target.value !== "" ? Number(e.target.value) : ("" as any)})}
                           className="w-full mt-1.5 p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
                           placeholder="Ex: 4500"
                         />
