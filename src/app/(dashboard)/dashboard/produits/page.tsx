@@ -40,6 +40,11 @@ export default function ProductsPage() {
   };
 
   const handleImageUpload = (file: File) => {
+    setIsUploadingImage(true);
+    // Affichage instantané en local pour éviter l'effet "ça prend du temps"
+    const localUrl = URL.createObjectURL(file);
+    setLocalImagePreview(localUrl);
+
     const reader = new FileReader();
     reader.onload = (event) => {
       const img = new window.Image();
@@ -70,6 +75,10 @@ export default function ProductsPage() {
               setCurrentProduct(prev => ({ ...prev, imageUrl: url }));
             }
           }
+          setIsUploadingImage(false);
+          // On peut libérer l'URL locale une fois l'upload terminé
+          URL.revokeObjectURL(localUrl);
+          setLocalImagePreview(null);
         }, "image/jpeg", 0.9);
       };
       img.src = event.target?.result as string;
@@ -93,6 +102,8 @@ export default function ProductsPage() {
   const [currentProduct, setCurrentProduct] = useState<Partial<Product>>({});
   const [isImprovingDesc, setIsImprovingDesc] = useState(false);
   const [isImprovingImage, setIsImprovingImage] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [localImagePreview, setLocalImagePreview] = useState<string | null>(null);
 
   const handleImproveImage = async () => {
     if (!currentProduct.imageUrl) return;
@@ -239,6 +250,7 @@ export default function ProductsPage() {
 
   const handleOpenAdd = () => {
     setModalMode("add");
+    setLocalImagePreview(null);
     setCurrentProduct({ 
       name: "", 
       sku: `SKU-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`, 
@@ -316,6 +328,7 @@ export default function ProductsPage() {
       isPublishedOnStore: product.isPublishedOnStore !== false
     });
     setIsModalOpen(true);
+    setLocalImagePreview(null);
   };
 
   const handleDelete = () => {
@@ -349,9 +362,13 @@ export default function ProductsPage() {
       : `https://ui-avatars.com/api/?name=${encodeURIComponent(currentProduct.name || "Produit")}&background=0b213f&color=fff&size=512&font-size=0.33`;
 
     if (modalMode === "add") {
+      const safeId = (typeof crypto !== 'undefined' && crypto.randomUUID) 
+        ? crypto.randomUUID() 
+        : `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
       const newProduct = {
         ...currentProduct,
-        id: crypto.randomUUID(),
+        id: safeId,
         sku: currentProduct.sku || `SKU-${Math.floor(1000 + Math.random() * 9000)}`,
         stock: stockNum,
         purchasePrice: Number(currentProduct.purchasePrice) || 0,
@@ -1351,9 +1368,9 @@ export default function ProductsPage() {
               <Button variant="outline" onClick={() => setIsModalOpen(false)} className="bg-white">
                 Annuler
               </Button>
-              <Button onClick={handleSave} className="bg-[#0b213f] hover:bg-[#18355c] text-white">
+              <Button onClick={handleSave} disabled={isUploadingImage} className="bg-[#0b213f] hover:bg-[#18355c] text-white">
                 <Save size={16} className="mr-2" />
-                Enregistrer
+                {isUploadingImage ? "Patientez..." : "Enregistrer"}
               </Button>
             </div>
           </div>
