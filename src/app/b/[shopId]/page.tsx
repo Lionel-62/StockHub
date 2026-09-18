@@ -194,6 +194,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
   const { sendMessage } = useMessages(shopUuid);
   const { orders, addOrder } = useOrders(shopUuid);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [cart, setCart] = useState<{id: string, product: Product, quantity: number, selectedOptions?: Record<string, string>}[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedProductForOptions, setSelectedProductForOptions] = useState<Product | null>(null);
@@ -218,9 +219,13 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
 
   // Filter products that are in stock and published
   const availableProducts = products.filter(p => p.stock > 0 && p.isPublishedOnStore !== false);
-  const displayedProducts = availableProducts.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const categories = Array.from(new Set(availableProducts.map(p => p.category).filter(Boolean))).sort();
+  
+  const displayedProducts = availableProducts.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory ? p.category === selectedCategory : true;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleAddToCartClick = (product: Product) => {
     if (product.options && product.options.length > 0) {
@@ -557,6 +562,38 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
 
       {/* Products Grid */}
       <main className="max-w-5xl mx-auto px-4 py-8">
+        
+        {/* Categories Filter */}
+        {categories.length > 0 && (
+          <div className="flex overflow-x-auto gap-2 pb-4 mb-6 scrollbar-hide">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className={cn(
+                "px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all",
+                selectedCategory === null 
+                  ? "bg-[#0b213f] text-white shadow-md" 
+                  : "bg-white text-slate-600 border border-slate-200 hover:border-[#0b213f]/50 hover:bg-slate-50"
+              )}
+            >
+              Tous les produits
+            </button>
+            {categories.map((category: any) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={cn(
+                  "px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all",
+                  selectedCategory === category
+                    ? "bg-[#0b213f] text-white shadow-md" 
+                    : "bg-white text-slate-600 border border-slate-200 hover:border-[#0b213f]/50 hover:bg-slate-50"
+                )}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {displayedProducts.map(product => (
             <ShopProductCard
