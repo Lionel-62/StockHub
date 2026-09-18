@@ -121,8 +121,8 @@ export default function EquipePage() {
     <div className="p-3 md:p-0 max-w-5xl mx-auto space-y-8 relative pb-20 animate-in fade-in duration-300">
       {/* HEADER SECTION */}
       <div className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100 flex items-start gap-4">
-        <div className="w-12 h-12 rounded-full bg-violet-100 flex items-center justify-center shrink-0">
-          <Users className="text-violet-600 w-6 h-6" />
+        <div className="w-12 h-12 rounded-full bg-[#0b213f]/10 flex items-center justify-center shrink-0">
+          <Users className="text-[#0b213f] w-6 h-6" />
         </div>
         <div>
           <h1 className="text-xl font-bold text-slate-900">Équipe</h1>
@@ -140,7 +140,7 @@ export default function EquipePage() {
               value={formName}
               onChange={(e) => setFormName(e.target.value)}
               placeholder="Ex: Alice"
-              className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-600/20 focus:border-violet-600 outline-none transition-all text-sm shadow-sm hover:border-violet-300"
+              className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] outline-none transition-all text-sm shadow-sm hover:border-[#0b213f]/50"
               required
             />
           </div>
@@ -150,7 +150,7 @@ export default function EquipePage() {
               <select
                 value={formRole}
                 onChange={(e) => setFormRole(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-violet-600/20 focus:border-violet-600 outline-none transition-all text-sm shadow-sm cursor-pointer appearance-none hover:border-violet-300"
+                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] outline-none transition-all text-sm shadow-sm cursor-pointer appearance-none hover:border-[#0b213f]/50"
               >
                 <option>Vendeur (Accès limité)</option>
                 <option>Gérant (Accès complet)</option>
@@ -163,7 +163,7 @@ export default function EquipePage() {
           <Button 
             type="submit" 
             disabled={isSubmitting}
-            className="w-full md:w-auto bg-[#7c3aed] hover:bg-[#6d28d9] text-white font-medium px-8 py-6 rounded-xl transition-all shadow-md shadow-violet-500/20"
+            className="w-full md:w-auto bg-[#0b213f] hover:bg-[#18355c] text-white font-medium px-8 py-6 rounded-xl transition-all shadow-md shadow-[#0b213f]/20"
           >
             {isSubmitting ? "Génération..." : "Générer"}
           </Button>
@@ -183,14 +183,28 @@ export default function EquipePage() {
                 </div>
               </div>
             </div>
-            <Button 
-              type="button"
-              onClick={() => handleShare(generatedAccess)} 
-              className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0 rounded-lg text-sm px-4 shadow-sm"
-            >
-              <Share2 className="w-4 h-4 mr-2" />
-              Partager l'accès
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  const message = `Bonjour ${generatedAccess.name},\n\nVoici tes accès pour l'espace vendeur StockHub :\n\nLien de connexion : ${window.location.origin}/employe/${currentUser?.shopSlug}/login\nIdentifiant : ${generatedAccess.identifier}\nCode PIN : ${generatedAccess.pin}\n\nNe partage pas ces informations.`;
+                  navigator.clipboard.writeText(message);
+                  alert("Les accès ont été copiés dans le presse-papier !");
+                }} 
+                className="bg-white hover:bg-slate-50 text-emerald-700 border-emerald-200 shrink-0 rounded-lg text-sm px-4 shadow-sm"
+              >
+                Copier
+              </Button>
+              <Button 
+                type="button"
+                onClick={() => handleShare(generatedAccess)} 
+                className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0 rounded-lg text-sm px-4 shadow-sm"
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                Partager
+              </Button>
+            </div>
           </div>
         )}
       </div>
@@ -206,7 +220,7 @@ export default function EquipePage() {
               placeholder="Rechercher par nom..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-4 py-2 w-full border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-violet-600/20 focus:border-violet-600 transition-all shadow-sm"
+              className="pl-9 pr-4 py-2 w-full border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] transition-all shadow-sm"
             />
           </div>
         </div>
@@ -232,7 +246,7 @@ export default function EquipePage() {
                   <TableRow key={user.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group flex flex-col md:table-row">
                     <TableCell className="py-4 pl-6 flex-1 border-b md:border-b-0 border-slate-100">
                       <div className="flex items-center gap-4">
-                        <div className="h-10 w-10 rounded-full bg-[#7c3aed] text-white flex items-center justify-center font-bold shrink-0 text-lg shadow-sm">
+                        <div className="h-10 w-10 rounded-full bg-[#0b213f] text-white flex items-center justify-center font-bold shrink-0 text-lg shadow-sm">
                           {user.name.charAt(0).toUpperCase()}
                         </div>
                         <div>
@@ -244,7 +258,7 @@ export default function EquipePage() {
                     <TableCell className="text-left md:text-right py-3 md:py-4 pl-6 md:pl-0 border-b md:border-b-0 border-slate-100">
                       <Badge className={
                         user.role === "owner" 
-                          ? "bg-violet-100 text-violet-700 hover:bg-violet-200 font-semibold border-0 px-3 py-1" 
+                          ? "bg-amber-100 text-amber-700 hover:bg-amber-200 font-semibold border-0 px-3 py-1" 
                           : user.permissions.canViewDashboard 
                             ? "bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold border-0 px-3 py-1"
                             : "bg-slate-100 text-slate-600 hover:bg-slate-200 font-semibold border-0 px-3 py-1"
@@ -255,7 +269,20 @@ export default function EquipePage() {
                     <TableCell className="py-3 md:py-4 pr-6 pl-6 md:pl-0 text-right">
                       {user.role !== "owner" && user.id !== currentUser?.id && (
                         <div className="flex justify-end gap-1 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button variant="ghost" size="icon" onClick={() => handleShare(user)} className="text-slate-400 hover:text-violet-600 hover:bg-violet-50 h-8 w-8 rounded-full" title="Partager">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => {
+                              const message = `Bonjour ${user.name},\n\nVoici tes accès pour l'espace vendeur StockHub :\n\nLien de connexion : ${window.location.origin}/employe/${currentUser?.shopSlug}/login\nIdentifiant : ${user.identifier}\nCode PIN : ${user.pinCode}\n\nNe partage pas ces informations.`;
+                              navigator.clipboard.writeText(message);
+                              alert("Identifiants copiés !");
+                            }}
+                            className="text-slate-400 hover:text-[#0b213f] hover:bg-[#0b213f]/10 h-8 w-8 rounded-full" 
+                            title="Copier les accès"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                          </Button>
+                          <Button variant="ghost" size="icon" onClick={() => handleShare(user)} className="text-slate-400 hover:text-[#0b213f] hover:bg-[#0b213f]/10 h-8 w-8 rounded-full" title="Partager">
                             <Share2 size={16} />
                           </Button>
                           <Button variant="ghost" size="icon" onClick={() => confirmDelete(user.id)} className="text-slate-400 hover:text-red-600 hover:bg-red-50 h-8 w-8 rounded-full" title="Supprimer">
