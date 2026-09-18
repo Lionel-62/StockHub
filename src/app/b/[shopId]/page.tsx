@@ -544,14 +544,21 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
 
       {/* Hero Banner */}
       <div className="relative overflow-hidden rounded-3xl mx-4 mt-4 md:mt-6 bg-[#0b213f] text-white py-16 md:py-28 px-6 text-center shadow-2xl shadow-[#0b213f]/40 isolate">
-        {/* 3D Decorative elements */}
+        {/* Decorative background glows */}
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#0d8f76]/40 via-transparent to-transparent pointer-events-none"></div>
         <div className="absolute -bottom-32 -left-32 w-[30rem] h-[30rem] bg-[#0d8f76]/30 rounded-full blur-[100px] pointer-events-none"></div>
         <div className="absolute -top-32 -right-32 w-[30rem] h-[30rem] bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none"></div>
         
-        {/* Floating 3D objects */}
-        <div className="hidden md:block absolute top-1/4 left-[10%] w-24 h-24 rounded-3xl bg-gradient-to-br from-[#0d8f76] to-[#044c3e] rotate-12 opacity-90 shadow-[0_20px_50px_-15px_rgba(13,143,118,0.8)] border border-white/20 blur-[1px]"></div>
-        <div className="hidden md:block absolute bottom-1/4 right-[10%] w-20 h-20 rounded-full bg-gradient-to-tl from-amber-400 to-orange-500 -rotate-12 opacity-80 shadow-[0_20px_50px_-15px_rgba(245,158,11,0.6)] border border-white/20 blur-[1px]"></div>
+        {/* Floating Emoji Cards */}
+        <div className="hidden md:flex absolute top-[15%] left-[8%] w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 items-center justify-center text-4xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_6s_ease-in-out_infinite] rotate-12">
+          🛍️
+        </div>
+        <div className="hidden md:flex absolute bottom-[15%] right-[10%] w-24 h-24 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 items-center justify-center text-5xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_7s_ease-in-out_infinite_reverse] -rotate-12">
+          🎁
+        </div>
+        <div className="hidden lg:flex absolute top-[25%] right-[20%] w-16 h-16 rounded-xl bg-white/10 backdrop-blur-lg border border-white/20 items-center justify-center text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_4s_ease-in-out_infinite] rotate-45">
+          ✨
+        </div>
         
         <div className="relative max-w-4xl mx-auto space-y-6 z-10">
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
