@@ -543,18 +543,25 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
       </div>
 
       {/* Hero Banner */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#0b213f] via-blue-900 to-[#0b213f] text-white py-16 md:py-24 px-4 text-center shadow-xl shadow-blue-900/10">
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-400/20 via-transparent to-transparent"></div>
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"></div>
+      <div className="relative overflow-hidden rounded-3xl mx-4 mt-4 md:mt-6 bg-[#0b213f] text-white py-16 md:py-28 px-6 text-center shadow-2xl shadow-[#0b213f]/40 isolate">
+        {/* 3D Decorative elements */}
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#0d8f76]/40 via-transparent to-transparent pointer-events-none"></div>
+        <div className="absolute -bottom-32 -left-32 w-[30rem] h-[30rem] bg-[#0d8f76]/30 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute -top-32 -right-32 w-[30rem] h-[30rem] bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none"></div>
         
-        <div className="relative max-w-3xl mx-auto space-y-5 z-10">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold tracking-wider text-blue-100 mb-2 shadow-sm uppercase">
-            Bienvenue
+        {/* Floating 3D objects */}
+        <div className="hidden md:block absolute top-1/4 left-[10%] w-24 h-24 rounded-3xl bg-gradient-to-br from-[#0d8f76] to-[#044c3e] rotate-12 opacity-90 shadow-[0_20px_50px_-15px_rgba(13,143,118,0.8)] border border-white/20 blur-[1px]"></div>
+        <div className="hidden md:block absolute bottom-1/4 right-[10%] w-20 h-20 rounded-full bg-gradient-to-tl from-amber-400 to-orange-500 -rotate-12 opacity-80 shadow-[0_20px_50px_-15px_rgba(245,158,11,0.6)] border border-white/20 blur-[1px]"></div>
+        
+        <div className="relative max-w-4xl mx-auto space-y-6 z-10">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+             <span className="flex h-2.5 w-2.5 rounded-full bg-[#0d8f76] shadow-[0_0_12px_rgba(13,143,118,1)] animate-pulse"></span>
+             <span className="text-sm font-semibold tracking-wider uppercase text-white/90">Bienvenue sur notre boutique</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-black tracking-tight drop-shadow-md">{shopSettings.name}</h2>
-          <p className="text-blue-100/90 md:text-xl font-light max-w-2xl mx-auto leading-relaxed drop-shadow-sm">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight" style={{ textShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+            {shopSettings.name}
+          </h2>
+          <p className="text-lg md:text-xl lg:text-2xl text-slate-300 font-light max-w-2xl mx-auto leading-relaxed" style={{ textShadow: '0 4px 10px rgba(0,0,0,0.3)' }}>
             {shopSettings.description}
           </p>
         </div>
