@@ -173,24 +173,45 @@ export default function ProductsPage() {
 
 
   const handleImproveDescription = async () => {
-    if (!currentProduct.description || currentProduct.description.trim() === "") return;
     setIsImprovingDesc(true);
     
     // Simulate AI API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    let improved = currentProduct.description.trim()
-      .replace(/([.,!?])([^\s])/g, '$1 $2') // Fix spacing after punctuation
-      .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
-      .replace(/\. \s*([a-z])/g, (match, letter) => `. ${letter.toUpperCase()}`);
-      
-    if (!improved.endsWith(".")) improved += ".";
+    // Get shop name from local storage
+    let shopName = "notre boutique";
+    try {
+      const sessionStr = localStorage.getItem("stockhub_session");
+      if (sessionStr) {
+        const session = JSON.parse(sessionStr);
+        if (session.shopId) {
+           const cachedSettings = localStorage.getItem("stockhub_settings_" + session.shopId);
+           if (cachedSettings) {
+             shopName = JSON.parse(cachedSettings).name || "notre boutique";
+           }
+        }
+      }
+    } catch (e) {}
+
+    const prodName = currentProduct.name && currentProduct.name.trim() !== "" ? currentProduct.name : "ce produit";
+    const prodCat = currentProduct.category || "cet article";
     
-    // Make it sound professional
-    if (improved.length < 30) {
-      improved = `✨ Découvrez notre produit de qualité supérieure : ${improved} Idéal pour répondre à tous vos besoins avec une satisfaction garantie.`;
+    let improved = "";
+    if (!currentProduct.description || currentProduct.description.trim() === "") {
+      improved = `✨ Découvrez ${prodName}, l'incontournable de la catégorie ${prodCat} sur ${shopName} ! \n\nConçu pour répondre à toutes vos attentes, cet article allie qualité supérieure et fiabilité. Ne manquez pas cette opportunité de vous faire plaisir avec une satisfaction garantie.`;
     } else {
-      improved = `✨ ${improved} \n\nUne excellente opportunité à ne pas manquer, conçu spécialement pour vous offrir la meilleure qualité possible.`;
+      improved = currentProduct.description.trim()
+        .replace(/([.,!?])([^\s])/g, '$1 $2')
+        .replace(/^./, str => str.toUpperCase())
+        .replace(/\. \s*([a-z])/g, (match, letter) => `. ${letter.toUpperCase()}`);
+        
+      if (!improved.endsWith(".")) improved += ".";
+      
+      if (improved.length < 50) {
+        improved = `✨ Découvrez ${prodName} : ${improved} Idéal pour répondre à vos besoins avec une qualité garantie par ${shopName}.`;
+      } else {
+        improved = `✨ ${improved} \n\nUne excellente opportunité à saisir sur ${shopName}, offrant la meilleure qualité possible.`;
+      }
     }
     
     setCurrentProduct(prev => ({ ...prev, description: improved }));
