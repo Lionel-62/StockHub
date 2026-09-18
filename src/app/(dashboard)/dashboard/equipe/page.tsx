@@ -251,7 +251,10 @@ export default function EquipePage() {
                         </div>
                         <div>
                           <div className="font-semibold text-slate-900">{user.name}</div>
-                          <div className="text-slate-500 text-xs font-mono mt-0.5 opacity-80">ID: {user.identifier}</div>
+                          <div className="text-slate-500 text-xs font-mono mt-0.5 opacity-80 flex gap-3">
+                            <span>ID: {user.identifier}</span>
+                            <span>PIN: {user.pinCode}</span>
+                          </div>
                         </div>
                       </div>
                     </TableCell>
