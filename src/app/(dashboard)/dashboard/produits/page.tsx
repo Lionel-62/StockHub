@@ -362,9 +362,17 @@ export default function ProductsPage() {
       : `https://ui-avatars.com/api/?name=${encodeURIComponent(currentProduct.name || "Produit")}&background=0b213f&color=fff&size=512&font-size=0.33`;
 
     if (modalMode === "add") {
-      const safeId = (typeof crypto !== 'undefined' && crypto.randomUUID) 
-        ? crypto.randomUUID() 
-        : `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const generateUUID = () => {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+          return crypto.randomUUID();
+        }
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+      };
+      
+      const safeId = generateUUID();
 
       const newProduct = {
         ...currentProduct,
