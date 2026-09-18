@@ -188,9 +188,9 @@ export default function EquipePage() {
                 type="button"
                 variant="outline"
                 onClick={() => {
-                  const message = `Bonjour ${generatedAccess.name},\n\nVoici tes accès pour l'espace vendeur StockHub :\n\nLien de connexion : ${window.location.origin}/employe/${currentUser?.shopSlug}/login\nIdentifiant : ${generatedAccess.identifier}\nCode PIN : ${generatedAccess.pin}\n\nNe partage pas ces informations.`;
-                  navigator.clipboard.writeText(message);
-                  alert("Les accès ont été copiés dans le presse-papier !");
+                  const loginUrl = `${window.location.origin}/employe/${currentUser?.shopSlug}/login`;
+                  navigator.clipboard.writeText(loginUrl);
+                  alert("Lien de connexion copié dans le presse-papier !");
                 }} 
                 className="bg-white hover:bg-slate-50 text-emerald-700 border-emerald-200 shrink-0 rounded-lg text-sm px-4 shadow-sm"
               >
@@ -273,9 +273,9 @@ export default function EquipePage() {
                             variant="ghost" 
                             size="icon" 
                             onClick={() => {
-                              const message = `Bonjour ${user.name},\n\nVoici tes accès pour l'espace vendeur StockHub :\n\nLien de connexion : ${window.location.origin}/employe/${currentUser?.shopSlug}/login\nIdentifiant : ${user.identifier}\nCode PIN : ${user.pinCode}\n\nNe partage pas ces informations.`;
-                              navigator.clipboard.writeText(message);
-                              alert("Identifiants copiés !");
+                              const loginUrl = `${window.location.origin}/employe/${currentUser?.shopSlug}/login`;
+                              navigator.clipboard.writeText(loginUrl);
+                              alert("Lien de connexion copié !");
                             }}
                             className="text-slate-400 hover:text-[#0b213f] hover:bg-[#0b213f]/10 h-8 w-8 rounded-full" 
                             title="Copier les accès"
