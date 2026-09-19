@@ -3,6 +3,7 @@
 import { createAdminClient, createAuthenticatedClient } from '@/lib/supabase/server';
 import { setSession, deleteSession, getSession } from '@/lib/auth/session';
 import { checkRateLimit, incrementRateLimit, resetRateLimit } from '@/lib/auth/rate-limit';
+import { sendAdminTelegram } from '@/lib/telegram';
 
 export async function loginAction(identifier: string, pinCode: string, allowedRole?: "owner" | "employee", shopSlug?: string) {
   const rateLimit = checkRateLimit(identifier);
@@ -262,6 +263,10 @@ export async function createShopAction(userId: string, shopName: string, categor
         createdAt: profile.created_at
       };
       await setSession(sessionData);
+      
+      // Notification Admin Telegram non-bloquante
+      sendAdminTelegram(`🆕 Nouveau commerçant inscrit : ${profile.name} – ${profile.identifier} – boutique : ${shopName} – le ${new Date().toLocaleString('fr-FR')}`);
+      
       return { success: true, user: sessionData };
     }
     

@@ -120,7 +120,7 @@ export function Pricing() {
               href="/login?plan=pro"
               className="w-full text-center bg-[#0b213f] hover:bg-slate-900 text-white font-semibold py-3.5 px-6 rounded-full transition-all shadow-md shadow-[#0b213f]/20 text-sm"
             >
-              Choisir le Plan Pro (14j d'essai)
+              Choisir le Plan Pro (7j d'essai)
             </Link>
           </motion.div>
 
@@ -161,14 +161,12 @@ export function Pricing() {
                 </li>
               </ul>
             </div>
-            <a 
-              href="https://wa.me/2290162579394"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link 
+              href="/login?plan=business"
               className="w-full text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-3 px-6 rounded-full transition-colors text-sm"
             >
-              Contacter l'équipe (14j d'essai)
-            </a>
+              Choisir le Plan Business (7j d'essai)
+            </Link>
           </motion.div>
 
         </div>

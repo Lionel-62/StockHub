@@ -41,6 +41,8 @@ function SettingsContent() {
   const [formData, setFormData] = useState(settings);
   const [ownerName, setOwnerName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isSubscribeLoading, setIsSubscribeLoading] = useState(false);
+  const [subscribeError, setSubscribeError] = useState("");
   
   const [origin, setOrigin] = useState("");
 
@@ -119,6 +121,35 @@ function SettingsContent() {
         setFormData({ ...formData, logo: reader.result as string });
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubscribe = async () => {
+    try {
+      setIsSubscribeLoading(true);
+      setSubscribeError("");
+      
+      const response = await fetch('/api/billing/saspay/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: "5000.00" }) // Prix fixe de l'abonnement
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Erreur lors de l'initialisation du paiement");
+      }
+      
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        throw new Error("Lien de paiement introuvable");
+      }
+      
+    } catch (err: any) {
+      setSubscribeError(err.message);
+      setIsSubscribeLoading(false);
     }
   };
 
@@ -345,6 +376,39 @@ function SettingsContent() {
           {activeTab === "facturation" && (
             <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
               <Card className="shadow-sm border-slate-200">
+                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900">Abonnement Premium</CardTitle>
+                  <CardDescription>Gérez votre abonnement StockHub pour accéder à toutes les fonctionnalités.</CardDescription>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div>
+                      <div className="text-3xl font-bold text-[#0b213f] mb-2">5 000 FCFA <span className="text-sm font-normal text-slate-500">/ mois</span></div>
+                      <ul className="space-y-2 mt-4">
+                        <li className="flex items-start gap-2 text-sm text-slate-600"><Check className="w-4 h-4 text-green-500 shrink-0 mt-0.5" /> Boutique en ligne personnalisée</li>
+                        <li className="flex items-start gap-2 text-sm text-slate-600"><Check className="w-4 h-4 text-green-500 shrink-0 mt-0.5" /> Gestion des stocks illimitée</li>
+                        <li className="flex items-start gap-2 text-sm text-slate-600"><Check className="w-4 h-4 text-green-500 shrink-0 mt-0.5" /> Support prioritaire & Mises à jour gratuites</li>
+                      </ul>
+                    </div>
+                    <div className="w-full md:w-auto flex flex-col gap-3">
+                      {subscribeError && (
+                        <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm text-center">
+                          {subscribeError}
+                        </div>
+                      )}
+                      <Button 
+                        onClick={handleSubscribe} 
+                        disabled={isSubscribeLoading}
+                        className="w-full md:w-64 py-6 bg-[#0b213f] hover:bg-[#18355c] text-white text-lg font-semibold shadow-md"
+                      >
+                        {isSubscribeLoading ? "Redirection SASPay..." : "S'abonner maintenant"}
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-sm border-slate-200 mt-6">
                 <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
                   <CardTitle className="text-lg font-bold text-slate-900">Paramètres de Facturation</CardTitle>
                   <CardDescription>Configurez la TVA et les informations légales.</CardDescription>
