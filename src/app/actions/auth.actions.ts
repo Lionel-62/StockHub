@@ -124,8 +124,10 @@ export async function registerOwnerAction(payload: {
     // Attendre un peu et vérifier si le profil a été créé par le trigger Supabase
     let retries = 0;
     while (retries < 3) {
-      const { data: existingProfile } = await supabase.from('profiles').select('id, shop_id').eq('id', payload.userId).single();
-      if (existingProfile && existingProfile.shop_id) {
+      const { data: existingProfile } = await supabase.from('profiles').select('id, name').eq('id', payload.userId).single();
+      if (existingProfile) {
+        // Notification étape 1
+        sendAdminTelegram(`📝 Inscription (Étape 1) : ${payload.name} (${payload.email}) vient de créer un compte.`);
         return { success: true };
       }
       await new Promise(r => setTimeout(r, 500));
@@ -166,8 +168,9 @@ export async function completeGoogleSignupAction(userId: string, email: string, 
     // Attendre un peu et vérifier si le profil a été créé par le trigger Supabase
     let retries = 0;
     while (retries < 3) {
-      const { data: existingProfile } = await supabase.from('profiles').select('id, shop_id').eq('id', userId).single();
-      if (existingProfile && existingProfile.shop_id) {
+      const { data: existingProfile } = await supabase.from('profiles').select('id').eq('id', userId).single();
+      if (existingProfile) {
+        sendAdminTelegram(`📝 Inscription Google (Étape 1) : ${name} (${email}) vient de se connecter via Google.`);
         return { success: true };
       }
       await new Promise(r => setTimeout(r, 500));
