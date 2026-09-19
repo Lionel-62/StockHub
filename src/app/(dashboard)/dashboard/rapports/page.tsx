@@ -174,7 +174,7 @@ export default function RapportsPage() {
     
     filteredOrders.forEach(order => {
       if (order.status !== "Payée" && order.status !== "Livrée") return;
-      order.items.forEach(item => {
+      (order.items || []).forEach(item => {
         const existing = productSales.get(item.productId) || { id: item.productId, name: item.name, qty: 0, revenue: 0 };
         existing.qty += item.quantity;
         existing.revenue += (item.unitPrice * item.quantity);

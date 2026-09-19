@@ -41,7 +41,7 @@ function SettingsContent() {
   const [formData, setFormData] = useState(settings);
   const [ownerName, setOwnerName] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const [isSubscribeLoading, setIsSubscribeLoading] = useState(false);
+  const [isSubscribeLoading, setIsSubscribeLoading] = useState<string | false>(false);
   const [subscribeError, setSubscribeError] = useState("");
   
   const [origin, setOrigin] = useState("");
