@@ -62,6 +62,51 @@ export async function logoutAction() {
   return { success: true };
 }
 
+export async function deleteOwnerAccountAction() {
+  try {
+    const session = await getSession();
+    if (!session || session.role !== 'owner') return { success: false, error: 'Non autorisé' };
+
+    const supabase = createAdminClient();
+    
+    // 1. Obtenir toutes les boutiques appartenant à cet utilisateur
+    const { data: shops } = await supabase.from('shops').select('id').eq('owner_id', session.id);
+    
+    if (shops && shops.length > 0) {
+      const shopIds = shops.map(s => s.id);
+      
+      // 2. Supprimer tous les employés de ces boutiques
+      await supabase.from('profiles').delete().in('shop_id', shopIds).neq('id', session.id);
+      
+      // 3. Supprimer les boutiques
+      for (const shop of shopIds) {
+        await supabase.from('shops').delete().eq('id', shop);
+      }
+    }
+    
+    // 4. Supprimer le profil du propriétaire
+    await supabase.from('profiles').delete().eq('id', session.id);
+    
+    // 5. Supprimer l'utilisateur du système Auth
+    const { error: authError } = await supabase.auth.admin.deleteUser(session.id);
+    
+    if (authError) {
+      console.error("Auth delete error:", authError);
+      return { success: false, error: "Impossible de supprimer l'utilisateur système." };
+    }
+    
+    // Envoi de l'alerte Telegram
+    sendAdminTelegram(`🚨 CRITIQUE : Le commerçant ${session.name} (${session.identifier}) a définitivement supprimé son compte et ses boutiques.`);
+    
+    await deleteSession();
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error("Delete Account Error:", error);
+    return { success: false, error: error.message || "Erreur interne lors de la suppression." };
+  }
+}
+
 export async function syncSessionAction(sessionData: any) {
   console.log("syncSessionAction called with:", sessionData);
   await setSession(sessionData);

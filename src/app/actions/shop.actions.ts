@@ -2,6 +2,7 @@
 
 import { createAuthenticatedClient, createAdminClient } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
+import { sendAdminTelegram } from '@/lib/telegram';
 
 export async function getShopSettingsAction() {
   const session = await getSession();
@@ -64,7 +65,14 @@ export async function deleteShopAction(shopId: string) {
   const isOwner = myShops.some(s => s.id === shopId);
   if (!isOwner) return { success: false, error: 'Vous ne possédez pas cette boutique.' };
 
+  const { data: shopToDelete } = await supabase.from('shops').select('name').eq('id', shopId).single();
+
   const { error } = await supabase.from('shops').delete().eq('id', shopId);
   if (error) return { success: false, error: error.message };
+
+  if (shopToDelete) {
+    sendAdminTelegram(`🗑️ 🚨 CRITIQUE : La boutique "${shopToDelete.name}" a été définitivement supprimée par ${session.name}.`);
+  }
+
   return { success: true };
 }

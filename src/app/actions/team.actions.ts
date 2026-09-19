@@ -2,6 +2,7 @@
 
 import { createAuthenticatedClient, createAdminClient } from '@/lib/supabase/server';
 import { getSession } from '@/lib/auth/session';
+import { sendAdminTelegram } from '@/lib/telegram';
 
 export async function getTeamMembersAction() {
   const session = await getSession();
@@ -68,6 +69,8 @@ export async function deleteTeamMemberAction(id: string) {
   if (!session?.shopId || session.role !== 'owner') return { success: false, error: 'Non autorisé' };
 
   const supabase = createAdminClient();
+  const { data: userToDelete } = await supabase.from('profiles').select('name, identifier').eq('id', id).single();
+
   const { error } = await supabase
     .from('profiles')
     .delete()
@@ -76,5 +79,10 @@ export async function deleteTeamMemberAction(id: string) {
     .neq('id', session.id); // Cannot delete oneself
 
   if (error) return { success: false, error: error.message };
+
+  if (userToDelete) {
+    sendAdminTelegram(`🗑️ ⚠️ Sécurité : L'employé "${userToDelete.name}" (${userToDelete.identifier}) a été supprimé par ${session.name}.`);
+  }
+
   return { success: true };
 }

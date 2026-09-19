@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { useSettings } from "@/hooks/settings";
 import { useAuth } from "@/hooks/auth";
 import { SuccessModal } from "@/components/ui/success-modal";
-import { updateProfileNameAction, syncSessionAction } from "@/app/actions/auth.actions";
+import { updateProfileNameAction, syncSessionAction, deleteOwnerAccountAction } from "@/app/actions/auth.actions";
 import { supabase } from "@/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -44,6 +44,10 @@ function SettingsContent() {
   const [isSubscribeLoading, setIsSubscribeLoading] = useState<string | false>(false);
   const [subscribeError, setSubscribeError] = useState("");
   
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const [origin, setOrigin] = useState("");
 
   useEffect(() => {
@@ -153,6 +157,19 @@ function SettingsContent() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmation !== "SUPPRIMER") return;
+    setIsDeleting(true);
+    const res = await deleteOwnerAccountAction();
+    if (res.success) {
+      localStorage.clear();
+      window.location.href = '/login';
+    } else {
+      alert("Erreur: " + res.error);
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <>
       <SuccessModal 
@@ -161,6 +178,46 @@ function SettingsContent() {
         title="Paramètres enregistrés !"
         description="Les informations de votre entreprise ont été mises à jour avec succès. Elles apparaîtront désormais sur vos factures."
       />
+      
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-xl font-bold text-red-600 mb-2">Zone de Danger Absolu</h3>
+            <p className="text-sm text-slate-600 mb-4">
+              La suppression de votre compte entraînera la perte définitive de <strong>toutes vos boutiques</strong>, de vos produits, de vos ventes, et des accès de <strong>tous vos employés</strong>. Cette action est irréversible.
+            </p>
+            <div className="space-y-3 mb-6">
+              <label className="text-sm font-semibold text-slate-900">Veuillez taper <span className="text-red-600 font-bold select-none">SUPPRIMER</span> pour confirmer</label>
+              <input 
+                type="text" 
+                value={deleteConfirmation}
+                onChange={(e) => setDeleteConfirmation(e.target.value)}
+                placeholder="SUPPRIMER"
+                className="w-full p-2.5 border-2 border-red-100 focus:border-red-500 rounded-lg text-center font-bold tracking-widest uppercase focus:outline-none focus:ring-4 focus:ring-red-500/20"
+              />
+            </div>
+            <div className="flex gap-3">
+              <Button 
+                variant="outline" 
+                onClick={() => { setShowDeleteModal(false); setDeleteConfirmation(""); }}
+                className="flex-1"
+                disabled={isDeleting}
+              >
+                Annuler
+              </Button>
+              <Button 
+                variant="destructive"
+                onClick={handleDeleteAccount}
+                disabled={deleteConfirmation !== "SUPPRIMER" || isDeleting}
+                className="flex-1"
+              >
+                {isDeleting ? "Suppression..." : "Adieu StockHub"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="p-3 md:p-0 max-w-[1200px] mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-300">
         
         {/* En-tête */}
@@ -610,6 +667,32 @@ function SettingsContent() {
                   </div>
                 </CardContent>
               </Card>
+
+              {currentUser?.role === 'owner' && (
+                <Card className="shadow-sm border-red-200 mt-6">
+                  <CardHeader className="bg-red-50/50 border-b border-red-100 pb-4">
+                    <CardTitle className="text-lg font-bold text-red-900">Zone de Danger</CardTitle>
+                    <CardDescription className="text-red-700/80">Ces actions sont irréversibles. Soyez certain de votre choix.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div>
+                        <h4 className="font-semibold text-slate-900">Supprimer mon compte définitivement</h4>
+                        <p className="text-sm text-slate-500 mt-1 max-w-xl">
+                          Cette action effacera immédiatement toutes vos boutiques, vos employés associés, vos produits et votre compte de connexion.
+                        </p>
+                      </div>
+                      <Button 
+                        variant="destructive" 
+                        onClick={() => setShowDeleteModal(true)}
+                        className="w-full md:w-auto"
+                      >
+                        Supprimer le compte
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           )}
           
