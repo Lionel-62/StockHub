@@ -124,15 +124,15 @@ function SettingsContent() {
     }
   };
 
-  const handleSubscribe = async () => {
+  const handleSubscribe = async (amount: string, planName: string) => {
     try {
-      setIsSubscribeLoading(true);
+      setIsSubscribeLoading(planName);
       setSubscribeError("");
       
       const response = await fetch('/api/billing/saspay/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: "5000.00" }) // Prix fixe de l'abonnement
+        body: JSON.stringify({ amount, description: `Abonnement StockHub - ${planName}` })
       });
       
       const data = await response.json();
@@ -149,7 +149,7 @@ function SettingsContent() {
       
     } catch (err: any) {
       setSubscribeError(err.message);
-      setIsSubscribeLoading(false);
+      setIsSubscribeLoading("");
     }
   };
 
@@ -377,31 +377,100 @@ function SettingsContent() {
             <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
               <Card className="shadow-sm border-slate-200">
                 <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-                  <CardTitle className="text-lg font-bold text-slate-900">Abonnement Premium</CardTitle>
-                  <CardDescription>Gérez votre abonnement StockHub pour accéder à toutes les fonctionnalités.</CardDescription>
+                  <CardTitle className="text-xl font-bold text-slate-900">Choisissez votre formule</CardTitle>
+                  <CardDescription>Passez à la vitesse supérieure. Investissez dans un outil qui fait grandir votre entreprise.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div>
-                      <div className="text-3xl font-bold text-[#0b213f] mb-2">5 000 FCFA <span className="text-sm font-normal text-slate-500">/ mois</span></div>
-                      <ul className="space-y-2 mt-4">
-                        <li className="flex items-start gap-2 text-sm text-slate-600"><Check className="w-4 h-4 text-green-500 shrink-0 mt-0.5" /> Boutique en ligne personnalisée</li>
-                        <li className="flex items-start gap-2 text-sm text-slate-600"><Check className="w-4 h-4 text-green-500 shrink-0 mt-0.5" /> Gestion des stocks illimitée</li>
-                        <li className="flex items-start gap-2 text-sm text-slate-600"><Check className="w-4 h-4 text-green-500 shrink-0 mt-0.5" /> Support prioritaire & Mises à jour gratuites</li>
-                      </ul>
+                  {/* Status Banner */}
+                  <div className="mb-8 p-4 rounded-xl border flex items-start gap-4 
+                    bg-slate-50 border-slate-200">
+                    <div className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center shrink-0",
+                      currentUser?.subscriptionStatus === 'active' ? "bg-emerald-100 text-emerald-600" :
+                      currentUser?.subscriptionStatus === 'expired' ? "bg-red-100 text-red-600" :
+                      "bg-amber-100 text-amber-600"
+                    )}>
+                      {currentUser?.subscriptionStatus === 'active' ? <Check size={20} /> :
+                       currentUser?.subscriptionStatus === 'expired' ? <Lock size={20} /> :
+                       <Shield size={20} />}
                     </div>
-                    <div className="w-full md:w-auto flex flex-col gap-3">
-                      {subscribeError && (
-                        <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm text-center">
-                          {subscribeError}
-                        </div>
-                      )}
+                    <div className="flex-1">
+                      <h4 className={cn(
+                        "font-bold text-base",
+                        currentUser?.subscriptionStatus === 'active' ? "text-emerald-700" :
+                        currentUser?.subscriptionStatus === 'expired' ? "text-red-700" :
+                        "text-amber-700"
+                      )}>
+                        {currentUser?.subscriptionStatus === 'active' ? "Abonnement Actif" :
+                         currentUser?.subscriptionStatus === 'expired' ? "Période d'essai expirée" :
+                         "En période d'essai"}
+                      </h4>
+                      <p className="text-sm text-slate-600 mt-1">
+                        {currentUser?.subscriptionStatus === 'active' 
+                          ? `Votre abonnement est valide jusqu'au ${currentUser?.subscriptionEndDate ? new Date(currentUser.subscriptionEndDate).toLocaleDateString('fr-FR') : 'inconnu'}.`
+                          : currentUser?.subscriptionStatus === 'expired'
+                          ? "Votre période d'essai est terminée. Veuillez choisir un plan ci-dessous pour débloquer votre accès."
+                          : "Vous profitez actuellement de toutes les fonctionnalités. Sécurisez votre boutique en choisissant un plan dès maintenant."}
+                      </p>
+                    </div>
+                  </div>
+
+                  {subscribeError && (
+                    <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium border border-red-100">
+                      {subscribeError}
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    {/* Plan Pro */}
+                    <div className="border-2 border-slate-200 rounded-2xl p-6 flex flex-col hover:border-[#0b213f] transition-colors bg-white relative">
+                      <div className="mb-4">
+                        <h3 className="text-xl font-bold text-slate-900">Plan Pro</h3>
+                        <p className="text-sm text-slate-500 mt-1">Pour les boutiques actives en pleine croissance</p>
+                      </div>
+                      <div className="text-3xl font-extrabold text-[#0b213f] mb-6">
+                        5 000 <span className="text-base font-normal text-slate-500">FCFA / mois</span>
+                      </div>
+                      <ul className="space-y-3 mb-8 flex-1">
+                        <li className="flex items-start gap-2 text-sm text-slate-600"><Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" /> <strong>Produits & ventes illimités</strong></li>
+                        <li className="flex items-start gap-2 text-sm text-slate-600"><Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" /> Jusqu'à 3 comptes vendeurs</li>
+                        <li className="flex items-start gap-2 text-sm text-slate-600"><Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" /> Capture de leads clients sur boutique</li>
+                        <li className="flex items-start gap-2 text-sm text-slate-600"><Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" /> Devis, Factures & Reçus PDF</li>
+                      </ul>
                       <Button 
-                        onClick={handleSubscribe} 
-                        disabled={isSubscribeLoading}
-                        className="w-full md:w-64 py-6 bg-[#0b213f] hover:bg-[#18355c] text-white text-lg font-semibold shadow-md"
+                        onClick={() => handleSubscribe("5000.00", "Pro")} 
+                        disabled={!!isSubscribeLoading}
+                        variant="outline"
+                        className="w-full py-6 border-2 border-[#0b213f] text-[#0b213f] hover:bg-slate-50 text-base font-bold rounded-xl"
                       >
-                        {isSubscribeLoading ? "Redirection SASPay..." : "S'abonner maintenant"}
+                        {isSubscribeLoading === "Pro" ? "Redirection..." : "S'abonner au Plan Pro"}
+                      </Button>
+                    </div>
+
+                    {/* Plan Business */}
+                    <div className="border-2 border-[#0b213f] rounded-2xl p-6 flex flex-col bg-[#0b213f]/5 relative shadow-xl transform md:-translate-y-2">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0b213f] text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider whitespace-nowrap">
+                        ⭐ Le Plus Complet
+                      </div>
+                      <div className="mb-4 mt-2">
+                        <h3 className="text-xl font-bold text-[#0b213f]">Plan Business</h3>
+                        <p className="text-sm text-slate-600 mt-1">Pour chaînes de magasins & franchises</p>
+                      </div>
+                      <div className="text-3xl font-extrabold text-[#0b213f] mb-6">
+                        8 000 <span className="text-base font-normal text-slate-600">FCFA / mois</span>
+                      </div>
+                      <ul className="space-y-3 mb-8 flex-1">
+                        <li className="flex items-start gap-2 text-sm text-slate-800"><Check className="w-4 h-4 text-[#0b213f] shrink-0 mt-0.5" /> <strong>Tout ce qui est inclus dans le Plan Pro</strong></li>
+                        <li className="flex items-start gap-2 text-sm text-slate-800"><Check className="w-4 h-4 text-[#0b213f] shrink-0 mt-0.5" /> Multi-points de vente (jusqu'à 5)</li>
+                        <li className="flex items-start gap-2 text-sm text-slate-800"><Check className="w-4 h-4 text-[#0b213f] shrink-0 mt-0.5" /> Vendeurs & collaborateurs illimités</li>
+                        <li className="flex items-start gap-2 text-sm text-slate-800"><Check className="w-4 h-4 text-[#0b213f] shrink-0 mt-0.5" /> Assistance VIP prioritaire 7j/7</li>
+                      </ul>
+                      <Button 
+                        onClick={() => handleSubscribe("8000.00", "Business")} 
+                        disabled={!!isSubscribeLoading}
+                        className="w-full py-6 bg-[#0b213f] hover:bg-slate-900 text-white text-base font-bold rounded-xl shadow-lg shadow-[#0b213f]/20"
+                      >
+                        {isSubscribeLoading === "Business" ? "Redirection..." : "S'abonner au Plan Business"}
                       </Button>
                     </div>
                   </div>

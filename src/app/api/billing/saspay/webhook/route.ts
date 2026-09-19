@@ -60,10 +60,15 @@ export async function POST(req: Request) {
           .single();
 
         if (profile) {
+          // Calculer la nouvelle date d'expiration (+30 jours pour l'abonnement mensuel)
+          const newEndDate = new Date();
+          newEndDate.setDate(newEndDate.getDate() + 30);
+          
           // Mettre à jour le statut du plan
-          // Note: Il faut s'assurer que le champ planStatus existe dans la table profiles
-          // S'il n'existe pas, on peut juste enregistrer le succès pour le moment.
-          // await supabase.from('profiles').update({ planStatus: 'active' }).eq('id', profile.id);
+          await supabase.from('profiles').update({ 
+            subscription_status: 'active',
+            subscription_end_date: newEndDate.toISOString()
+          }).eq('id', profile.id);
 
           // Notification Telegram de l'admin
           await sendAdminTelegram(`💰 Abonnement payé par ${profile.name} (${email}) – ${amount} FCFA – le ${new Date().toLocaleString('fr-FR')}`);

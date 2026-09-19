@@ -55,10 +55,10 @@ export function Features() {
               <Receipt className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">
-              Ventes, devis & facturation
+              Caisse ultra-rapide & Facturation
             </h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Toutes vos ventes en magasin et commandes en ligne dans un seul historique. Générez des devis et factures professionnelles (TVA automatique), changez leur statut (payée, en attente...) et envoyez-les en PDF sur WhatsApp.
+              Vendez au comptoir en un éclair grâce à notre interface de caisse (POS) fluide avec filtrage par catégories. Générez des devis et factures professionnelles, suivez les paiements et envoyez vos reçus PDF directement sur WhatsApp.
             </p>
           </motion.div>
 
@@ -93,10 +93,10 @@ export function Features() {
               <BarChart2 className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">
-              Clients, fournisseurs & rapports
+              Analytique Premium & Mini-CRM
             </h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Un mini-CRM qui garde l'historique d'achat de chaque client, un carnet fournisseurs pour vos réapprovisionnements, et des rapports détaillés (marges, produits les plus vendus, bilans filtrables par dates) pour décider sereinement.
+              Prenez des décisions éclairées avec un tableau de bord analytique digne des grandes entreprises : séparation du CA En Ligne / Sur Place, Panier Moyen, évolution graphique et palmarès des meilleures ventes. Inclus également un carnet clients/fournisseurs.
             </p>
           </motion.div>
 
@@ -130,15 +130,15 @@ export function Features() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
             {[
-              { icon: LayoutDashboard, name: "Tableau de bord", desc: "vue d'ensemble (chiffre d'affaires, bénéfices, ventes, alertes stock)" },
+              { icon: LayoutDashboard, name: "Tableau de bord", desc: "vue d'ensemble de votre activité et alertes de rupture" },
               { icon: PackageSearch, name: "Produits", desc: "catalogue avec prix, photos, variantes et catégories" },
-              { icon: Boxes, name: "Stock", desc: "réapprovisionnements, inventaires et alertes de rupture" },
-              { icon: ShoppingCart, name: "Ventes & commandes", desc: "historique unifié magasin + en ligne" },
+              { icon: Boxes, name: "Stock", desc: "réapprovisionnements, inventaires et mouvements" },
+              { icon: ShoppingCart, name: "Caisse & commandes", desc: "interface POS ultra-rapide avec catégories" },
               { icon: Receipt, name: "Factures & Devis", desc: "création de devis et factures pro PDF, envoi WhatsApp" },
               { icon: Users, name: "Clients", desc: "carnet d'adresses et historique d'achat (mini-CRM)" },
               { icon: Truck, name: "Fournisseurs", desc: "carnet B2B pour vos réapprovisionnements" },
               { icon: Store, name: "Boutique en ligne", desc: "vitrine e-commerce publique connectée à WhatsApp" },
-              { icon: BarChart2, name: "Rapports", desc: "statistiques de marges, meilleures ventes et bilans par dates" },
+              { icon: BarChart2, name: "Rapports Analytiques", desc: "stats premium : CA Web vs Comptoir, Panier Moyen, Top 5" },
               { icon: Settings, name: "Paramètres", desc: "identité de la boutique, devise, taxes, infos légales des factures" },
               { icon: ShieldCheck, name: "Équipe", desc: "comptes vendeurs à code PIN avec permissions" },
               { icon: LifeBuoy, name: "Aide & support", desc: "assistance à l'utilisation" },

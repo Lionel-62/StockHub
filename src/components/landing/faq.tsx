@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const faqs = [
   {
     question: "StockHub est-il vraiment gratuit ?",
-    answer: "Oui, le plan gratuit est permanent (jusqu'à 20 produits). Les plans payants offrent en plus 14 jours d'essai gratuit, sans carte bancaire."
+    answer: "Oui, le plan gratuit est permanent (jusqu'à 20 produits). Les plans payants offrent en plus 7 jours d'essai gratuit, sans carte bancaire."
   },
   {
     question: "Ai-je besoin de compétences techniques ?",

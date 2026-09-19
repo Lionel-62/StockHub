@@ -23,11 +23,15 @@ export default function PointOfSalePage() {
   const [paymentMethod, setPaymentMethod] = useState("Espèces");
   const [visibleCount, setVisibleCount] = useState(15);
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("Toutes");
 
   const { products, setProducts, updateProduct, isLoaded: productsLoaded } = useProducts();
   const { orders, addOrder } = useOrders();
   const { clients, isLoaded: clientsLoaded } = useClients();
   const router = useRouter();
+
+  // Extract unique categories
+  const categories = ["Toutes", ...Array.from(new Set(products.map(p => p.category).filter(Boolean)))];
 
   // Format currency
   const formatCurrency = (amount: number) => {
@@ -40,10 +44,12 @@ export default function PointOfSalePage() {
 
   // Filter products
   const availableProducts = products.filter(p => p.stock > 0);
-  const filteredProducts = availableProducts.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    p.sku.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = availableProducts.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          p.sku.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === "Toutes" || p.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const displayedProducts = filteredProducts.slice(0, visibleCount);
 
@@ -156,21 +162,44 @@ export default function PointOfSalePage() {
         
         {/* Left Column: Catalogue */}
         <div className="flex-1 w-full flex flex-col bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          {/* Top Search Bar */}
-          <div className="p-4 border-b border-slate-100 bg-slate-50/80 sticky top-0 z-10">
-            <div className="relative w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-              <input 
-                type="text" 
-                placeholder="Scanner ou rechercher un produit (Nom, Code SKU)..." 
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setVisibleCount(15); // Reset count on search
-                }}
-                className="pl-12 pr-4 py-3.5 w-full border-2 border-slate-200 rounded-xl text-sm font-medium bg-white focus:outline-none focus:border-[#0b213f] focus:ring-4 focus:ring-[#0b213f]/10 transition-all duration-300 shadow-sm"
-                autoFocus
-              />
+          {/* Top Search Bar & Categories */}
+          <div className="flex flex-col border-b border-slate-100 bg-slate-50/80 sticky top-0 z-10">
+            <div className="p-4 pb-2">
+              <div className="relative w-full">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+                <input 
+                  type="text" 
+                  placeholder="Scanner ou rechercher un produit (Nom, Code SKU)..." 
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setVisibleCount(15); // Reset count on search
+                  }}
+                  className="pl-12 pr-4 py-3.5 w-full border-2 border-slate-200 rounded-xl text-sm font-medium bg-white focus:outline-none focus:border-[#0b213f] focus:ring-4 focus:ring-[#0b213f]/10 transition-all duration-300 shadow-sm"
+                  autoFocus
+                />
+              </div>
+            </div>
+            
+            {/* Categories */}
+            <div className="px-4 pb-3 overflow-x-auto hide-scrollbar flex items-center gap-2">
+              {categories.map(category => (
+                <button
+                  key={category}
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setVisibleCount(15);
+                  }}
+                  className={cn(
+                    "px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-200 border",
+                    selectedCategory === category
+                      ? "bg-[#0b213f] text-white border-[#0b213f] shadow-md shadow-[#0b213f]/20"
+                      : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                  )}
+                >
+                  {category}
+                </button>
+              ))}
             </div>
           </div>
           

@@ -17,6 +17,8 @@ export interface User {
   permissions: {
     canViewDashboard: boolean;
   };
+  subscriptionStatus?: "trial" | "active" | "expired";
+  subscriptionEndDate?: string;
   createdAt: string;
 }
 
@@ -70,7 +72,7 @@ export function useAuth() {
         }
 
         // STEP 1: Check if the user has a profile in our database
-        const { data: profileRow, error: profileErr } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
+        const { data: profileRow, error: profileErr } = await supabase.from('profiles').select('shop_id, onboarding_completed, subscription_status, subscription_end_date').eq('id', session.user.id).single();
         if (profileErr) console.error("Profile fetch error:", profileErr);
         
         let profile: any = profileRow;
@@ -85,7 +87,7 @@ export function useAuth() {
             session.user.user_metadata?.full_name || ''
           );
           if (res.success) {
-            const { data: newProfileRow } = await supabase.from('profiles').select('shop_id, onboarding_completed').eq('id', session.user.id).single();
+            const { data: newProfileRow } = await supabase.from('profiles').select('shop_id, onboarding_completed, subscription_status, subscription_end_date').eq('id', session.user.id).single();
             profile = newProfileRow;
             if (profile && profile.shop_id) {
               const { data: activeShop } = await supabase.from('shops').select('slug, name').eq('id', profile.shop_id).single();
@@ -143,6 +145,8 @@ export function useAuth() {
           myShops: myShops,
           onboardingCompleted: profile.onboarding_completed ?? false,
           permissions: { canViewDashboard: true },
+          subscriptionStatus: profile.subscription_status || "trial",
+          subscriptionEndDate: profile.subscription_end_date,
           createdAt: session.user.created_at
         };
         setCurrentUser(user);

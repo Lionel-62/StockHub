@@ -26,7 +26,7 @@ export function FinalCta() {
           transition={{ delay: 0.1 }}
           className="text-base sm:text-xl text-[#93bade]/90 max-w-2xl mx-auto mb-10 font-normal"
         >
-          Testez StockHub gratuitement pendant 14 jours. Aucune carte bancaire requise, configuration en moins de 2 minutes.
+          Testez StockHub gratuitement pendant 7 jours. Aucune carte bancaire requise, configuration en moins de 2 minutes.
         </motion.p>
         
         <motion.div 
@@ -71,7 +71,7 @@ export function FinalCta() {
           transition={{ delay: 0.4 }}
           className="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-[#c2d6eb]/80 font-medium"
         >
-          <span className="flex items-center gap-1.5">✓ 14 jours d&apos;essai offerts</span>
+          <span className="flex items-center gap-1.5">✓ 7 jours d&apos;essai offerts</span>
           <span className="flex items-center gap-1.5">✓ Sans engagement</span>
           <span className="flex items-center gap-1.5">✓ Support en français 7j/7</span>
         </motion.div>

@@ -71,7 +71,7 @@ export function Testimonials() {
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-4">Sans engagement</h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Testez notre plateforme librement. Profitez de notre plan gratuit à vie ou de 14 jours d'essai sur nos plans pros. Résiliable à tout moment, sans frais cachés.
+              Testez notre plateforme librement. Profitez de notre plan gratuit à vie ou de 7 jours d'essai sur nos plans pros. Résiliable à tout moment, sans frais cachés.
             </p>
           </motion.div>
 
