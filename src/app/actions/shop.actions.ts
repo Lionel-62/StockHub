@@ -71,7 +71,7 @@ export async function deleteShopAction(shopId: string) {
   if (error) return { success: false, error: error.message };
 
   if (shopToDelete) {
-    sendAdminTelegram(`🗑️ 🚨 CRITIQUE : La boutique "${shopToDelete.name}" a été définitivement supprimée par ${session.name}.`);
+    await sendAdminTelegram(`🗑️ 🚨 CRITIQUE : La boutique "${shopToDelete.name}" a été définitivement supprimée par ${session.name}.`);
   }
 
   return { success: true };

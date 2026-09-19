@@ -96,7 +96,7 @@ export async function deleteOwnerAccountAction() {
     }
     
     // Envoi de l'alerte Telegram
-    sendAdminTelegram(`🚨 CRITIQUE : Le commerçant ${session.name} (${session.identifier}) a définitivement supprimé son compte et ses boutiques.`);
+    await sendAdminTelegram(`🚨 CRITIQUE : Le commerçant ${session.name} (${session.identifier}) a définitivement supprimé son compte et ses boutiques.`);
     
     await deleteSession();
     
@@ -127,7 +127,7 @@ export async function registerOwnerAction(payload: {
       const { data: existingProfile } = await supabase.from('profiles').select('id, name').eq('id', payload.userId).single();
       if (existingProfile) {
         // Notification étape 1
-        sendAdminTelegram(`📝 Inscription (Étape 1) : ${payload.name} (${payload.email}) vient de créer un compte.`);
+        await sendAdminTelegram(`📝 Inscription (Étape 1) : ${payload.name} (${payload.email}) vient de créer un compte.`);
         return { success: true };
       }
       await new Promise(r => setTimeout(r, 500));
@@ -170,7 +170,7 @@ export async function completeGoogleSignupAction(userId: string, email: string, 
     while (retries < 3) {
       const { data: existingProfile } = await supabase.from('profiles').select('id').eq('id', userId).single();
       if (existingProfile) {
-        sendAdminTelegram(`📝 Inscription Google (Étape 1) : ${name} (${email}) vient de se connecter via Google.`);
+        await sendAdminTelegram(`📝 Inscription Google (Étape 1) : ${name} (${email}) vient de se connecter via Google.`);
         return { success: true };
       }
       await new Promise(r => setTimeout(r, 500));
@@ -312,8 +312,8 @@ export async function createShopAction(userId: string, shopName: string, categor
       };
       await setSession(sessionData);
       
-      // Notification Admin Telegram non-bloquante
-      sendAdminTelegram(`🆕 Nouveau commerçant inscrit : ${profile.name} – ${profile.identifier} – boutique : ${shopName} – le ${new Date().toLocaleString('fr-FR')}`);
+      // Notification Admin Telegram
+      await sendAdminTelegram(`🆕 Nouveau commerçant inscrit : ${profile.name} – ${profile.identifier} – boutique : ${shopName} – le ${new Date().toLocaleString('fr-FR')}`);
       
       return { success: true, user: sessionData };
     }

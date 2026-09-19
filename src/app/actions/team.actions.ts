@@ -81,7 +81,7 @@ export async function deleteTeamMemberAction(id: string) {
   if (error) return { success: false, error: error.message };
 
   if (userToDelete) {
-    sendAdminTelegram(`🗑️ ⚠️ Sécurité : L'employé "${userToDelete.name}" (${userToDelete.identifier}) a été supprimé par ${session.name}.`);
+    await sendAdminTelegram(`🗑️ ⚠️ Sécurité : L'employé "${userToDelete.name}" (${userToDelete.identifier}) a été supprimé par ${session.name}.`);
   }
 
   return { success: true };
