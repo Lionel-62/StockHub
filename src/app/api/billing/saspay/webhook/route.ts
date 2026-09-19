@@ -13,7 +13,12 @@ export async function POST(req: Request) {
     const signature = req.headers.get('x-webhook-signature');
     const timestamp = req.headers.get('x-webhook-timestamp');
 
-    if (secret && signature && timestamp) {
+    if (secret) {
+      if (!signature || !timestamp) {
+        console.error("Tentative d'accès au Webhook sans signature !");
+        return NextResponse.json({ error: 'Signature requise' }, { status: 401 });
+      }
+      
       const hmac = crypto.createHmac('sha256', secret);
       hmac.update(`${timestamp}.${rawBody}`);
       const expectedSignature = hmac.digest('hex');
