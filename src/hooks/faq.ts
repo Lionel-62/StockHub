@@ -37,29 +37,41 @@ export function useFAQ(publicShopId?: string) {
       return;
     }
 
-    const { data, error } = await supabase
-      .from('faqs')
-      .select('*')
-      .eq('shop_id', shopId)
-      .order('order_index', { ascending: true })
-      .order('created_at', { ascending: true });
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1500);
 
-    if (!error && data) {
-      setFaqs(data as FAQ[]);
-      localStorage.setItem(`stockhub_faqs_v3_${shopId}`, JSON.stringify(data));
-    } else {
-      // Fallback to cache if offline or error
-      const cached = localStorage.getItem(`stockhub_faqs_v3_${shopId}`);
-      if (cached) {
-        try {
-          setFaqs(JSON.parse(cached));
-        } catch (e) { }
+      const { data, error } = await supabase
+        .from('faqs')
+        .select('*')
+        .eq('shop_id', shopId)
+        .order('order_index', { ascending: true })
+        .order('created_at', { ascending: true })
+        .abortSignal(controller.signal);
+        
+      clearTimeout(timeoutId);
+
+      if (!error && data) {
+        setFaqs(data as FAQ[]);
+        localStorage.setItem(`stockhub_faqs_v3_${shopId}`, JSON.stringify(data));
       }
+    } catch (e) {
+      // Ignore timeout errors
     }
     setIsLoaded(true);
   };
 
   useEffect(() => {
+    const shopId = getShopId();
+    if (shopId) {
+      const cached = localStorage.getItem(`stockhub_faqs_v3_${shopId}`);
+      if (cached) {
+        try {
+          setFaqs(JSON.parse(cached));
+          setIsLoaded(true);
+        } catch (e) { }
+      }
+    }
     fetchFaqsFromDb();
     
     // eslint-disable-next-line react-hooks/exhaustive-deps

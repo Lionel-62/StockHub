@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Présentation du Projet - StockHub</title>
+    <style>
+        :root {
+            --primary: #0b213f;
+            --secondary: #10b981;
+            --bg: #f8fafc;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #fff;
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+            background: #fff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0 auto 20px auto;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 2px;
+            background: var(--border);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .tech-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tech-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .feature-list strong {
+            color: var(--primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 20px;
+            background: var(--bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo-placeholder">SH</div>
+            <h1>StockHub</h1>
+            <p class="subtitle">Plateforme Hybride SaaS : Caisse, Gestion & Boutique en Ligne</p>
+        </header>
+
+        <div class="section">
+            <h2 class="section-title">Résumé du Projet</h2>
+            <p style="text-align: justify;">
+                StockHub est une application web moderne de type <strong>SaaS (Software as a Service)</strong> conçue pour les commerçants. 
+                Elle combine un puissant <strong>système de gestion back-office (ERP/CRM)</strong> avec un <strong>Terminal de Point de Vente (POS)</strong> 
+                et une <strong>Boutique en ligne (Vitrine client)</strong>. L'objectif est de digitaliser entièrement le processus de vente 
+                (sur place et en ligne) avec une expérience utilisateur ultra-fluide.
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Développé en TypeScript</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">2 en 1</div>
+                    <div class="stat-label">Dashboard + E-Commerce</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">UI/UX</div>
+                    <div class="stat-label">Design Premium & Moderne</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Technologies Utilisées (Stack)</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">NX</div>
+                    <div>
+                        <strong>Next.js 14+</strong>
+                        <div style="font-size: 12px; color: var(--text-light);">Framework React (App Router)</div>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">TS</div>
+                    <div>
+                        <strong>TypeScript</strong>
+                        <div style="font-size: 12px; color: var(--text-light);">Typage fort et sécurité</div>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">TW</div>
+                    <div>
+                        <strong>Tailwind CSS</strong>
+                        <div style="font-size: 12px; color: var(--text-light);">Styling utilitaire rapide</div>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">LC</div>
+                    <div>
+                        <strong>Lucide React</strong>
+                        <div style="font-size: 12px; color: var(--text-light);">Bibliothèque d'icônes</div>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">DB</div>
+                    <div>
+                        <strong>Local Storage</strong>
+                        <div style="font-size: 12px; color: var(--text-light);">Persistance de données (Mock DB)</div>
+                    </div>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">SH</div>
+                    <div>
+                        <strong>Shadcn UI</strong>
+                        <div style="font-size: 12px; color: var(--text-light);">Composants UI Radix (Menus, Cards)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Fonctionnalités Principales Développées</h2>
+            
+            <h3 style="color: var(--primary); margin-bottom: 10px; font-size: 18px;">🛒 Boutique en Ligne (Front-Office)</h3>
+            <ul class="feature-list">
+                <li><strong>Catalogue Dynamique :</strong> Affichage des produits avec recherche et filtres par catégories.</li>
+                <li><strong>Panier Interactif :</strong> Ajout, retrait, modification des quantités en temps réel.</li>
+                <li><strong>Capture de Leads :</strong> Mur d'authentification forçant le client à renseigner son <em>Nom</em> et <em>Numéro WhatsApp</em> avant la validation.</li>
+                <li><strong>Checkout WhatsApp :</strong> Génération automatique d'un message pré-rempli envoyé directement au commerçant.</li>
+                <li><strong>Attribution Intelligente :</strong> Les ventes et les nouveaux clients acquis via la vitrine sont automatiquement taggés "En ligne" dans le CRM du commerçant.</li>
+            </ul>
+
+            <h3 style="color: var(--primary); margin: 25px 0 10px 0; font-size: 18px;">📊 Tableau de Bord (Back-Office)</h3>
+            <ul class="feature-list">
+                <li><strong>Sécurité & Rôles :</strong> AuthGuard restreignant l'accès selon le rôle (Propriétaire vs Employé).</li>
+                <li><strong>Point de Vente (POS) :</strong> Interface de caisse tactile et fluide pour les encaissements sur place.</li>
+                <li><strong>CRM & Historique :</strong> Base de données clients unifiée et suivi des ventes (distinction des canaux de vente).</li>
+                <li><strong>Devis & Factures :</strong> Génération de documents professionnels avec un design unifié et premium, imprimables en PDF ou envoyables via WhatsApp.</li>
+                <li><strong>Gestion des Stocks :</strong> Suivi des quantités, alertes de ruptures dynamiques selon des seuils personnalisables.</li>
+                <li><strong>Modèle SaaS :</strong> Interface d'abonnement intégrée (Plan Pro / Business) avec simulations de paiement (FedaPay/SASPay) et gestion des périodes d'essai.</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>Conçu et développé sur-mesure. Architecture évolutive prête pour un déploiement cloud (PostgreSQL, Prisma, Supabase/Vercel).</p>
+            <p style="margin-top: 10px;"><strong>Date d'édition :</strong> <script>document.write(new Date().toLocaleDateString('fr-FR'))</script></p>
+        </div>
+    </div>
+
+</body>
+</html>

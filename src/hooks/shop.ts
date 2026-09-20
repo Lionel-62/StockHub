@@ -52,7 +52,7 @@ export function useShopSettings(publicShopId?: string) {
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      const timeoutId = setTimeout(() => controller.abort(), 1000);
 
       const { data, error } = await supabase
         .from('shops')

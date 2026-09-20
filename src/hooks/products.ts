@@ -48,13 +48,23 @@ export function useProducts(publicShopId?: string) {
 
     if (publicShopId) {
       // Public store: Use the secure public view (anonymously)
-      const result = await supabase
-        .from('public_store_products')
-        .select('*')
-        .eq('shop_id', publicShopId)
-        .order('created_at', { ascending: false });
-      data = result.data;
-      error = result.error;
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 1500);
+
+        const result = await supabase
+          .from('public_store_products')
+          .select('*')
+          .eq('shop_id', publicShopId)
+          .order('created_at', { ascending: false })
+          .abortSignal(controller.signal);
+          
+        clearTimeout(timeoutId);
+        data = result.data;
+        error = result.error;
+      } catch (e) {
+        console.warn("Supabase public store fetch timeout", e);
+      }
     } else {
       // Dashboard: Use the Server Action (which uses Custom JWT for RLS)
       const result = await getProductsAction();
