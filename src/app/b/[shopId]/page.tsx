@@ -471,10 +471,6 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
   };
 
   const handleCheckoutClick = () => {
-    if (!loggedInCustomer) {
-      setShowAuthModal(true);
-      return;
-    }
     handleWhatsAppCheckout();
   };
 
@@ -507,12 +503,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                 className="pl-9 pr-4 py-2 w-80 lg:w-96 bg-slate-100 dark:bg-[#112240] border-transparent focus:bg-white dark:bg-[#0a192f] focus:border-blue-500 rounded-full text-sm transition-all outline-none ring-0"
               />
             </div>
-            <button 
-              onClick={() => loggedInCustomer ? setShowProfileModal(true) : setShowAuthModal(true)}
-              className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-[#0b213f] transition-colors"
-            >
-              <UserCircle className="h-6 w-6" />
-            </button>
+            {/* Button removed to simplify flow as requested */}
             <button 
               onClick={() => setIsCartOpen(true)}
               className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-[#0b213f] transition-colors"
@@ -773,17 +764,36 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                       <span className="text-[#0d8f76]"><span className="font-mono">{formatCurrency(cartTotal)}</span></span>
                     </div>
 
-                    {loggedInCustomer ? (
-                      <div className="bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] p-3 rounded-lg mb-2">
-                        <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Commande pour :</div>
-                        <div className="font-bold text-slate-800 dark:text-slate-100">{loggedInCustomer.name}</div>
-                        <div className="text-sm text-slate-600 dark:text-slate-300">{loggedInCustomer.phone}</div>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">Nom complet <span className="text-red-500">*</span></label>
+                        <input 
+                          type="text"
+                          placeholder="Votre nom et prénom" 
+                          value={customerName}
+                          onChange={e => setCustomerName(e.target.value)}
+                          className="w-full bg-white dark:bg-[#0a192f] border border-slate-300 dark:border-[#244b82] rounded-md p-2.5 text-sm focus:outline-none focus:border-[#0d8f76] focus:ring-1 focus:ring-[#0d8f76]"
+                        />
                       </div>
-                    ) : (
-                      <div className="bg-orange-50 border border-orange-100 p-3 rounded-lg mb-2 text-sm text-orange-800">
-                        Vous serez invité à vous connecter ou créer un compte lors de la validation pour sécuriser votre commande.
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">Numéro WhatsApp <span className="text-red-500">*</span></label>
+                        <div className="flex gap-2">
+                          <input 
+                            type="text" 
+                            value={customerPhoneCode}
+                            onChange={(e) => setCustomerPhoneCode(e.target.value)}
+                            className="w-20 bg-white dark:bg-[#0a192f] border border-slate-300 dark:border-[#244b82] rounded-md p-2.5 text-sm focus:outline-none focus:border-[#0d8f76] focus:ring-1 focus:ring-[#0d8f76]"
+                          />
+                          <input 
+                            type="tel"
+                            placeholder="Votre numéro" 
+                            value={customerPhone}
+                            onChange={e => setCustomerPhone(e.target.value)}
+                            className="flex-1 bg-white dark:bg-[#0a192f] border border-slate-300 dark:border-[#244b82] rounded-md p-2.5 text-sm focus:outline-none focus:border-[#0d8f76] focus:ring-1 focus:ring-[#0d8f76]"
+                          />
+                        </div>
                       </div>
-                    )}
+                    </div>
 
                     <div>
                       <label className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">Ville</label>
