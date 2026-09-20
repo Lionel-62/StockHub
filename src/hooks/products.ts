@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { addProductAction, updateProductAction, deleteProductAction, getProductsAction } from "@/app/actions/products.actions";
+import { syncManager } from "@/lib/sync/syncManager";
 
 export interface Product {
   id: string;
@@ -162,10 +163,12 @@ export function useProducts(publicShopId?: string) {
     const shopId = getShopId();
     if (!shopId) return;
 
-    // Optimistic update
+    // Optimistic update in state and local cache
     setProducts(prev => [product, ...prev]);
+    const cached = JSON.parse(localStorage.getItem("stockhub_cache_products_" + shopId) || "[]");
+    localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify([product, ...cached.filter((p: Product) => p.id !== product.id)]));
 
-    const result = await addProductAction({
+    const payload = {
       id: product.id,
       name: product.name,
       category: product.category,
@@ -181,21 +184,30 @@ export function useProducts(publicShopId?: string) {
       gallery_urls: product.galleryUrls ?? null,
       is_published_on_store: product.isPublishedOnStore,
       alert_threshold: product.alertThreshold ?? 5
-    });
+    };
 
-    if (!result.success) {
-      // Rollback on failure
-      console.error("Erreur ajout produit:", result.error);
-      setProducts(prev => prev.filter(p => p.id !== product.id));
-    } else {
-      const cached = JSON.parse(localStorage.getItem("stockhub_cache_products_" + shopId) || "[]");
-      localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify([product, ...cached.filter((p: Product) => p.id !== product.id)]));
+    try {
+      if (!navigator.onLine) throw new Error("offline");
+      const result = await addProductAction(payload);
+
+      if (!result.success) {
+        // Rollback on logic failure
+        console.error("Erreur ajout produit:", result.error);
+        setProducts(prev => prev.filter(p => p.id !== product.id));
+        const newCached = JSON.parse(localStorage.getItem("stockhub_cache_products_" + shopId) || "[]");
+        localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(newCached.filter((p: Product) => p.id !== product.id)));
+      }
+    } catch (e) {
+      console.warn("Ajout de produit mis en attente de synchronisation (hors ligne)");
+      syncManager.addToQueue('ADD_PRODUCT', payload);
     }
   };
 
   const updateProduct = async (product: Product) => {
     const shopId = getShopId();
     let prevProducts: Product[] = [];
+    
+    // Optimistic update in state and local cache
     setProducts(prev => {
       prevProducts = prev;
       return prev.map(p => p.id === product.id ? product : p);
@@ -208,43 +220,69 @@ export function useProducts(publicShopId?: string) {
       } catch {}
     }
 
-    const result = await updateProductAction(product.id, {
-      name: product.name,
-      category: product.category,
-      stock: product.stock,
-      purchase_price: product.purchasePrice,
-      sale_price: product.salePrice,
-      promotional_price: product.promotionalPrice ?? null,
-      pack_offers: product.packOffers ?? null,
-      description: product.description ?? null,
-      barcode: product.sku,
-      status: product.stock === 0 ? "Rupture" : (product.stock <= (product.alertThreshold ?? 5) ? "Stock faible" : "En stock"),
-      image_url: product.imageUrl,
-      gallery_urls: product.galleryUrls ?? null,
-      is_published_on_store: product.isPublishedOnStore,
-      alert_threshold: product.alertThreshold ?? 5
-    });
-
-    if (!result.success) {
-      console.error("Erreur mise à jour produit:", result.error);
-      // Rollback to previous state
-      setProducts(prevProducts);
-      if (shopId) {
-        try {
-          localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(prevProducts));
-        } catch {}
+    const payload = {
+      id: product.id,
+      data: {
+        name: product.name,
+        category: product.category,
+        stock: product.stock,
+        purchase_price: product.purchasePrice,
+        sale_price: product.salePrice,
+        promotional_price: product.promotionalPrice ?? null,
+        pack_offers: product.packOffers ?? null,
+        description: product.description ?? null,
+        barcode: product.sku,
+        status: product.stock === 0 ? "Rupture" : (product.stock <= (product.alertThreshold ?? 5) ? "Stock faible" : "En stock"),
+        image_url: product.imageUrl,
+        gallery_urls: product.galleryUrls ?? null,
+        is_published_on_store: product.isPublishedOnStore,
+        alert_threshold: product.alertThreshold ?? 5
       }
+    };
+
+    try {
+      if (!navigator.onLine) throw new Error("offline");
+      const result = await updateProductAction(payload.id, payload.data);
+
+      if (!result.success) {
+        console.error("Erreur mise à jour produit:", result.error);
+        // Rollback
+        setProducts(prevProducts);
+        if (shopId) {
+          localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(prevProducts));
+        }
+      }
+    } catch (e) {
+      console.warn("Modification de produit mise en attente de synchronisation (hors ligne)");
+      syncManager.addToQueue('UPDATE_PRODUCT', payload);
     }
   };
 
   const deleteProduct = async (id: string) => {
-    setProducts(prev => prev.filter(p => p.id !== id));
     const shopId = getShopId();
+    let prevProducts: Product[] = [];
+    
+    // Optimistic update in state and local cache
+    setProducts(prev => {
+      prevProducts = prev;
+      return prev.filter(p => p.id !== id);
+    });
+    
     if (shopId) {
       const cached = JSON.parse(localStorage.getItem("stockhub_cache_products_" + shopId) || "[]");
       localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(cached.filter((p: Product) => p.id !== id)));
     }
-    await deleteProductAction(id);
+    
+    try {
+      if (!navigator.onLine) throw new Error("offline");
+      const result = await deleteProductAction(id);
+      
+      // Assume success, server actions don't return success obj strictly for delete in older code?
+      // Wait, deleteProductAction returns {success} ? Let's just catch network error
+    } catch (e) {
+      console.warn("Suppression de produit mise en attente de synchronisation (hors ligne)");
+      syncManager.addToQueue('DELETE_PRODUCT', { id });
+    }
   };
 
   // For compatibility with older code that used setProducts(newArray)

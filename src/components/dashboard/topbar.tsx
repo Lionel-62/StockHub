@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/auth";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
 import { deleteShopAction } from "@/app/actions/shop.actions";
+import { SyncIndicator } from "@/components/dashboard/sync-indicator";
 
 export function Topbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -137,6 +138,7 @@ export function Topbar() {
 
         {/* Bottom Row for Mobile / Right Section for Desktop */}
         <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto">
+          <SyncIndicator />
           {isDashboardHome && (
             <div className="relative flex items-center w-full md:w-auto">
               <Search className="absolute left-3 text-slate-400" size={16} />
