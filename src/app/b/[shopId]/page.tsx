@@ -541,29 +541,29 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
         <div className="absolute -top-32 -right-32 w-[30rem] h-[30rem] bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none"></div>
         
         {/* Floating Emoji Cards */}
-        <div className="hidden md:flex absolute top-[15%] left-[8%] w-20 h-20 rounded-2xl bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 items-center justify-center text-4xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_6s_ease-in-out_infinite] rotate-12">
+        <div className="hidden md:flex absolute top-[15%] left-[8%] w-20 h-20 rounded-2xl bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-4xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_6s_ease-in-out_infinite] rotate-12">
           🛍️
         </div>
-        <div className="absolute top-[10%] right-[10%] md:right-[20%] w-14 h-14 md:w-16 md:h-16 rounded-full bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 flex items-center justify-center text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_5s_ease-in-out_infinite_reverse] -rotate-12">
+        <div className="absolute top-[10%] right-[10%] md:right-[20%] w-10 h-10 md:w-16 md:h-16 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 flex items-center justify-center text-xl md:text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_5s_ease-in-out_infinite_reverse] -rotate-12">
           🎁
         </div>
-        <div className="hidden lg:flex absolute top-[40%] right-[5%] w-24 h-24 rounded-3xl bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 items-center justify-center text-5xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_7s_ease-in-out_infinite] -rotate-6">
+        <div className="hidden lg:flex absolute top-[40%] right-[5%] w-24 h-24 rounded-3xl bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-5xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_7s_ease-in-out_infinite] -rotate-6">
           🛒
         </div>
-        <div className="absolute bottom-[20%] left-[10%] md:left-[25%] w-16 h-16 rounded-full bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 flex items-center justify-center text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_4s_ease-in-out_infinite] rotate-45">
+        <div className="absolute bottom-[20%] left-[10%] md:left-[25%] w-10 h-10 md:w-16 md:h-16 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 flex items-center justify-center text-xl md:text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_4s_ease-in-out_infinite] rotate-45">
           ✨
         </div>
-        <div className="hidden md:flex absolute bottom-[10%] right-[15%] w-16 h-16 rounded-2xl bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 items-center justify-center text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_8s_ease-in-out_infinite] rotate-12">
+        <div className="hidden md:flex absolute bottom-[10%] right-[15%] w-16 h-16 rounded-2xl bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_8s_ease-in-out_infinite] rotate-12">
           💎
         </div>
-        <div className="hidden lg:flex absolute top-[60%] left-[5%] w-14 h-14 rounded-full bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 items-center justify-center text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_5s_ease-in-out_infinite_reverse] -rotate-45">
+        <div className="hidden lg:flex absolute top-[60%] left-[5%] w-14 h-14 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_5s_ease-in-out_infinite_reverse] -rotate-45">
           👟
         </div>
         
         <div className="relative max-w-4xl mx-auto space-y-6 z-10">
-          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white dark:bg-[#0a192f]/10 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
              <span className="flex h-2.5 w-2.5 rounded-full bg-[#0d8f76] shadow-[0_0_12px_rgba(13,143,118,1)] animate-pulse"></span>
-             <span className="text-sm font-semibold tracking-wider uppercase text-white/90">Bienvenue sur notre boutique</span>
+             <span className="text-sm font-semibold tracking-wider uppercase text-white">Bienvenue sur notre boutique</span>
           </div>
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight" style={{ textShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
             {shopSettings.name}
