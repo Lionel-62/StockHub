@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PackageSearch, Receipt, Store, BarChart2, ShieldCheck, LayoutDashboard, Boxes, ShoppingCart, Users, Truck, Settings, LifeBuoy } from "lucide-react";
+import { PackageSearch, Receipt, Store, BarChart2, ShieldCheck, LayoutDashboard, Boxes, ShoppingCart, Users, Truck, Settings, LifeBuoy, CloudOff } from "lucide-react";
 
 export function Features() {
   return (
@@ -106,7 +106,7 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-20px" }}
             transition={{ duration: 0.4, delay: 0.4 }}
-            className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:shadow-md transition-shadow md:col-span-1 lg:col-span-2"
+            className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:shadow-md transition-shadow md:col-span-1 lg:col-span-1"
           >
             <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center mb-6">
               <ShieldCheck className="w-6 h-6" />
@@ -115,7 +115,26 @@ export function Features() {
               Équipe & sécurité anti-fraude
             </h3>
             <p className="text-slate-600 text-sm leading-relaxed">
-              Créez des comptes vendeurs avec code PIN à 4 chiffres et permissions personnalisées. Vos employés accèdent aux outils du quotidien (ventes, factures, stock, clients, produits) sans jamais voir vos bénéfices, vos prix d'achat, vos rapports ni vos paramètres.
+              Créez des comptes vendeurs avec code PIN à 4 chiffres et permissions. Vos employés accèdent aux outils du quotidien sans jamais voir vos bénéfices ni vos paramètres.
+            </p>
+          </motion.div>
+
+          {/* Card 6 */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4, delay: 0.5 }}
+            className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:shadow-md transition-shadow md:col-span-2 lg:col-span-1"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-orange-100 text-orange-700 flex items-center justify-center mb-6">
+              <CloudOff className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 mb-3">
+              Mode Hors-ligne & Synchro
+            </h3>
+            <p className="text-slate-600 text-sm leading-relaxed">
+              Continuez à travailler même sans connexion internet (Offline-First). L'application enregistre vos actions localement et les synchronise automatiquement en arrière-plan dès le retour du réseau.
             </p>
           </motion.div>
         </div>
