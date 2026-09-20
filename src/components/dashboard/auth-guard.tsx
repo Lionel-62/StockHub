@@ -24,10 +24,21 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       return;
     }
     
-    // Monetization stub: Check subscription plan status
-    if (currentUser.role === "owner" && (currentUser as any).planStatus === "expired") {
-      // router.push("/dashboard/parametres/facturation"); // Prepare for future redirection
-      console.warn("Abonnement expiré. Redirection vers la facturation (stub).");
+    // Monetization: Check subscription plan status
+    let isExpired = false;
+    if (currentUser.subscriptionStatus === "expired") {
+      isExpired = true;
+    } else if (currentUser.subscriptionEndDate) {
+      const end = new Date(currentUser.subscriptionEndDate).getTime();
+      const now = new Date().getTime();
+      if (end < now) {
+        isExpired = true;
+      }
+    }
+    
+    if (isExpired && pathname !== "/dashboard/abonnement") {
+      router.push("/dashboard/abonnement");
+      return;
     }
 
     // Check permissions
@@ -67,6 +78,14 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const needsOnboarding = currentUser.role === "owner" && (!currentUser.onboardingCompleted || !currentUser.shopId);
   if (needsOnboarding && pathname !== "/onboarding") {
     return null;
+  }
+  
+  let isExpired = false;
+  if (currentUser.subscriptionStatus === "expired") isExpired = true;
+  else if (currentUser.subscriptionEndDate && new Date(currentUser.subscriptionEndDate).getTime() < new Date().getTime()) isExpired = true;
+  
+  if (isExpired && pathname !== "/dashboard/abonnement") {
+    return null; // Don't render anything while redirecting
   }
   
   // Render block for prohibited routes to avoid flashing unauthorized content

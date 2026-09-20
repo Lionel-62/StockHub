@@ -15,7 +15,7 @@ export async function loginAction(identifier: string, pinCode: string, allowedRo
   
   let query = supabase
     .from('profiles')
-    .select('*, shops!profiles_shop_id_fkey!inner(slug, name)')
+    .select('*, shops!profiles_shop_id_fkey!inner(slug, name), subscription_status, subscription_end_date')
     .eq('identifier', identifier)
     .eq('pin_code', pinCode);
     
@@ -44,6 +44,8 @@ export async function loginAction(identifier: string, pinCode: string, allowedRo
       shopName: userRecord.shops?.name || userRecord.shop_name,
       onboardingCompleted: userRecord.onboarding_completed,
       permissions: typeof userRecord.permissions === 'string' ? JSON.parse(userRecord.permissions) : userRecord.permissions,
+      subscriptionStatus: userRecord.subscription_status,
+      subscriptionEndDate: userRecord.subscription_end_date,
       createdAt: userRecord.created_at || new Date().toISOString()
     };
 
@@ -298,16 +300,22 @@ export async function createShopAction(userId: string, shopName: string, categor
       .single();
       
     if (profile) {
+      // We also update subscription details since createShop creates a new active profile.
+      // Usually trigger sets this, so fetch it back
+      const { data: updatedProfile } = await supabase.from('profiles').select('subscription_status, subscription_end_date').eq('id', profile.id).single();
+
       const sessionData = {
         id: profile.id,
         name: profile.name,
         identifier: profile.identifier,
         role: profile.role,
-        shopId: profile.shop_id,
-        shopSlug: profile.shops?.slug,
-        shopName: profile.shops?.name,
-        onboardingCompleted: profile.onboarding_completed,
+        shopId: shop.id,
+        shopSlug: shop.slug,
+        shopName: shop.name,
+        onboardingCompleted: true,
         permissions: typeof profile.permissions === 'string' ? JSON.parse(profile.permissions) : profile.permissions,
+        subscriptionStatus: updatedProfile?.subscription_status || 'trial',
+        subscriptionEndDate: updatedProfile?.subscription_end_date,
         createdAt: profile.created_at
       };
       await setSession(sessionData);

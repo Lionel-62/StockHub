@@ -22,7 +22,8 @@ import {
   UserPlus,
   ChevronDown,
   Plus,
-  Trash2
+  Trash2,
+  CreditCard
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -43,6 +44,7 @@ const mainMenu = [
 
 const otherMenu = [
   { name: "Rapports", href: "/dashboard/rapports", icon: BarChart2 },
+  { name: "Abonnement", href: "/dashboard/abonnement", icon: CreditCard },
   { name: "Paramètres", href: "/dashboard/parametres", icon: Settings },
   { name: "Équipe", href: "/dashboard/equipe", icon: UserPlus },
   { name: "Aide et support", href: "/dashboard/aide", icon: LifeBuoy },
