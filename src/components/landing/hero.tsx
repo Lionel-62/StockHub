@@ -20,9 +20,9 @@ export function Hero() {
               <span>Reçu de caisse</span>
               <span className="text-[#0f9d58] font-bold font-sans">✓ PAYÉ</span>
             </div>
-            <div className="text-xs font-bold text-slate-900 mt-1 font-sans">Ticket #1489</div>
+            <div className="text-xs font-bold text-slate-900 dark:text-white mt-1 font-sans">Ticket #1489</div>
             <div className="text-sm font-extrabold text-[#0f9d58] mt-0.5">18 500 FCFA</div>
-            <div className="text-[9px] text-slate-500 font-sans flex items-center gap-1 mt-1.5 pt-1.5 border-t border-dashed border-amber-300/70">
+            <div className="text-[9px] text-slate-500 dark:text-slate-400 font-sans flex items-center gap-1 mt-1.5 pt-1.5 border-t border-dashed border-amber-300/70">
               <span className="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
               <span>Règlement Wave</span>
             </div>
@@ -30,9 +30,9 @@ export function Hero() {
         </div>
 
         {/* 2. Top Centered Payment Notification Badge */}
-        <div className="hidden md:flex items-center gap-2.5 absolute top-20 right-[24%] transform rotate-3 bg-white/95 backdrop-blur-md border border-amber-200/90 rounded-full py-1.5 px-3.5 shadow-lg shadow-slate-900/5 animate-float-slow pointer-events-auto">
+        <div className="hidden md:flex items-center gap-2.5 absolute top-20 right-[24%] transform rotate-3 bg-white dark:bg-[#0a192f]/95 backdrop-blur-md border border-amber-200/90 rounded-full py-1.5 px-3.5 shadow-lg shadow-slate-900/5 animate-float-slow pointer-events-auto">
           <div className="w-7 h-7 rounded-full bg-orange-500 text-white flex items-center justify-center font-black text-xs shadow-md shadow-orange-500/30 tracking-tighter border border-white">OM</div>
-          <div className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+          <div className="text-xs font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
             <span className="text-orange-500 font-bold uppercase text-[10px] tracking-wider">Orange Money</span>
             <span className="text-slate-300">•</span>
             <span className="text-[#0f9d58] font-extrabold">+42 000 FCFA</span>
@@ -41,13 +41,13 @@ export function Hero() {
 
         {/* 3. Top Right Floating WhatsApp Order Capsule */}
         <div className="hidden lg:flex flex-col gap-3 items-end absolute right-[5%] top-28 transform rotate-6 pointer-events-auto animate-float-med">
-          <div className="bg-white/95 backdrop-blur-sm border border-[#0f9d58]/40 rounded-2xl p-2.5 shadow-xl flex items-center gap-2.5">
+          <div className="bg-white dark:bg-[#0a192f]/95 backdrop-blur-sm border border-[#0f9d58]/40 rounded-2xl p-2.5 shadow-xl flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-[#0f9d58] text-white flex items-center justify-center shadow-md shadow-[#0f9d58]/30">
               <MessageCircle className="w-5 h-5 fill-current" />
             </div>
             <div className="text-left">
               <div className="text-[10px] uppercase font-bold text-[#0f9d58]">WhatsApp Store</div>
-              <div className="text-xs font-bold text-slate-900">Nouvelle commande #482</div>
+              <div className="text-xs font-bold text-slate-900 dark:text-white">Nouvelle commande #482</div>
             </div>
           </div>
         </div>
@@ -63,7 +63,7 @@ export function Hero() {
           <motion.div 
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-slate-700 text-xs sm:text-sm font-semibold shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold shadow-sm"
           >
             <span className="flex h-2 w-2 rounded-full bg-[#0f9d58] animate-ping"></span>
             <span>La solution tout-en-un pour les commerçants d&apos;Afrique</span>
@@ -76,7 +76,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-slate-900 tracking-tight leading-[1.08] mb-6"
+            className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.08] mb-6"
           >
             Fini les cahiers de stock et les commandes <span className="bg-gradient-to-r from-[#0b213f] to-[#305886] bg-clip-text text-transparent">WhatsApp en désordre.</span>
           </motion.h1>
@@ -85,7 +85,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed mb-10 font-normal"
+            className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed mb-10 font-normal"
           >
             Gérez vos stocks, ventes et factures en temps réel, tout en offrant à vos clients une vitrine e-commerce (avec promotions, packs et capture de leads) connectée directement à votre WhatsApp en 2 minutes chrono.
           </motion.p>
@@ -112,7 +112,7 @@ export function Hero() {
               <motion.button 
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-base px-6 py-4 rounded-full border border-slate-200 shadow-sm transition-all hover:border-slate-300"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white dark:bg-[#0a192f] hover:bg-slate-50 dark:bg-[#06101e] text-slate-700 dark:text-slate-200 font-semibold text-base px-6 py-4 rounded-full border border-slate-200 dark:border-[#1c3a66] shadow-sm transition-all hover:border-slate-300 dark:border-[#244b82]"
               >
                 <Play className="w-5 h-5 text-[#0f9d58]" />
                 <span>Voir la démo</span>
@@ -125,7 +125,7 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-xs sm:text-sm text-slate-500 font-medium"
+            className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium"
           >
             Programme de lancement — soyez parmi les premiers commerçants à digitaliser leur boutique.
           </motion.p>
@@ -140,7 +140,7 @@ export function Hero() {
           id="demo"
         >
           {/* Floating sticker 1 (Left): WhatsApp Order */}
-          <div className="hidden md:flex items-center gap-3 glass-card border border-[#0f9d58]/40 text-slate-800 p-3.5 rounded-2xl shadow-xl absolute -left-6 top-16 z-30 animate-float-slow">
+          <div className="hidden md:flex items-center gap-3 glass-card border border-[#0f9d58]/40 text-slate-800 dark:text-slate-100 p-3.5 rounded-2xl shadow-xl absolute -left-6 top-16 z-30 animate-float-slow">
             <div className="w-10 h-10 rounded-xl bg-[#0f9d58] text-white flex items-center justify-center shadow-md shadow-[#0f9d58]/30">
               <MessageCircle className="w-6 h-6 fill-current" />
             </div>
@@ -150,19 +150,19 @@ export function Hero() {
                 <span>•</span>
                 <span className="text-[#0f9d58] font-bold">À l&apos;instant</span>
               </div>
-              <div className="text-sm font-bold text-slate-900">📦 Commande reçue (32 500 F)</div>
-              <div className="text-xs text-slate-500">Awa D. • Robe Wax Royale (M)</div>
+              <div className="text-sm font-bold text-slate-900 dark:text-white">📦 Commande reçue (32 500 F)</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">Awa D. • Robe Wax Royale (M)</div>
             </div>
           </div>
 
           {/* Floating sticker 2 (Right): Instant Cash / Invoicing */}
-          <div className="hidden md:flex items-center gap-3 glass-card border border-slate-200/80 text-slate-800 p-3.5 rounded-2xl shadow-xl absolute -right-6 top-28 z-30 animate-float-med">
+          <div className="hidden md:flex items-center gap-3 glass-card border border-slate-200 dark:border-[#1c3a66]/80 text-slate-800 dark:text-slate-100 p-3.5 rounded-2xl shadow-xl absolute -right-6 top-28 z-30 animate-float-med">
             <div className="w-10 h-10 rounded-xl bg-[#0b213f] text-white flex items-center justify-center shadow-md shadow-[#0b213f]/30">
               <TrendingUp className="w-6 h-6" />
             </div>
             <div>
               <div className="text-xs text-slate-400 font-medium">Caisse du jour • Abidjan</div>
-              <div className="text-sm font-extrabold text-slate-900">+125 000 FCFA</div>
+              <div className="text-sm font-extrabold text-slate-900 dark:text-white">+125 000 FCFA</div>
               <div className="text-[11px] text-[#0f9d58] font-semibold flex items-center gap-1">
                 <span>●</span> Reçu généré #849
               </div>
@@ -170,8 +170,8 @@ export function Hero() {
           </div>
 
           {/* Main Workspace Frame */}
-          <div className="rounded-3xl p-2 sm:p-4 bg-gradient-to-b from-slate-200/70 via-slate-100/50 to-white border border-slate-200/90 shadow-card-lift relative z-10">
-            <div className="rounded-2xl overflow-hidden border border-slate-200/60 shadow-inner bg-slate-950 flex items-center justify-center">
+          <div className="rounded-3xl p-2 sm:p-4 bg-gradient-to-b from-slate-200/70 via-slate-100/50 to-white border border-slate-200 dark:border-[#1c3a66]/90 shadow-card-lift relative z-10">
+            <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-[#1c3a66]/60 shadow-inner bg-slate-950 flex items-center justify-center">
               <img 
                 src="/dashboard-preview.png" 
                 alt="Aperçu du tableau de bord StockHub" 

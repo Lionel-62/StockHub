@@ -28,10 +28,10 @@ export function StatCard({
 }: StatCardProps) {
   
   return (
-    <Card className="shadow-sm border-slate-200">
+    <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
       <CardContent className="p-5">
         <div className="flex items-center justify-between mb-4">
-          <p className="text-sm font-medium text-slate-500">
+          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
             {title}
           </p>
           <div className={cn("w-8 h-8 rounded-md flex items-center justify-center", iconBgClass)}>
@@ -40,7 +40,7 @@ export function StatCard({
         </div>
         
         <div className="flex items-baseline gap-1 mb-2">
-          <h3 className="text-2xl font-bold text-slate-900">{value}</h3>
+          <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{value}</h3>
           {subValue && <span className="text-sm font-medium text-slate-400">{subValue}</span>}
         </div>
         
@@ -54,7 +54,7 @@ export function StatCard({
               "text-xs font-bold",
               trendType === "up" ? "text-green-600" : 
               trendType === "down" || trendType === "alert" ? "text-red-600" : 
-              "text-slate-600"
+              "text-slate-600 dark:text-slate-300"
             )}>
               {trend}
             </span>
@@ -75,7 +75,7 @@ export function StatCard({
 
 export function StatCardSkeleton() {
   return (
-    <Card className="shadow-sm border-slate-200">
+    <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
       <CardContent className="p-5">
         <div className="flex items-center justify-between mb-4">
           <Skeleton className="h-4 w-24" />

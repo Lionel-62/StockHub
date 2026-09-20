@@ -156,13 +156,13 @@ function SettingsContent() {
       
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl animate-in fade-in zoom-in-95">
+          <div className="bg-white dark:bg-[#0a192f] rounded-2xl p-6 max-w-md w-full shadow-2xl animate-in fade-in zoom-in-95">
             <h3 className="text-xl font-bold text-red-600 mb-2">Zone de Danger Absolu</h3>
-            <p className="text-sm text-slate-600 mb-4">
+            <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
               La suppression de votre compte entraînera la perte définitive de <strong>toutes vos boutiques</strong>, de vos produits, de vos ventes, et des accès de <strong>tous vos employés</strong>. Cette action est irréversible.
             </p>
             <div className="space-y-3 mb-6">
-              <label className="text-sm font-semibold text-slate-900">Veuillez taper <span className="text-red-600 font-bold select-none">SUPPRIMER</span> pour confirmer</label>
+              <label className="text-sm font-semibold text-slate-900 dark:text-white">Veuillez taper <span className="text-red-600 font-bold select-none">SUPPRIMER</span> pour confirmer</label>
               <input 
                 type="text" 
                 value={deleteConfirmation}
@@ -198,8 +198,8 @@ function SettingsContent() {
         {/* En-tête */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Paramètres</h1>
-          <p className="text-slate-500 mt-1">Gérez la configuration et les préférences de votre espace StockHub.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Paramètres</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Gérez la configuration et les préférences de votre espace StockHub.</p>
         </div>
         <Button 
           onClick={handleSave}
@@ -226,8 +226,8 @@ function SettingsContent() {
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all whitespace-nowrap",
                   activeTab === tab.id 
-                    ? "bg-white text-[#0b213f] shadow-sm border border-slate-200" 
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent"
+                    ? "bg-white dark:bg-[#0a192f] text-[#0b213f] shadow-sm border border-slate-200 dark:border-[#1c3a66]" 
+                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:bg-[#112240] hover:text-slate-900 dark:text-white border border-transparent"
                 )}
               >
                 <tab.icon size={18} className={cn(
@@ -247,64 +247,64 @@ function SettingsContent() {
           {activeTab === "general" && (
             <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
               {/* Informations du compte (Lecture seule) */}
-              <Card className="shadow-sm border-slate-200 overflow-hidden">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-                  <CardTitle className="text-lg font-bold text-slate-900">Informations du Compte</CardTitle>
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66] overflow-hidden">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Informations du Compte</CardTitle>
                   <CardDescription>L'email d'inscription est verrouillé, mais le nom reste modifiable.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Nom / Propriétaire</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Nom / Propriétaire</label>
                       <input 
                         type="text" 
                         value={ownerName} 
                         onChange={(e) => setOwnerName(e.target.value)}
-                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] transition-all text-slate-900" 
+                        className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-white dark:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] transition-all text-slate-900 dark:text-white" 
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Adresse Email</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Adresse Email</label>
                       <input 
                         type="email" 
                         value={currentUser?.identifier || ""} 
                         readOnly
-                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-slate-100 text-slate-500 cursor-not-allowed outline-none" 
+                        className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-slate-100 dark:bg-[#112240] text-slate-500 dark:text-slate-400 cursor-not-allowed outline-none" 
                       />
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="shadow-sm border-slate-200 overflow-hidden">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-                  <CardTitle className="text-lg font-bold text-slate-900">Profil de l'Entreprise</CardTitle>
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66] overflow-hidden">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Profil de l'Entreprise</CardTitle>
                   <CardDescription>Informations de base affichées sur vos documents.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Email de contact</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Email de contact</label>
                       <div className="relative">
                         <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                         <input 
                           type="email" 
                           value={formData.email} 
                           onChange={e => setFormData({...formData, email: e.target.value})}
-                          className="w-full pl-9 pr-3 p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
+                          className="w-full pl-9 pr-3 p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
                         />
                       </div>
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Numéro WhatsApp</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Numéro WhatsApp</label>
                       <div className="relative">
                         <Smartphone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                         <input 
                           type="tel" 
                           value={formData.phone} 
                           onChange={e => setFormData({...formData, phone: e.target.value})}
-                          className="w-full pl-9 pr-3 p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
+                          className="w-full pl-9 pr-3 p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
                           placeholder="+229 01 02 03 04"
                         />
                       </div>
@@ -313,7 +313,7 @@ function SettingsContent() {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Pays</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Pays</label>
                       <select 
                         value={formData.country || ""}
                         onChange={e => {
@@ -330,7 +330,7 @@ function SettingsContent() {
                           
                           setFormData({...formData, country, countryCode: code});
                         }}
-                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                        className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-[#0a192f]"
                       >
                         <option value="Bénin">Bénin</option>
                         <option value="Côte d'Ivoire">Côte d'Ivoire</option>
@@ -343,21 +343,21 @@ function SettingsContent() {
                       </select>
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Ville</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Ville</label>
                       <input 
                         type="text" 
                         value={formData.city || ""} 
                         onChange={e => setFormData({...formData, city: e.target.value})}
-                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
+                        className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
                         placeholder="Ex: Cotonou"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Catégorie</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Catégorie</label>
                       <select 
                         value={formData.category || "autre"}
                         onChange={e => setFormData({...formData, category: e.target.value})}
-                        className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                        className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-[#0a192f]"
                       >
                         <option value="vetements">Vêtements & Mode</option>
                         <option value="electronique">Électronique & Tech</option>
@@ -370,24 +370,24 @@ function SettingsContent() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-sm font-semibold text-slate-700">Adresse complète</label>
+                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Adresse complète</label>
                     <textarea 
                       rows={2} 
                       value={formData.address} 
                       onChange={e => setFormData({...formData, address: e.target.value})}
-                      className="w-full p-3 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
+                      className="w-full p-3 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
                     />
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="shadow-sm border-slate-200">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-                  <CardTitle className="text-lg font-bold text-slate-900">Réseaux Sociaux & Site Web</CardTitle>
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Réseaux Sociaux & Site Web</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-1.5">
-                    <label className="text-sm font-semibold text-slate-700">Site Web</label>
+                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Site Web</label>
                     <div className="relative">
                       <Globe size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                       <input 
@@ -395,7 +395,7 @@ function SettingsContent() {
                         value={formData.website} 
                         onChange={e => setFormData({...formData, website: e.target.value})}
                         placeholder="https://" 
-                        className="w-full pl-9 pr-3 p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
+                        className="w-full pl-9 pr-3 p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
                       />
                     </div>
                   </div>
@@ -415,8 +415,8 @@ function SettingsContent() {
                       <CreditCard size={24} />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-900 text-lg">Gérer votre Abonnement</h4>
-                      <p className="text-slate-600 text-sm mt-1">Consultez votre forfait actuel, la date d'expiration et gérez vos paiements sur la page dédiée.</p>
+                      <h4 className="font-bold text-slate-900 dark:text-white text-lg">Gérer votre Abonnement</h4>
+                      <p className="text-slate-600 dark:text-slate-300 text-sm mt-1">Consultez votre forfait actuel, la date d'expiration et gérez vos paiements sur la page dédiée.</p>
                     </div>
                   </div>
                   <Button 
@@ -428,15 +428,15 @@ function SettingsContent() {
                 </CardContent>
               </Card>
 
-              <Card className="shadow-sm border-slate-200">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-                  <CardTitle className="text-lg font-bold text-slate-900">Paramètres de Facturation</CardTitle>
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Paramètres de Facturation</CardTitle>
                   <CardDescription>Configurez la TVA et les informations légales.</CardDescription>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1.5 relative z-20">
-                      <label className="text-sm font-semibold text-slate-700">Devise principale</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Devise principale</label>
                       <CustomSelect
                         options={[
                           { value: "XOF", label: "Franc CFA (XOF)" },
@@ -449,22 +449,22 @@ function SettingsContent() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Taux de TVA par défaut (%)</label>
-                      <input type="number" defaultValue="18" className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Taux de TVA par défaut (%)</label>
+                      <input type="number" defaultValue="18" className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Préfixe des factures</label>
-                      <input type="text" defaultValue="FAC-" className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 font-mono" />
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Préfixe des factures</label>
+                      <input type="text" defaultValue="FAC-" className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 dark:bg-[#06101e] font-mono" />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Numéro IFU / SIRET</label>
-                      <input type="text" placeholder="Entrez votre numéro d'identification" className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Numéro IFU / SIRET</label>
+                      <input type="text" placeholder="Entrez votre numéro d'identification" className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
                     </div>
                   </div>
                   
-                  <div className="space-y-1.5 pt-4 border-t border-slate-100">
-                    <label className="text-sm font-semibold text-slate-700">Pied de page des factures (Mention légale)</label>
-                    <textarea rows={2} defaultValue="Merci pour votre confiance. Le paiement est dû sous 30 jours." className="w-full p-3 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none text-slate-600" />
+                  <div className="space-y-1.5 pt-4 border-t border-slate-100 dark:border-[#152a4d]">
+                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Pied de page des factures (Mention légale)</label>
+                    <textarea rows={2} defaultValue="Merci pour votre confiance. Le paiement est dû sous 30 jours." className="w-full p-3 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none text-slate-600 dark:text-slate-300" />
                   </div>
                 </CardContent>
               </Card>
@@ -474,14 +474,14 @@ function SettingsContent() {
           {/* ONGLET: PRÉFÉRENCES */}
           {activeTab === "preferences" && (
             <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
-              <Card className="shadow-sm border-slate-200">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-                  <CardTitle className="text-lg font-bold text-slate-900">Préférences Régionales</CardTitle>
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Préférences Régionales</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-1.5 relative z-20">
-                      <label className="text-sm font-semibold text-slate-700">Langue de l'interface</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Langue de l'interface</label>
                       <CustomSelect
                         options={[
                           { value: "FR", label: "Français" },
@@ -493,7 +493,7 @@ function SettingsContent() {
                       />
                     </div>
                     <div className="space-y-1.5 relative z-10">
-                      <label className="text-sm font-semibold text-slate-700">Fuseau Horaire</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Fuseau Horaire</label>
                       <CustomSelect
                         options={[
                           { value: "GMT+1", label: "Afrique de l'Ouest (GMT+1)" },
@@ -509,9 +509,9 @@ function SettingsContent() {
                 </CardContent>
               </Card>
 
-              <Card className="shadow-sm border-slate-200">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-                  <CardTitle className="text-lg font-bold text-slate-900">Apparence</CardTitle>
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Apparence</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-6">
@@ -520,7 +520,7 @@ function SettingsContent() {
                       className={`flex-1 p-4 rounded-xl border-2 cursor-pointer transition-all ${
                         theme !== 'dark' 
                           ? 'border-blue-600 bg-blue-50/50' 
-                          : 'border-slate-200 bg-slate-50 hover:border-slate-300'
+                          : 'border-slate-200 dark:border-[#1c3a66] bg-slate-50 dark:bg-[#06101e] hover:border-slate-300 dark:border-[#244b82]'
                       } relative overflow-hidden`}
                     >
                       {theme !== 'dark' && (
@@ -528,10 +528,10 @@ function SettingsContent() {
                           <Check size={10} />
                         </div>
                       )}
-                      <div className={`font-semibold mb-1 ${theme !== 'dark' ? 'text-blue-900' : 'text-slate-700'}`}>
+                      <div className={`font-semibold mb-1 ${theme !== 'dark' ? 'text-blue-900' : 'text-slate-700 dark:text-slate-200'}`}>
                         Thème Clair
                       </div>
-                      <div className={`text-xs ${theme !== 'dark' ? 'text-blue-700/70' : 'text-slate-500'}`}>
+                      <div className={`text-xs ${theme !== 'dark' ? 'text-blue-700/70' : 'text-slate-500 dark:text-slate-400'}`}>
                         Idéal pour les environnements de travail lumineux.
                       </div>
                     </div>
@@ -541,7 +541,7 @@ function SettingsContent() {
                       className={`flex-1 p-4 rounded-xl border-2 cursor-pointer transition-all ${
                         theme === 'dark' 
                           ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-900/20' 
-                          : 'border-slate-200 bg-slate-50 hover:border-slate-300'
+                          : 'border-slate-200 dark:border-[#1c3a66] bg-slate-50 dark:bg-[#06101e] hover:border-slate-300 dark:border-[#244b82]'
                       } relative overflow-hidden`}
                     >
                       {theme === 'dark' && (
@@ -549,10 +549,10 @@ function SettingsContent() {
                           <Check size={10} />
                         </div>
                       )}
-                      <div className={`font-semibold mb-1 ${theme === 'dark' ? 'text-blue-900 dark:text-blue-300' : 'text-slate-700'}`}>
+                      <div className={`font-semibold mb-1 ${theme === 'dark' ? 'text-blue-900 dark:text-blue-300' : 'text-slate-700 dark:text-slate-200'}`}>
                         Thème Sombre
                       </div>
-                      <div className={`text-xs ${theme === 'dark' ? 'text-blue-700/70 dark:text-blue-400' : 'text-slate-500'}`}>
+                      <div className={`text-xs ${theme === 'dark' ? 'text-blue-700/70 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400'}`}>
                         Idéal pour les environnements sombres et reposer les yeux.
                       </div>
                     </div>
@@ -565,27 +565,27 @@ function SettingsContent() {
           {/* ONGLET: SÉCURITÉ */}
           {activeTab === "security" && (
             <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
-              <Card className="shadow-sm border-slate-200">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-                  <CardTitle className="text-lg font-bold text-slate-900">Mot de passe</CardTitle>
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Mot de passe</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
                   <div className="space-y-4 max-w-md">
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Mot de passe actuel</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Mot de passe actuel</label>
                       <div className="relative">
                         <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <input type="password" placeholder="••••••••" className="w-full pl-9 pr-3 p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                        <input type="password" placeholder="••••••••" className="w-full pl-9 pr-3 p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
                       </div>
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-semibold text-slate-700">Nouveau mot de passe</label>
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Nouveau mot de passe</label>
                       <div className="relative">
                         <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                        <input type="password" placeholder="••••••••" className="w-full pl-9 pr-3 p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                        <input type="password" placeholder="••••••••" className="w-full pl-9 pr-3 p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
                       </div>
                     </div>
-                    <Button variant="outline" className="w-full bg-white border-slate-200 text-slate-700 hover:bg-slate-50">
+                    <Button variant="outline" className="w-full bg-white dark:bg-[#0a192f] border-slate-200 dark:border-[#1c3a66] text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:bg-[#06101e]">
                       Mettre à jour le mot de passe
                     </Button>
                   </div>
@@ -601,8 +601,8 @@ function SettingsContent() {
                   <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div>
-                        <h4 className="font-semibold text-slate-900">Supprimer mon compte définitivement</h4>
-                        <p className="text-sm text-slate-500 mt-1 max-w-xl">
+                        <h4 className="font-semibold text-slate-900 dark:text-white">Supprimer mon compte définitivement</h4>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xl">
                           Cette action effacera immédiatement toutes vos boutiques, vos employés associés, vos produits et votre compte de connexion.
                         </p>
                       </div>
@@ -623,36 +623,36 @@ function SettingsContent() {
           {/* ONGLET: NOTIFICATIONS */}
           {activeTab === "notifications" && (
             <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
-              <Card className="shadow-sm border-slate-200">
-                <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-                  <CardTitle className="text-lg font-bold text-slate-900">Préférences de Notification</CardTitle>
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Préférences de Notification</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0 divide-y divide-slate-100">
                   <div className="flex items-center justify-between p-6">
                     <div>
-                      <h4 className="font-semibold text-slate-900 text-sm">Rappels de stock faible</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">Recevoir un email quand un produit passe sous le seuil d'alerte.</p>
+                      <h4 className="font-semibold text-slate-900 dark:text-white text-sm">Rappels de stock faible</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Recevoir un email quand un produit passe sous le seuil d'alerte.</p>
                     </div>
                     <div className="w-11 h-6 bg-blue-600 rounded-full relative cursor-pointer shadow-inner">
-                      <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                      <div className="absolute right-1 top-1 w-4 h-4 bg-white dark:bg-[#0a192f] rounded-full shadow-sm"></div>
                     </div>
                   </div>
                   <div className="flex items-center justify-between p-6">
                     <div>
-                      <h4 className="font-semibold text-slate-900 text-sm">Rapport de ventes quotidien</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">Un résumé de vos encaissements envoyé chaque soir.</p>
+                      <h4 className="font-semibold text-slate-900 dark:text-white text-sm">Rapport de ventes quotidien</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Un résumé de vos encaissements envoyé chaque soir.</p>
                     </div>
                     <div className="w-11 h-6 bg-slate-200 rounded-full relative cursor-pointer shadow-inner">
-                      <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                      <div className="absolute left-1 top-1 w-4 h-4 bg-white dark:bg-[#0a192f] rounded-full shadow-sm"></div>
                     </div>
                   </div>
                   <div className="flex items-center justify-between p-6">
                     <div>
-                      <h4 className="font-semibold text-slate-900 text-sm">Nouvelle connexion</h4>
-                      <p className="text-xs text-slate-500 mt-0.5">Alerte de sécurité lors d'une connexion depuis un nouvel appareil.</p>
+                      <h4 className="font-semibold text-slate-900 dark:text-white text-sm">Nouvelle connexion</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Alerte de sécurité lors d'une connexion depuis un nouvel appareil.</p>
                     </div>
                     <div className="w-11 h-6 bg-blue-600 rounded-full relative cursor-pointer shadow-inner">
-                      <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                      <div className="absolute right-1 top-1 w-4 h-4 bg-white dark:bg-[#0a192f] rounded-full shadow-sm"></div>
                     </div>
                   </div>
                 </CardContent>

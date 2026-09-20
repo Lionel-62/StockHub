@@ -5,18 +5,18 @@ import { PackageSearch, Receipt, Store, BarChart2, ShieldCheck, LayoutDashboard,
 
 export function Features() {
   return (
-    <section className="py-24 bg-white" data-purpose="features-section" id="fonctionnalites">
+    <section className="py-24 bg-white dark:bg-[#0a192f]" data-purpose="features-section" id="fonctionnalites">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-20">
-          <span className="text-xs uppercase tracking-widest font-bold text-[#0b213f] bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+          <span className="text-xs uppercase tracking-widest font-bold text-[#0b213f] bg-slate-100 dark:bg-[#112240] px-3 py-1 rounded-full border border-slate-200 dark:border-[#1c3a66]">
             Fonctionnalités
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-3">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-3">
             Gérez tout, du stock au client.
           </h2>
-          <p className="text-slate-600 mt-3 text-base sm:text-lg">
+          <p className="text-slate-600 dark:text-slate-300 mt-3 text-base sm:text-lg">
             Les vrais modules de votre application, pensés pour la croissance de votre entreprise.
           </p>
         </div>
@@ -30,15 +30,15 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-20px" }}
             transition={{ duration: 0.4 }}
-            className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:shadow-md transition-shadow"
+            className="bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] rounded-3xl p-8 hover:shadow-md transition-shadow"
           >
             <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center mb-6">
               <PackageSearch className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-3">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
               Catalogue, Packs & Promotions
             </h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
               Gérez votre catalogue avec des prix de vente simples, des promotions limitées dans le temps, ou créez des "Packs Produits" attractifs. Réapprovisionnements, ajustements et alertes de rupture automatiques : votre stock se met à jour à chaque vente.
             </p>
           </motion.div>
@@ -49,15 +49,15 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-20px" }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:shadow-md transition-shadow"
+            className="bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] rounded-3xl p-8 hover:shadow-md transition-shadow"
           >
             <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mb-6">
               <Receipt className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-3">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
               Caisse ultra-rapide & Facturation
             </h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
               Vendez au comptoir en un éclair grâce à notre interface de caisse (POS) fluide avec filtrage par catégories. Générez des devis et factures professionnelles, suivez les paiements et envoyez vos reçus PDF directement sur WhatsApp.
             </p>
           </motion.div>
@@ -68,15 +68,15 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-20px" }}
             transition={{ duration: 0.4, delay: 0.2 }}
-            className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:shadow-md transition-shadow md:col-span-2 lg:col-span-1"
+            className="bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] rounded-3xl p-8 hover:shadow-md transition-shadow md:col-span-2 lg:col-span-1"
           >
             <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mb-6">
               <Store className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-3">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
               Boutique en ligne & Capture WhatsApp
             </h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
               Activez votre vitrine e-commerce en un clic. Vos clients s'identifient (Nom, Téléphone) avant de valider leur commande. Vous recevez chaque commande pré-remplie directement sur WhatsApp et constituez votre fichier client automatiquement.
             </p>
           </motion.div>
@@ -87,15 +87,15 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-20px" }}
             transition={{ duration: 0.4, delay: 0.3 }}
-            className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:shadow-md transition-shadow md:col-span-1 lg:col-span-1"
+            className="bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] rounded-3xl p-8 hover:shadow-md transition-shadow md:col-span-1 lg:col-span-1"
           >
             <div className="w-12 h-12 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center mb-6">
               <BarChart2 className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-3">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
               Analytique Premium & Mini-CRM
             </h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
               Prenez des décisions éclairées avec un tableau de bord analytique digne des grandes entreprises : séparation du CA En Ligne / Sur Place, Panier Moyen, évolution graphique et palmarès des meilleures ventes. Inclus également un carnet clients/fournisseurs.
             </p>
           </motion.div>
@@ -106,15 +106,15 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-20px" }}
             transition={{ duration: 0.4, delay: 0.4 }}
-            className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:shadow-md transition-shadow md:col-span-1 lg:col-span-1"
+            className="bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] rounded-3xl p-8 hover:shadow-md transition-shadow md:col-span-1 lg:col-span-1"
           >
             <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center mb-6">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-3">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
               Équipe & sécurité anti-fraude
             </h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
               Créez des comptes vendeurs avec code PIN à 4 chiffres et permissions. Vos employés accèdent aux outils du quotidien sans jamais voir vos bénéfices ni vos paramètres.
             </p>
           </motion.div>
@@ -125,15 +125,15 @@ export function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-20px" }}
             transition={{ duration: 0.4, delay: 0.5 }}
-            className="bg-slate-50 border border-slate-200 rounded-3xl p-8 hover:shadow-md transition-shadow md:col-span-2 lg:col-span-1"
+            className="bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] rounded-3xl p-8 hover:shadow-md transition-shadow md:col-span-2 lg:col-span-1"
           >
             <div className="w-12 h-12 rounded-2xl bg-orange-100 text-orange-700 flex items-center justify-center mb-6">
               <CloudOff className="w-6 h-6" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-3">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
               Mode Hors-ligne & Synchro
             </h3>
-            <p className="text-slate-600 text-sm leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
               Continuez à travailler même sans connexion internet (Offline-First). L'application enregistre vos actions localement et les synchronise automatiquement en arrière-plan dès le retour du réseau.
             </p>
           </motion.div>
@@ -141,7 +141,7 @@ export function Features() {
 
         {/* Grid Block "Une plateforme complète, pas un simple gadget" */}
         <div className="mt-16 bg-[#0b213f] rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-white dark:bg-[#0a192f]/5 rounded-full blur-3xl pointer-events-none"></div>
           
           <h3 className="text-2xl sm:text-3xl font-bold mb-10 text-center relative z-10">
             Une plateforme complète, pas un simple gadget
@@ -162,7 +162,7 @@ export function Features() {
               { icon: ShieldCheck, name: "Équipe", desc: "comptes vendeurs à code PIN avec permissions" },
               { icon: LifeBuoy, name: "Aide & support", desc: "assistance à l'utilisation" },
             ].map((module, idx) => (
-              <div key={idx} className="flex items-start gap-3 bg-white/5 p-4 rounded-xl border border-white/10 hover:bg-white/10 transition-colors">
+              <div key={idx} className="flex items-start gap-3 bg-white dark:bg-[#0a192f]/5 p-4 rounded-xl border border-white/10 hover:bg-white dark:bg-[#0a192f]/10 transition-colors">
                 <module.icon className="w-5 h-5 text-blue-300 shrink-0 mt-0.5" />
                 <div>
                   <div className="font-semibold text-sm">{module.name}</div>

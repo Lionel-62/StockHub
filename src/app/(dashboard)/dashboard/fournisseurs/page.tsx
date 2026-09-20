@@ -117,8 +117,8 @@ export default function SuppliersPage() {
       {/* En-tête de la page */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Fournisseurs</h1>
-          <p className="text-slate-500 mt-1">Gérez votre base de données Fournisseurs et leur historique.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Fournisseurs</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Gérez votre base de données Fournisseurs et leur historique.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -129,7 +129,7 @@ export default function SuppliersPage() {
               placeholder="Rechercher..." 
               value={searchTerm}
               onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-              className="pl-9 pr-4 py-2 w-full sm:w-64 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+              className="pl-9 pr-4 py-2 w-full sm:w-64 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-white dark:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
             />
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
@@ -153,11 +153,11 @@ export default function SuppliersPage() {
       </div>
 
       {/* Tableau des Fournisseurs */}
-      <Card className="shadow-none border-0 ring-0 bg-white rounded-none sm:rounded-xl overflow-visible border-x-0 sm:border-x">
+      <Card className="shadow-none border-0 ring-0 bg-white dark:bg-[#0a192f] rounded-none sm:rounded-xl overflow-visible border-x-0 sm:border-x">
         <CardContent className="p-0 overflow-visible">
           <div className="overflow-x-auto overflow-y-visible">
             <Table>
-              <TableHeader className="bg-slate-50/50">
+              <TableHeader className="bg-slate-50 dark:bg-[#06101e]/50">
                 <TableRow>
                   <TableHead>Fournisseur</TableHead>
                   <TableHead>Contact</TableHead>
@@ -167,25 +167,25 @@ export default function SuppliersPage() {
               </TableHeader>
               <TableBody>
                 {paginatedSuppliers.map((supplier) => (
-                  <TableRow key={supplier.id} className="hover:bg-slate-50 transition-colors group">
+                  <TableRow key={supplier.id} className="hover:bg-slate-50 dark:bg-[#06101e] transition-colors group">
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold shrink-0">
                           {supplier.name.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <div className="font-semibold text-slate-900 line-clamp-1">{supplier.name}</div>
-                          <div className="text-xs text-slate-500 mt-0.5">ID: {supplier.id}</div>
+                          <div className="font-semibold text-slate-900 dark:text-white line-clamp-1">{supplier.name}</div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">ID: {supplier.id}</div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col gap-1">
-                        <div className="flex items-center text-sm text-slate-600">
+                        <div className="flex items-center text-sm text-slate-600 dark:text-slate-300">
                           <Mail size={14} className="mr-2 text-slate-400 shrink-0" />
                           <span className="line-clamp-1">{supplier.email}</span>
                         </div>
-                        <div className="flex items-center text-sm text-slate-600">
+                        <div className="flex items-center text-sm text-slate-600 dark:text-slate-300">
                           <Phone size={14} className="mr-2 text-slate-400 shrink-0" />
                           <span className="line-clamp-1">{supplier.phone}</span>
                         </div>
@@ -195,7 +195,7 @@ export default function SuppliersPage() {
                       <Badge 
                         className={cn("font-medium", 
                           supplier.status === "Actif" ? "bg-green-100 text-green-700 hover:bg-green-200" : 
-                          "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                          "bg-slate-100 dark:bg-[#112240] text-slate-700 dark:text-slate-200 hover:bg-slate-200"
                         )}
                       >
                         {supplier.status}
@@ -203,7 +203,7 @@ export default function SuppliersPage() {
                     </TableCell>
                     <TableCell className="text-center relative">
                       <button 
-                        className="action-menu-btn p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-colors"
+                        className="action-menu-btn p-1.5 text-slate-400 hover:text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#112240] rounded-md transition-colors"
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
@@ -215,17 +215,17 @@ export default function SuppliersPage() {
 
                       {activeDropdown === supplier.id && (
                         <div 
-                          className="action-menu-content absolute right-8 top-10 w-48 bg-white border border-slate-200 shadow-lg rounded-lg py-1 z-50 animate-in fade-in zoom-in-95 duration-100"
+                          className="action-menu-content absolute right-8 top-10 w-48 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] shadow-lg rounded-lg py-1 z-50 animate-in fade-in zoom-in-95 duration-100"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <button 
-                            className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                            className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:bg-[#06101e] flex items-center gap-2"
                             onClick={() => { setActiveDropdown(null); handleOpenEdit(supplier); }}
                           >
                             <Edit size={16} className="text-slate-400" /> Modifier Fournisseur
                           </button>
 
-                          <div className="h-px bg-slate-100 my-1 mx-2"></div>
+                          <div className="h-px bg-slate-100 dark:bg-[#112240] my-1 mx-2"></div>
                           <button 
                             className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
                             onClick={() => { 
@@ -244,7 +244,7 @@ export default function SuppliersPage() {
                 
                 {paginatedSuppliers.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-32 text-center text-slate-500">
+                    <TableCell colSpan={5} className="h-32 text-center text-slate-500 dark:text-slate-400">
                       Aucun Fournisseur ne correspond à votre recherche.
                     </TableCell>
                   </TableRow>
@@ -255,8 +255,8 @@ export default function SuppliersPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 bg-slate-50/50">
-              <span className="text-sm text-slate-500">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-[#152a4d] bg-slate-50 dark:bg-[#06101e]/50">
+              <span className="text-sm text-slate-500 dark:text-slate-400">
                 Affichage de {((currentPage - 1) * itemsPerPage) + 1} à {Math.min(currentPage * itemsPerPage, filteredSuppliers.length)} sur {filteredSuppliers.length} Fournisseurs
               </span>
               <div className="flex gap-1">
@@ -297,49 +297,49 @@ export default function SuppliersPage() {
       {/* Modal Ajouter/Modifier Fournisseur */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm transition-opacity">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 overflow-hidden border border-slate-200 transform scale-100 animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex justify-between items-center p-5 border-b border-slate-100">
-              <h2 className="text-lg font-bold text-slate-900">
+          <div className="bg-white dark:bg-[#0a192f] rounded-xl shadow-lg w-full max-w-md mx-4 overflow-hidden border border-slate-200 dark:border-[#1c3a66] transform scale-100 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center p-5 border-b border-slate-100 dark:border-[#152a4d]">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                 {modalMode === "add" ? "Nouveau Fournisseur" : "Modifier le Fournisseur"}
               </h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-700 transition-colors">
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-700 dark:text-slate-200 transition-colors">
                 <X size={20} />
               </button>
             </div>
             
             <div className="p-5 space-y-4">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-700">Nom complet *</label>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Nom complet *</label>
                 <input 
                   type="text" 
                   value={currentSupplier.name || ""}
                   onChange={(e) => setcurrentSupplier({...currentSupplier, name: e.target.value})}
-                  className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                  className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 dark:bg-[#06101e]"
                   placeholder="Jean Dupont"
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-700">Email</label>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Email</label>
                 <input 
                   type="email" 
                   value={currentSupplier.email || ""}
                   onChange={(e) => setcurrentSupplier({...currentSupplier, email: e.target.value})}
-                  className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                  className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 dark:bg-[#06101e]"
                   placeholder="jean@exemple.com"
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-700">Téléphone</label>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Téléphone</label>
                 <input 
                   type="tel" 
                   value={currentSupplier.phone || ""}
                   onChange={(e) => setcurrentSupplier({...currentSupplier, phone: e.target.value})}
-                  className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                  className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 dark:bg-[#06101e]"
                   placeholder="+229 XX XX XX XX"
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-700">Statut</label>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Statut</label>
                 <CustomSelect
                   options={[
                     { value: "Actif", label: "Actif" },
@@ -352,8 +352,8 @@ export default function SuppliersPage() {
               </div>
             </div>
 
-            <div className="p-5 border-t border-slate-100 flex justify-end gap-3 bg-slate-50">
-              <Button variant="outline" onClick={() => setIsModalOpen(false)} className="bg-white">
+            <div className="p-5 border-t border-slate-100 dark:border-[#152a4d] flex justify-end gap-3 bg-slate-50 dark:bg-[#06101e]">
+              <Button variant="outline" onClick={() => setIsModalOpen(false)} className="bg-white dark:bg-[#0a192f]">
                 Annuler
               </Button>
               <Button translate="no" onClick={handleSave} className="bg-[#0b213f] hover:bg-[#18355c] text-white">

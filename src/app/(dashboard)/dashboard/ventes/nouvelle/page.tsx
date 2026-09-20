@@ -93,7 +93,7 @@ export default function PointOfSalePage() {
   const getCategoryColor = (category: string) => {
     if (category.toLowerCase().includes("alim")) return "bg-emerald-100 text-emerald-600";
     if (category.toLowerCase().includes("entre")) return "bg-blue-100 text-blue-600";
-    return "bg-slate-100 text-slate-600";
+    return "bg-slate-100 dark:bg-[#112240] text-slate-600 dark:text-slate-300";
   };
 
   const paymentMethods = [
@@ -147,13 +147,13 @@ export default function PointOfSalePage() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <Link href="/dashboard/ventes">
-            <Button variant="outline" size="icon" className="h-10 w-10 rounded-full border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors shadow-sm">
+            <Button variant="outline" size="icon" className="h-10 w-10 rounded-full border-slate-200 dark:border-[#1c3a66] text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:bg-[#112240] transition-colors shadow-sm">
               <ArrowLeft size={18} />
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">Point de Vente</h1>
-            <p className="text-slate-500 text-sm">Caisse rapide - Interface vendeur</p>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Point de Vente</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Caisse rapide - Interface vendeur</p>
           </div>
         </div>
       </div>
@@ -161,9 +161,9 @@ export default function PointOfSalePage() {
       <div className="flex flex-col lg:flex-row gap-6 relative items-start">
         
         {/* Left Column: Catalogue */}
-        <div className="flex-1 w-full flex flex-col bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="flex-1 w-full flex flex-col bg-white dark:bg-[#0a192f] rounded-2xl border border-slate-200 dark:border-[#1c3a66] shadow-sm overflow-hidden">
           {/* Top Search Bar & Categories */}
-          <div className="flex flex-col border-b border-slate-100 bg-slate-50/80 sticky top-0 z-10">
+          <div className="flex flex-col border-b border-slate-100 dark:border-[#152a4d] bg-slate-50 dark:bg-[#06101e]/80 sticky top-0 z-10">
             <div className="p-4 pb-2">
               <div className="relative w-full">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
@@ -175,7 +175,7 @@ export default function PointOfSalePage() {
                     setSearchTerm(e.target.value);
                     setVisibleCount(15); // Reset count on search
                   }}
-                  className="pl-12 pr-4 py-3.5 w-full border-2 border-slate-200 rounded-xl text-sm font-medium bg-white focus:outline-none focus:border-[#0b213f] focus:ring-4 focus:ring-[#0b213f]/10 transition-all duration-300 shadow-sm"
+                  className="pl-12 pr-4 py-3.5 w-full border-2 border-slate-200 dark:border-[#1c3a66] rounded-xl text-sm font-medium bg-white dark:bg-[#0a192f] focus:outline-none focus:border-[#0b213f] focus:ring-4 focus:ring-[#0b213f]/10 transition-all duration-300 shadow-sm"
                   autoFocus
                 />
               </div>
@@ -194,7 +194,7 @@ export default function PointOfSalePage() {
                     "px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-200 border",
                     selectedCategory === category
                       ? "bg-[#0b213f] text-white border-[#0b213f] shadow-md shadow-[#0b213f]/20"
-                      : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                      : "bg-white dark:bg-[#0a192f] text-slate-600 dark:text-slate-300 border-slate-200 dark:border-[#1c3a66] hover:border-slate-300 dark:border-[#244b82] hover:bg-slate-50 dark:bg-[#06101e]"
                   )}
                 >
                   {category}
@@ -204,7 +204,7 @@ export default function PointOfSalePage() {
           </div>
           
           {/* Products Grid */}
-          <div className="p-3 bg-slate-50/50 min-h-[500px] flex-1 overflow-y-auto">
+          <div className="p-3 bg-slate-50 dark:bg-[#06101e]/50 min-h-[500px] flex-1 overflow-y-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5">
               {displayedProducts.map((product) => {
                 const cartItem = cart.find(item => item.id === product.id);
@@ -214,17 +214,17 @@ export default function PointOfSalePage() {
                 <div 
                   key={product.id} 
                   onClick={() => { if (qtyInCart === 0) addToCart(product); }}
-                  className="group bg-white border border-slate-200/60 rounded-xl p-2.5 hover:border-[#0b213f]/40 hover:shadow-md hover:shadow-slate-200 transition-all duration-200 cursor-pointer active:scale-[0.98] flex flex-col relative"
+                  className="group bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66]/60 rounded-xl p-2.5 hover:border-[#0b213f]/40 hover:shadow-md hover:shadow-slate-200 transition-all duration-200 cursor-pointer active:scale-[0.98] flex flex-col relative"
                 >
                   {/* Stock Badge */}
                   <div className="absolute top-2 right-2 z-10">
-                    <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold shadow-sm backdrop-blur-sm border", product.stock <= 5 ? "bg-red-50 text-red-600 border-red-100" : "bg-white/90 text-slate-800 border-slate-100")}>
+                    <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold shadow-sm backdrop-blur-sm border", product.stock <= 5 ? "bg-red-50 text-red-600 border-red-100" : "bg-white dark:bg-[#0a192f]/90 text-slate-800 dark:text-slate-100 border-slate-100 dark:border-[#152a4d]")}>
                       <span className="font-mono">{product.stock}</span>
                     </span>
                   </div>
 
                   {/* Product Image */}
-                  <div className="relative w-full aspect-[4/3] rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 mb-2">
+                  <div className="relative w-full aspect-[4/3] rounded-lg bg-slate-100 dark:bg-[#112240] flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 dark:border-[#152a4d] mb-2">
                     {product.imageUrl && product.imageUrl.trim() !== "" && product.imageUrl !== "undefined" && product.imageUrl !== "null" ? (
                       <Image 
                         src={product.imageUrl} 
@@ -241,7 +241,7 @@ export default function PointOfSalePage() {
 
                   {/* Product Info */}
                   <div className="flex flex-col flex-1">
-                    <h3 className="font-bold text-slate-700 text-xs sm:text-sm leading-tight line-clamp-2 min-h-[32px]" title={product.name}>
+                    <h3 className="font-bold text-slate-700 dark:text-slate-200 text-xs sm:text-sm leading-tight line-clamp-2 min-h-[32px]" title={product.name}>
                       {product.name}
                     </h3>
                     
@@ -255,7 +255,7 @@ export default function PointOfSalePage() {
                         <div className="flex items-center gap-1 bg-orange-50 border border-orange-200 rounded-lg px-1 py-1 shadow-sm" onClick={(e) => e.stopPropagation()}>
                           <button 
                             onClick={() => updateQuantity(product.id, -1)}
-                            className="h-6 w-6 rounded bg-white text-orange-600 flex items-center justify-center hover:bg-orange-100 transition-colors shadow-sm shrink-0"
+                            className="h-6 w-6 rounded bg-white dark:bg-[#0a192f] text-orange-600 flex items-center justify-center hover:bg-orange-100 transition-colors shadow-sm shrink-0"
                           >
                             <Minus size={14} strokeWidth={3} />
                           </button>
@@ -266,13 +266,13 @@ export default function PointOfSalePage() {
                             onClick={() => {
                                if (qtyInCart < product.stock) updateQuantity(product.id, 1);
                             }}
-                            className={cn("h-6 w-6 rounded bg-white text-orange-600 flex items-center justify-center hover:bg-orange-100 transition-colors shadow-sm shrink-0", qtyInCart >= product.stock && "opacity-50 cursor-not-allowed")}
+                            className={cn("h-6 w-6 rounded bg-white dark:bg-[#0a192f] text-orange-600 flex items-center justify-center hover:bg-orange-100 transition-colors shadow-sm shrink-0", qtyInCart >= product.stock && "opacity-50 cursor-not-allowed")}
                           >
                             <Plus size={14} strokeWidth={3} />
                           </button>
                         </div>
                       ) : (
-                        <div className="h-8 w-8 shrink-0 rounded-lg bg-slate-50 text-slate-400 flex items-center justify-center group-hover:bg-[#0b213f] group-hover:text-white transition-colors border border-slate-100 shadow-sm">
+                        <div className="h-8 w-8 shrink-0 rounded-lg bg-slate-50 dark:bg-[#06101e] text-slate-400 flex items-center justify-center group-hover:bg-[#0b213f] group-hover:text-white transition-colors border border-slate-100 dark:border-[#152a4d] shadow-sm">
                           <Plus size={16} strokeWidth={3} />
                         </div>
                       )}
@@ -287,7 +287,7 @@ export default function PointOfSalePage() {
               <div className="mt-6 mb-4 flex justify-center">
                 <Button 
                   variant="outline" 
-                  className="rounded-full px-6 py-2 border-slate-200 text-slate-600 hover:text-[#0b213f] hover:bg-slate-100 font-semibold text-sm shadow-sm transition-all"
+                  className="rounded-full px-6 py-2 border-slate-200 dark:border-[#1c3a66] text-slate-600 dark:text-slate-300 hover:text-[#0b213f] hover:bg-slate-100 dark:bg-[#112240] font-semibold text-sm shadow-sm transition-all"
                   onClick={() => setVisibleCount(prev => prev + 15)}
                 >
                   Voir plus de produits
@@ -298,7 +298,7 @@ export default function PointOfSalePage() {
             {filteredProducts.length === 0 && (
               <div className="flex flex-col items-center justify-center text-slate-400 py-20">
                 <Search size={48} className="mb-4 opacity-20" />
-                <p className="font-medium text-lg text-slate-500">Aucun produit trouvé</p>
+                <p className="font-medium text-lg text-slate-500 dark:text-slate-400">Aucun produit trouvé</p>
                 <p className="text-sm">Essayez une autre recherche</p>
               </div>
             )}
@@ -315,7 +315,7 @@ export default function PointOfSalePage() {
 
         {/* Right Column: Ticket / Cart */}
         <div className={cn(
-          "lg:w-[420px] xl:w-[450px] lg:sticky lg:top-6 flex-col bg-white border-slate-200 lg:shadow-xl lg:shadow-slate-200/50 shrink-0 overflow-hidden lg:max-h-[calc(100dvh-100px)]",
+          "lg:w-[420px] xl:w-[450px] lg:sticky lg:top-6 flex-col bg-white dark:bg-[#0a192f] border-slate-200 dark:border-[#1c3a66] lg:shadow-xl lg:shadow-slate-200/50 shrink-0 overflow-hidden lg:max-h-[calc(100dvh-100px)]",
           "lg:flex lg:rounded-2xl lg:border lg:mb-0", // Desktop visibility
           isMobileCartOpen 
             ? "fixed inset-x-0 bottom-0 z-[60] flex rounded-t-2xl max-h-[90dvh] shadow-[0_-10px_40px_rgba(0,0,0,0.2)] animate-in slide-in-from-bottom-full duration-300" 
@@ -323,8 +323,8 @@ export default function PointOfSalePage() {
         )}>
           
           {/* Mobile Cart Close Header */}
-          <div className="lg:hidden flex items-center justify-between p-3 bg-white border-b border-slate-100 shrink-0 rounded-t-2xl">
-            <h2 className="font-bold text-slate-800 flex items-center gap-2">
+          <div className="lg:hidden flex items-center justify-between p-3 bg-white dark:bg-[#0a192f] border-b border-slate-100 dark:border-[#152a4d] shrink-0 rounded-t-2xl">
+            <h2 className="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
               <ShoppingCart size={18} className="text-[#0b213f]" />
               Ticket en cours
             </h2>
@@ -334,7 +334,7 @@ export default function PointOfSalePage() {
                   Vider
                 </button>
               )}
-              <button onClick={() => setIsMobileCartOpen(false)} className="p-1.5 rounded-full hover:bg-slate-100 text-slate-500 transition-colors">
+              <button onClick={() => setIsMobileCartOpen(false)} className="p-1.5 rounded-full hover:bg-slate-100 dark:bg-[#112240] text-slate-500 dark:text-slate-400 transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -347,14 +347,14 @@ export default function PointOfSalePage() {
               Ticket en cours
             </h2>
             {cart.length > 0 && (
-              <button onClick={clearCart} className="text-slate-300 hover:text-white text-xs font-medium transition-colors px-2 py-1 rounded hover:bg-white/10">
+              <button onClick={clearCart} className="text-slate-300 hover:text-white text-xs font-medium transition-colors px-2 py-1 rounded hover:bg-white dark:bg-[#0a192f]/10">
                 Vider
               </button>
             )}
           </div>
           
           {/* Client Selection */}
-          <div className="p-3 border-b border-slate-100 bg-slate-50 shrink-0">
+          <div className="p-3 border-b border-slate-100 dark:border-[#152a4d] bg-slate-50 dark:bg-[#06101e] shrink-0">
               <CustomSelect
                 options={[
                   { value: "", label: "-- Client de passage --" },
@@ -367,20 +367,20 @@ export default function PointOfSalePage() {
           </div>
 
           {/* Cart Items List */}
-          <div className="flex-1 overflow-y-auto p-2 space-y-2 custom-scrollbar bg-slate-50/50 min-h-[100px]">
+          <div className="flex-1 overflow-y-auto p-2 space-y-2 custom-scrollbar bg-slate-50 dark:bg-[#06101e]/50 min-h-[100px]">
             {cart.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-slate-400 py-8">
                 <ShoppingCart size={40} className="mb-3 opacity-20" />
-                <p className="font-medium text-slate-500 text-sm">Le panier est vide</p>
+                <p className="font-medium text-slate-500 dark:text-slate-400 text-sm">Le panier est vide</p>
                 <p className="text-xs mt-1">Sélectionnez des articles</p>
               </div>
             ) : (
               cart.map((item) => (
-                <div key={item.id} className="flex flex-col p-2.5 bg-white border border-slate-100 rounded-lg shadow-sm hover:border-slate-300 transition-colors">
+                <div key={item.id} className="flex flex-col p-2.5 bg-white dark:bg-[#0a192f] border border-slate-100 dark:border-[#152a4d] rounded-lg shadow-sm hover:border-slate-300 dark:border-[#244b82] transition-colors">
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex-1 pr-2">
-                      <h4 className="font-bold text-slate-800 text-xs leading-tight">{item.name}</h4>
-                      <p className="text-[10px] text-slate-500 mt-0.5">{formatCurrency(item.salePrice)} l'unité</p>
+                      <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs leading-tight">{item.name}</h4>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">{formatCurrency(item.salePrice)} l'unité</p>
                     </div>
                     <button 
                       onClick={() => removeFromCart(item.id)}
@@ -391,23 +391,23 @@ export default function PointOfSalePage() {
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg p-0.5">
+                    <div className="flex items-center bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] rounded-lg p-0.5">
                       <button 
                         onClick={() => updateQuantity(item.id, -1)}
-                        className="h-7 w-7 flex items-center justify-center text-slate-600 hover:bg-white hover:shadow-sm rounded-md transition-all"
+                        className="h-7 w-7 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white dark:bg-[#0a192f] hover:shadow-sm rounded-md transition-all"
                       >
                         <Minus size={14} />
                       </button>
-                      <span className="w-8 text-center font-bold text-xs text-slate-900"><span className="font-mono">{item.cartQuantity}</span></span>
+                      <span className="w-8 text-center font-bold text-xs text-slate-900 dark:text-white"><span className="font-mono">{item.cartQuantity}</span></span>
                       <button 
                         onClick={() => updateQuantity(item.id, 1)}
                         disabled={item.cartQuantity >= item.stock}
-                        className="h-7 w-7 flex items-center justify-center text-slate-600 hover:bg-white hover:shadow-sm rounded-md transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:shadow-none"
+                        className="h-7 w-7 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white dark:bg-[#0a192f] hover:shadow-sm rounded-md transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:shadow-none"
                       >
                         <Plus size={14} />
                       </button>
                     </div>
-                    <div className="font-bold text-slate-900 text-sm">
+                    <div className="font-bold text-slate-900 dark:text-white text-sm">
                       <span className="font-mono">{formatCurrency(item.salePrice * item.cartQuantity)}</span>
                     </div>
                   </div>
@@ -417,15 +417,15 @@ export default function PointOfSalePage() {
           </div>
 
           {/* Checkout Footer */}
-          <div className="p-3 bg-white border-t border-slate-200 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] shrink-0 z-10">
+          <div className="p-3 bg-white dark:bg-[#0a192f] border-t border-slate-200 dark:border-[#1c3a66] shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)] shrink-0 z-10">
             {/* VAT Toggle */}
             <div className="mb-3">
-              <div className="flex p-1 bg-slate-100 rounded-lg">
+              <div className="flex p-1 bg-slate-100 dark:bg-[#112240] rounded-lg">
                 <button
                   onClick={() => setApplyTax(true)}
                   className={cn(
                     "flex-1 py-1.5 text-xs font-bold rounded-md transition-all",
-                    applyTax ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                    applyTax ? "bg-white dark:bg-[#0a192f] text-slate-900 dark:text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-200"
                   )}
                 >
                   Avec TVA (18%)
@@ -434,7 +434,7 @@ export default function PointOfSalePage() {
                   onClick={() => setApplyTax(false)}
                   className={cn(
                     "flex-1 py-1.5 text-xs font-bold rounded-md transition-all",
-                    !applyTax ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                    !applyTax ? "bg-white dark:bg-[#0a192f] text-slate-900 dark:text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-200"
                   )}
                 >
                   Sans TVA
@@ -443,13 +443,13 @@ export default function PointOfSalePage() {
             </div>
 
             {/* Totals */}
-            <div className="space-y-1 mb-3 bg-slate-50 p-3 rounded-lg border border-slate-100">
-              <div className="flex justify-between text-slate-500 text-xs">
+            <div className="space-y-1 mb-3 bg-slate-50 dark:bg-[#06101e] p-3 rounded-lg border border-slate-100 dark:border-[#152a4d]">
+              <div className="flex justify-between text-slate-500 dark:text-slate-400 text-xs">
                 <span>Sous-total HT</span>
                 <span className="font-medium"><span className="font-mono">{formatCurrency(subtotal)}</span></span>
               </div>
               {applyTax && (
-                <div className="flex justify-between text-slate-500 text-xs">
+                <div className="flex justify-between text-slate-500 dark:text-slate-400 text-xs">
                   <span>TVA (18%)</span>
                   <span className="font-medium"><span className="font-mono">{formatCurrency(tax)}</span></span>
                 </div>
@@ -474,7 +474,7 @@ export default function PointOfSalePage() {
                         "flex items-center justify-center gap-2 py-2 rounded-lg border-2 transition-all duration-200",
                         paymentMethod === method.id 
                           ? "border-blue-600 bg-blue-50 text-blue-700 shadow-sm" 
-                          : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                          : "border-slate-200 dark:border-[#1c3a66] bg-white dark:bg-[#0a192f] text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:border-[#244b82] hover:bg-slate-50 dark:bg-[#06101e]"
                       )}
                     >
                       <Icon size={16} className={paymentMethod === method.id ? "text-blue-600" : "text-slate-400"} />
@@ -504,9 +504,9 @@ export default function PointOfSalePage() {
 
       {/* Mobile Cart Floating Bar */}
       {cart.length > 0 && !isMobileCartOpen && (
-        <div className="lg:hidden fixed bottom-[60px] md:bottom-0 left-0 right-0 p-3 bg-white border-t border-slate-200 shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.1)] z-40 flex items-center justify-between animate-in slide-in-from-bottom-10">
+        <div className="lg:hidden fixed bottom-[60px] md:bottom-0 left-0 right-0 p-3 bg-white dark:bg-[#0a192f] border-t border-slate-200 dark:border-[#1c3a66] shadow-[0_-10px_20px_-10px_rgba(0,0,0,0.1)] z-40 flex items-center justify-between animate-in slide-in-from-bottom-10">
           <div className="flex flex-col">
-            <span className="text-xs text-slate-500 font-medium">Total ({cart.reduce((a, b) => a + b.cartQuantity, 0)} articles)</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Total ({cart.reduce((a, b) => a + b.cartQuantity, 0)} articles)</span>
             <span className="font-black text-lg text-[#0b213f] leading-none"><span className="font-mono">{formatCurrency(total)}</span></span>
           </div>
           <Button 

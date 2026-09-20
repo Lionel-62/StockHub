@@ -12,7 +12,7 @@ import "./landing.css";
 
 export default function Home() {
   return (
-    <div className="bg-[#fcfdfe] text-slate-800 font-sans antialiased overflow-x-hidden selection:bg-[#0b213f] selection:text-white">
+    <div className="bg-[#fcfdfe] text-slate-800 dark:text-slate-100 font-sans antialiased overflow-x-hidden selection:bg-[#0b213f] selection:text-white">
       <Header />
       <main>
         <Hero />

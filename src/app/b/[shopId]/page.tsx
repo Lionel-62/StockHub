@@ -39,9 +39,9 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
 
   return (
     <>
-      <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-100 transition-all duration-300 group flex flex-col">
+      <div className="bg-white dark:bg-[#0a192f] rounded-2xl border border-slate-100 dark:border-[#152a4d] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-blue-100 transition-all duration-300 group flex flex-col">
         <div 
-          className="aspect-square bg-slate-50 relative overflow-hidden flex-shrink-0 group/image cursor-pointer"
+          className="aspect-square bg-slate-50 dark:bg-[#06101e] relative overflow-hidden flex-shrink-0 group/image cursor-pointer"
           onClick={() => { if (currentImage) setIsFullscreen(true); }}
         >
         {product.promotionalPrice && (
@@ -64,7 +64,7 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
                 key={idx}
                 type="button"
                 onClick={(e) => { e.stopPropagation(); setCurrentImageIdx(idx); }}
-                className={cn("h-1.5 rounded-full transition-all shadow-sm", currentImageIdx === idx ? "w-4 bg-white" : "w-1.5 bg-white/50")}
+                className={cn("h-1.5 rounded-full transition-all shadow-sm", currentImageIdx === idx ? "w-4 bg-white dark:bg-[#0a192f]" : "w-1.5 bg-white dark:bg-[#0a192f]/50")}
               />
             ))}
           </div>
@@ -74,16 +74,16 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
           "absolute top-2 right-2 px-2.5 py-1 rounded-lg text-xs font-bold shadow-sm backdrop-blur-sm border",
           product.stock <= 5 
             ? "bg-red-500/90 text-white border-red-400 animate-pulse" 
-            : "bg-white/90 text-slate-700 border-white/50"
+            : "bg-white dark:bg-[#0a192f]/90 text-slate-700 dark:text-slate-200 border-white/50"
         )}>
           {product.stock <= 5 ? `🔥 Vite, plus que ${product.stock} !` : `Stock: ${product.stock}`}
         </div>
       </div>
       <div className="p-4 sm:p-5 flex flex-col flex-1 bg-gradient-to-b from-transparent to-slate-50/50">
         <div className="flex-1">
-          <h3 className="font-bold text-slate-900 line-clamp-2 text-sm sm:text-base group-hover:text-[#0b213f] transition-colors">{product.name}</h3>
+          <h3 className="font-bold text-slate-900 dark:text-white line-clamp-2 text-sm sm:text-base group-hover:text-[#0b213f] transition-colors">{product.name}</h3>
           {product.description && (
-            <p className="text-xs sm:text-sm text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">{product.description}</p>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">{product.description}</p>
           )}
         </div>
         <div className="mt-4 flex items-end justify-between">
@@ -157,13 +157,13 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
             <>
               <button 
                 onClick={(e) => { e.stopPropagation(); setCurrentImageIdx(prev => prev === 0 ? images.length - 1 : prev - 1); }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-50 backdrop-blur-sm"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white dark:bg-[#0a192f]/10 hover:bg-white dark:bg-[#0a192f]/20 text-white rounded-full transition-colors z-50 backdrop-blur-sm"
               >
                 <ChevronLeft size={32} />
               </button>
               <button 
                 onClick={(e) => { e.stopPropagation(); setCurrentImageIdx(prev => (prev + 1) % images.length); }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-50 backdrop-blur-sm"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white dark:bg-[#0a192f]/10 hover:bg-white dark:bg-[#0a192f]/20 text-white rounded-full transition-colors z-50 backdrop-blur-sm"
               >
                 <ChevronRight size={32} />
               </button>
@@ -173,7 +173,7 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
                   <button 
                     key={idx}
                     onClick={() => setCurrentImageIdx(idx)}
-                    className={cn("h-2 rounded-full transition-all shadow-sm", currentImageIdx === idx ? "w-6 bg-white" : "w-2 bg-white/50")}
+                    className={cn("h-2 rounded-full transition-all shadow-sm", currentImageIdx === idx ? "w-6 bg-white dark:bg-[#0a192f]" : "w-2 bg-white dark:bg-[#0a192f]/50")}
                   />
                 ))}
               </div>
@@ -481,9 +481,9 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
   if (!shopLoaded || !productsLoaded) return null;
 
   return (
-    <div className="min-h-dvh bg-slate-50 font-sans pb-24">
+    <div className="min-h-dvh bg-slate-50 dark:bg-[#06101e] font-sans pb-24">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-40">
+      <header className="bg-white dark:bg-[#0a192f] shadow-sm sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {shopSettings.logoUrl ? (
@@ -493,7 +493,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                 {shopSettings.name.charAt(0).toUpperCase()}
               </div>
             )}
-            <h1 className="text-xl font-bold text-slate-900 hidden sm:block">{shopSettings.name}</h1>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white hidden sm:block">{shopSettings.name}</h1>
           </div>
           
           <div className="flex items-center gap-4">
@@ -504,18 +504,18 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                 placeholder="Rechercher un produit..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-2 w-80 lg:w-96 bg-slate-100 border-transparent focus:bg-white focus:border-blue-500 rounded-full text-sm transition-all outline-none ring-0"
+                className="pl-9 pr-4 py-2 w-80 lg:w-96 bg-slate-100 dark:bg-[#112240] border-transparent focus:bg-white dark:bg-[#0a192f] focus:border-blue-500 rounded-full text-sm transition-all outline-none ring-0"
               />
             </div>
             <button 
               onClick={() => loggedInCustomer ? setShowProfileModal(true) : setShowAuthModal(true)}
-              className="relative p-2 text-slate-600 hover:text-[#0b213f] transition-colors"
+              className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-[#0b213f] transition-colors"
             >
               <UserCircle className="h-6 w-6" />
             </button>
             <button 
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-slate-600 hover:text-[#0b213f] transition-colors"
+              className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-[#0b213f] transition-colors"
             >
               <ShoppingCart className="h-6 w-6" />
               {cartItemsCount > 0 && (
@@ -529,7 +529,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
       </header>
 
       {/* Mobile Search */}
-      <div className="md:hidden p-4 bg-white border-b border-slate-100">
+      <div className="md:hidden p-4 bg-white dark:bg-[#0a192f] border-b border-slate-100 dark:border-[#152a4d]">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input 
@@ -537,7 +537,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
             placeholder="Rechercher un produit..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 pr-4 py-2.5 w-full bg-slate-100 border-transparent focus:bg-white focus:border-blue-500 rounded-xl text-sm transition-all outline-none ring-0"
+            className="pl-9 pr-4 py-2.5 w-full bg-slate-100 dark:bg-[#112240] border-transparent focus:bg-white dark:bg-[#0a192f] focus:border-blue-500 rounded-xl text-sm transition-all outline-none ring-0"
           />
         </div>
       </div>
@@ -550,27 +550,27 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
         <div className="absolute -top-32 -right-32 w-[30rem] h-[30rem] bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none"></div>
         
         {/* Floating Emoji Cards */}
-        <div className="hidden md:flex absolute top-[15%] left-[8%] w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 items-center justify-center text-4xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_6s_ease-in-out_infinite] rotate-12">
+        <div className="hidden md:flex absolute top-[15%] left-[8%] w-20 h-20 rounded-2xl bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 items-center justify-center text-4xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_6s_ease-in-out_infinite] rotate-12">
           🛍️
         </div>
-        <div className="absolute top-[10%] right-[10%] md:right-[20%] w-14 h-14 md:w-16 md:h-16 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 flex items-center justify-center text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_5s_ease-in-out_infinite_reverse] -rotate-12">
+        <div className="absolute top-[10%] right-[10%] md:right-[20%] w-14 h-14 md:w-16 md:h-16 rounded-full bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 flex items-center justify-center text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_5s_ease-in-out_infinite_reverse] -rotate-12">
           🎁
         </div>
-        <div className="hidden lg:flex absolute top-[40%] right-[5%] w-24 h-24 rounded-3xl bg-white/10 backdrop-blur-lg border border-white/20 items-center justify-center text-5xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_7s_ease-in-out_infinite] -rotate-6">
+        <div className="hidden lg:flex absolute top-[40%] right-[5%] w-24 h-24 rounded-3xl bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 items-center justify-center text-5xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_7s_ease-in-out_infinite] -rotate-6">
           🛒
         </div>
-        <div className="absolute bottom-[20%] left-[10%] md:left-[25%] w-16 h-16 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 flex items-center justify-center text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_4s_ease-in-out_infinite] rotate-45">
+        <div className="absolute bottom-[20%] left-[10%] md:left-[25%] w-16 h-16 rounded-full bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 flex items-center justify-center text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_4s_ease-in-out_infinite] rotate-45">
           ✨
         </div>
-        <div className="hidden md:flex absolute bottom-[10%] right-[15%] w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 items-center justify-center text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_8s_ease-in-out_infinite] rotate-12">
+        <div className="hidden md:flex absolute bottom-[10%] right-[15%] w-16 h-16 rounded-2xl bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 items-center justify-center text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_8s_ease-in-out_infinite] rotate-12">
           💎
         </div>
-        <div className="hidden lg:flex absolute top-[60%] left-[5%] w-14 h-14 rounded-full bg-white/10 backdrop-blur-lg border border-white/20 items-center justify-center text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_5s_ease-in-out_infinite_reverse] -rotate-45">
+        <div className="hidden lg:flex absolute top-[60%] left-[5%] w-14 h-14 rounded-full bg-white dark:bg-[#0a192f]/10 backdrop-blur-lg border border-white/20 items-center justify-center text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_5s_ease-in-out_infinite_reverse] -rotate-45">
           👟
         </div>
         
         <div className="relative max-w-4xl mx-auto space-y-6 z-10">
-          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white dark:bg-[#0a192f]/10 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
              <span className="flex h-2.5 w-2.5 rounded-full bg-[#0d8f76] shadow-[0_0_12px_rgba(13,143,118,1)] animate-pulse"></span>
              <span className="text-sm font-semibold tracking-wider uppercase text-white/90">Bienvenue sur notre boutique</span>
           </div>
@@ -595,7 +595,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                 "px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all",
                 selectedCategory === null 
                   ? "bg-[#0b213f] text-white shadow-md" 
-                  : "bg-white text-slate-600 border border-slate-200 hover:border-[#0b213f]/50 hover:bg-slate-50"
+                  : "bg-white dark:bg-[#0a192f] text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-[#1c3a66] hover:border-[#0b213f]/50 hover:bg-slate-50 dark:bg-[#06101e]"
               )}
             >
               Tous les produits
@@ -608,7 +608,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                   "px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all",
                   selectedCategory === category
                     ? "bg-[#0b213f] text-white shadow-md" 
-                    : "bg-white text-slate-600 border border-slate-200 hover:border-[#0b213f]/50 hover:bg-slate-50"
+                    : "bg-white dark:bg-[#0a192f] text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-[#1c3a66] hover:border-[#0b213f]/50 hover:bg-slate-50 dark:bg-[#06101e]"
                 )}
               >
                 {category}
@@ -635,13 +635,13 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
             <ShoppingCart className="h-16 w-16 text-slate-200 mx-auto mb-4" />
             {availableProducts.length === 0 ? (
               <>
-                <h3 className="text-xl font-bold text-slate-700">De nouveaux articles arrivent bientôt !</h3>
-                <p className="text-slate-500 max-w-sm mx-auto mt-2">Nous préparons actuellement notre prochaine collection. Restez connectés, nos nouveautés seront disponibles très prochainement pour vous satisfaire.</p>
+                <h3 className="text-xl font-bold text-slate-700 dark:text-slate-200">De nouveaux articles arrivent bientôt !</h3>
+                <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto mt-2">Nous préparons actuellement notre prochaine collection. Restez connectés, nos nouveautés seront disponibles très prochainement pour vous satisfaire.</p>
               </>
             ) : (
               <>
-                <h3 className="text-xl font-bold text-slate-700">Aucun produit trouvé</h3>
-                <p className="text-slate-500">Essayez une autre recherche.</p>
+                <h3 className="text-xl font-bold text-slate-700 dark:text-slate-200">Aucun produit trouvé</h3>
+                <p className="text-slate-500 dark:text-slate-400">Essayez une autre recherche.</p>
               </>
             )}
           </div>
@@ -650,24 +650,24 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
 
       {/* FAQ Section */}
       {faqLoaded && faqs.length > 0 && (
-        <section className="max-w-3xl mx-auto px-4 py-12 border-t border-slate-200">
+        <section className="max-w-3xl mx-auto px-4 py-12 border-t border-slate-200 dark:border-[#1c3a66]">
           <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Foire Aux Questions</h2>
-            <p className="text-slate-500 mt-2">Trouvez rapidement des réponses à vos questions.</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Foire Aux Questions</h2>
+            <p className="text-slate-500 dark:text-slate-400 mt-2">Trouvez rapidement des réponses à vos questions.</p>
           </div>
           <div className="space-y-4">
             {faqs.filter(faq => faq.is_active !== false).map((faq) => (
               <details 
                 key={faq.id} 
-                className="group bg-white border border-slate-200 rounded-xl overflow-hidden [&_summary::-webkit-details-marker]:hidden"
+                className="group bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-xl overflow-hidden [&_summary::-webkit-details-marker]:hidden"
               >
-                <summary className="flex items-center justify-between p-5 cursor-pointer font-semibold text-slate-800 hover:text-[#0b213f] transition-colors">
+                <summary className="flex items-center justify-between p-5 cursor-pointer font-semibold text-slate-800 dark:text-slate-100 hover:text-[#0b213f] transition-colors">
                   {faq.question}
                   <span className="transition group-open:rotate-180">
                     <ChevronDown size={20} className="text-slate-400 group-hover:text-[#0b213f]" />
                   </span>
                 </summary>
-                <div className="p-5 pt-0 text-slate-600 bg-white border-t border-slate-100">
+                <div className="p-5 pt-0 text-slate-600 dark:text-slate-300 bg-white dark:bg-[#0a192f] border-t border-slate-100 dark:border-[#152a4d]">
                   {faq.answer}
                 </div>
               </details>
@@ -683,31 +683,31 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
             className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" 
             onClick={() => setIsCartOpen(false)}
           />
-          <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-white">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <div className="relative w-full max-w-md bg-white dark:bg-[#0a192f] h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+            <div className="p-4 border-b border-slate-100 dark:border-[#152a4d] flex items-center justify-between bg-white dark:bg-[#0a192f]">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5" /> Mon Panier
               </h2>
               <button 
                 onClick={() => setIsCartOpen(false)}
-                className="p-2 text-slate-400 hover:bg-slate-100 rounded-full transition-colors"
+                className="p-2 text-slate-400 hover:bg-slate-100 dark:bg-[#112240] rounded-full transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-[#06101e]/50">
               {cart.length === 0 ? (
                 <div className="text-center py-10">
-                  <div className="h-20 w-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="h-20 w-20 bg-slate-100 dark:bg-[#112240] rounded-full flex items-center justify-center mx-auto mb-4">
                     <ShoppingCart className="h-8 w-8 text-slate-400" />
                   </div>
-                  <p className="text-slate-500 font-medium">Votre panier est vide</p>
+                  <p className="text-slate-500 dark:text-slate-400 font-medium">Votre panier est vide</p>
                 </div>
               ) : (
                 cart.map(item => (
-                  <div key={item.id} className="flex gap-4 bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
-                    <div className="h-20 w-20 bg-slate-100 rounded-xl overflow-hidden relative flex-shrink-0">
+                  <div key={item.id} className="flex gap-4 bg-white dark:bg-[#0a192f] p-3 rounded-2xl border border-slate-100 dark:border-[#152a4d] shadow-sm">
+                    <div className="h-20 w-20 bg-slate-100 dark:bg-[#112240] rounded-xl overflow-hidden relative flex-shrink-0">
                       {item.product.imageUrl && item.product.imageUrl.trim() !== "" && item.product.imageUrl !== "undefined" && item.product.imageUrl !== "null" ? (
                         <Image src={item.product.imageUrl} alt={item.product.name} fill unoptimized className="object-cover" />
                       ) : (
@@ -719,11 +719,11 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                     <div className="flex-1 flex flex-col justify-between">
                       <div className="flex justify-between items-start gap-2">
                         <div>
-                          <h4 className="font-medium text-slate-900 text-sm line-clamp-2">{item.product.name}</h4>
+                          <h4 className="font-medium text-slate-900 dark:text-white text-sm line-clamp-2">{item.product.name}</h4>
                           {item.selectedOptions && Object.keys(item.selectedOptions).length > 0 && (
-                            <div className="text-xs text-slate-500 mt-1 flex flex-wrap gap-1">
+                            <div className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex flex-wrap gap-1">
                               {Object.entries(item.selectedOptions).map(([k, v]) => (
-                                <span key={k} className="bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">{v}</span>
+                                <span key={k} className="bg-slate-100 dark:bg-[#112240] px-1.5 py-0.5 rounded border border-slate-200 dark:border-[#1c3a66]">{v}</span>
                               ))}
                             </div>
                           )}
@@ -736,17 +736,17 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                         <div className="font-bold text-[#0b213f]">
                           <span className="font-mono">{formatCurrency(item.product.promotionalPrice || item.product.salePrice)}</span>
                         </div>
-                        <div className="flex items-center gap-3 bg-slate-100 px-2 py-1 rounded-lg">
+                        <div className="flex items-center gap-3 bg-slate-100 dark:bg-[#112240] px-2 py-1 rounded-lg">
                           <button 
                             onClick={() => updateQuantity(item.id, -1)}
-                            className="text-slate-600 hover:text-slate-900"
+                            className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white"
                           >
                             <Minus className="h-3 w-3" />
                           </button>
                           <span className="text-sm font-bold w-4 text-center"><span className="font-mono">{item.quantity}</span></span>
                           <button 
                             onClick={() => updateQuantity(item.id, 1)}
-                            className="text-slate-600 hover:text-slate-900 disabled:opacity-30"
+                            className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white disabled:opacity-30"
                             disabled={item.quantity >= item.product.stock}
                           >
                             <Plus className="h-3 w-3" />
@@ -759,25 +759,25 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
               )}
 
               {cart.length > 0 && (
-                <div className="bg-white border border-slate-200 shadow-sm mt-6 rounded-lg overflow-hidden">
+                <div className="bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] shadow-sm mt-6 rounded-lg overflow-hidden">
                   <div className="bg-[#0d8f76] text-white font-bold text-center py-3">
                     Formulaire de commande
                   </div>
                   <div className="p-4 space-y-4">
-                    <div className="flex justify-between text-sm border-b border-slate-100 pb-2">
-                      <span className="text-slate-500">Sous-total:</span>
-                      <span className="font-medium text-slate-700"><span className="font-mono">{formatCurrency(cartTotal)}</span></span>
+                    <div className="flex justify-between text-sm border-b border-slate-100 dark:border-[#152a4d] pb-2">
+                      <span className="text-slate-500 dark:text-slate-400">Sous-total:</span>
+                      <span className="font-medium text-slate-700 dark:text-slate-200"><span className="font-mono">{formatCurrency(cartTotal)}</span></span>
                     </div>
                     <div className="flex justify-between text-base font-bold pb-2">
-                      <span className="text-slate-800">Total:</span>
+                      <span className="text-slate-800 dark:text-slate-100">Total:</span>
                       <span className="text-[#0d8f76]"><span className="font-mono">{formatCurrency(cartTotal)}</span></span>
                     </div>
 
                     {loggedInCustomer ? (
-                      <div className="bg-slate-50 border border-slate-200 p-3 rounded-lg mb-2">
-                        <div className="text-xs font-semibold text-slate-500 mb-1">Commande pour :</div>
-                        <div className="font-bold text-slate-800">{loggedInCustomer.name}</div>
-                        <div className="text-sm text-slate-600">{loggedInCustomer.phone}</div>
+                      <div className="bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] p-3 rounded-lg mb-2">
+                        <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Commande pour :</div>
+                        <div className="font-bold text-slate-800 dark:text-slate-100">{loggedInCustomer.name}</div>
+                        <div className="text-sm text-slate-600 dark:text-slate-300">{loggedInCustomer.phone}</div>
                       </div>
                     ) : (
                       <div className="bg-orange-50 border border-orange-100 p-3 rounded-lg mb-2 text-sm text-orange-800">
@@ -786,25 +786,25 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                     )}
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Ville</label>
+                      <label className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">Ville</label>
                       <input 
                         type="text"
                         placeholder="Votre ville" 
                         value={customerCity}
                         onChange={e => setCustomerCity(e.target.value)}
-                        className="w-full bg-white border border-slate-300 rounded-md p-2.5 text-sm focus:outline-none focus:border-[#0d8f76] focus:ring-1 focus:ring-[#0d8f76]"
+                        className="w-full bg-white dark:bg-[#0a192f] border border-slate-300 dark:border-[#244b82] rounded-md p-2.5 text-sm focus:outline-none focus:border-[#0d8f76] focus:ring-1 focus:ring-[#0d8f76]"
                       />
                     </div>
 
-                    <div className="flex items-center justify-between mt-4 border-t border-slate-100 pt-4">
-                      <label className="text-xs font-semibold text-slate-700 cursor-pointer" onClick={() => setShowDetails(!showDetails)}>
+                    <div className="flex items-center justify-between mt-4 border-t border-slate-100 dark:border-[#152a4d] pt-4">
+                      <label className="text-xs font-semibold text-slate-700 dark:text-slate-200 cursor-pointer" onClick={() => setShowDetails(!showDetails)}>
                         Je veux ajouter des détails
                       </label>
                       <button 
                         onClick={() => setShowDetails(!showDetails)}
                         className={cn("w-10 h-5 rounded-full relative transition-colors duration-200 ease-in-out", showDetails ? "bg-[#0d8f76]" : "bg-slate-200")}
                       >
-                        <span className={cn("absolute top-0.5 left-0.5 bg-white w-4 h-4 rounded-full shadow transition-transform duration-200 ease-in-out", showDetails ? "translate-x-5" : "translate-x-0")} />
+                        <span className={cn("absolute top-0.5 left-0.5 bg-white dark:bg-[#0a192f] w-4 h-4 rounded-full shadow transition-transform duration-200 ease-in-out", showDetails ? "translate-x-5" : "translate-x-0")} />
                       </button>
                     </div>
                     
@@ -814,7 +814,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                         value={customerAddress}
                         onChange={e => setCustomerAddress(e.target.value)}
                         rows={2}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-md p-2.5 text-sm focus:outline-none focus:border-[#0d8f76] focus:ring-1 focus:ring-[#0d8f76] resize-none mt-2"
+                        className="w-full bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] rounded-md p-2.5 text-sm focus:outline-none focus:border-[#0d8f76] focus:ring-1 focus:ring-[#0d8f76] resize-none mt-2"
                       />
                     )}
 
@@ -827,7 +827,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                             onClick={() => setDeliveryTime(d)}
                             className={cn(
                               "px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors", 
-                              deliveryTime === d ? "bg-[#0d8f76] text-white border-[#0d8f76] shadow-sm" : "bg-white text-slate-600 border-slate-200 hover:border-[#0d8f76]/50"
+                              deliveryTime === d ? "bg-[#0d8f76] text-white border-[#0d8f76] shadow-sm" : "bg-white dark:bg-[#0a192f] text-slate-600 dark:text-slate-300 border-slate-200 dark:border-[#1c3a66] hover:border-[#0d8f76]/50"
                             )}
                           >
                             {d}
@@ -841,7 +841,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
             </div>
 
             {cart.length > 0 && (
-              <div className="p-4 bg-white border-t border-slate-100 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+              <div className="p-4 bg-white dark:bg-[#0a192f] border-t border-slate-100 dark:border-[#152a4d] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
                 <Button 
                   onClick={handleCheckoutClick}
                   className="w-full py-6 bg-[#f39c12] hover:bg-[#e67e22] text-white text-lg font-bold rounded-xl shadow-lg shadow-[#f39c12]/30 flex items-center justify-center gap-2"
@@ -858,12 +858,12 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
       {/* Auth Modal */}
       {showAuthModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-[#0a192f] rounded-2xl p-6 max-w-sm w-full shadow-xl animate-in fade-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-xl text-slate-900">
+              <h3 className="font-bold text-xl text-slate-900 dark:text-white">
                 {authMode === "login" ? "Connexion" : "Créer un compte"}
               </h3>
-              <button onClick={() => setShowAuthModal(false)} className="text-slate-400 hover:text-slate-700 transition-colors bg-slate-100 p-1.5 rounded-full">
+              <button onClick={() => setShowAuthModal(false)} className="text-slate-400 hover:text-slate-700 dark:text-slate-200 transition-colors bg-slate-100 dark:bg-[#112240] p-1.5 rounded-full">
                 <X size={18} />
               </button>
             </div>
@@ -871,49 +871,49 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
             <form onSubmit={handleAuthSubmit} className="space-y-4">
               {authMode === "register" && (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Nom complet *</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">Nom complet *</label>
                   <input 
                     type="text" 
                     required
                     value={authForm.name}
                     onChange={e => setAuthForm({...authForm, name: e.target.value})}
-                    className="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="w-full border border-slate-300 dark:border-[#244b82] rounded-lg p-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                     placeholder="Votre nom"
                   />
                 </div>
               )}
               
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Numéro WhatsApp *</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">Numéro WhatsApp *</label>
                 <input 
                   type="tel" 
                   required
                   value={authForm.phone}
                   onChange={e => setAuthForm({...authForm, phone: e.target.value})}
-                  className="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full border border-slate-300 dark:border-[#244b82] rounded-lg p-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   placeholder="Ex: 97000000"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Email (facultatif)</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">Email (facultatif)</label>
                 <input 
                   type="email" 
                   value={authForm.email}
                   onChange={e => setAuthForm({...authForm, email: e.target.value})}
-                  className="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full border border-slate-300 dark:border-[#244b82] rounded-lg p-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   placeholder="votre@email.com"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Mot de passe *</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-200 mb-1">Mot de passe *</label>
                 <input 
                   type="password" 
                   required
                   value={authForm.password}
                   onChange={e => setAuthForm({...authForm, password: e.target.value})}
-                  className="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="w-full border border-slate-300 dark:border-[#244b82] rounded-lg p-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   placeholder="••••••••"
                 />
               </div>
@@ -923,7 +923,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-slate-500">
+            <div className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
               {authMode === "login" ? "Pas encore de compte ?" : "Déjà un compte ?"}
               <button 
                 onClick={() => setAuthMode(authMode === "login" ? "register" : "login")}
@@ -939,10 +939,10 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
       {/* Profile Modal */}
       {showProfileModal && loggedInCustomer && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-[#0a192f] rounded-2xl p-6 max-w-sm w-full shadow-xl animate-in fade-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-xl text-slate-900">Mon Profil</h3>
-              <button onClick={() => setShowProfileModal(false)} className="text-slate-400 hover:text-slate-700 transition-colors bg-slate-100 p-1.5 rounded-full">
+              <h3 className="font-bold text-xl text-slate-900 dark:text-white">Mon Profil</h3>
+              <button onClick={() => setShowProfileModal(false)} className="text-slate-400 hover:text-slate-700 dark:text-slate-200 transition-colors bg-slate-100 dark:bg-[#112240] p-1.5 rounded-full">
                 <X size={18} />
               </button>
             </div>
@@ -951,22 +951,22 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
               <div className="h-20 w-20 bg-gradient-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center text-blue-600 font-bold text-3xl mb-3 shadow-inner">
                 {loggedInCustomer.name?.charAt(0).toUpperCase()}
               </div>
-              <h2 className="text-lg font-bold text-slate-800">{loggedInCustomer.name}</h2>
+              <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">{loggedInCustomer.name}</h2>
               <div className="mt-1 bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 border border-green-200">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                 Client Actif
               </div>
             </div>
 
-            <div className="space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <div className="space-y-4 bg-slate-50 dark:bg-[#06101e] p-4 rounded-xl border border-slate-100 dark:border-[#152a4d]">
               <div>
-                <label className="text-xs text-slate-500 font-medium">WhatsApp / Téléphone</label>
-                <div className="font-semibold text-slate-700">{loggedInCustomer.phone}</div>
+                <label className="text-xs text-slate-500 dark:text-slate-400 font-medium">WhatsApp / Téléphone</label>
+                <div className="font-semibold text-slate-700 dark:text-slate-200">{loggedInCustomer.phone}</div>
               </div>
               {loggedInCustomer.email && (
                 <div>
-                  <label className="text-xs text-slate-500 font-medium">Email</label>
-                  <div className="font-semibold text-slate-700">{loggedInCustomer.email}</div>
+                  <label className="text-xs text-slate-500 dark:text-slate-400 font-medium">Email</label>
+                  <div className="font-semibold text-slate-700 dark:text-slate-200">{loggedInCustomer.email}</div>
                 </div>
               )}
             </div>
@@ -988,15 +988,15 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
       {/* Options Selection Modal */}
       {selectedProductForOptions && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex justify-between items-center mb-4 border-b border-slate-100 pb-4">
-              <h3 className="font-bold text-lg text-slate-900">Choisir les options</h3>
-              <button onClick={() => setSelectedProductForOptions(null)} className="text-slate-400 hover:text-slate-700 transition-colors bg-slate-100 p-1.5 rounded-full">
+          <div className="bg-white dark:bg-[#0a192f] rounded-2xl p-6 max-w-sm w-full shadow-xl animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center mb-4 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+              <h3 className="font-bold text-lg text-slate-900 dark:text-white">Choisir les options</h3>
+              <button onClick={() => setSelectedProductForOptions(null)} className="text-slate-400 hover:text-slate-700 dark:text-slate-200 transition-colors bg-slate-100 dark:bg-[#112240] p-1.5 rounded-full">
                 <X size={18} />
               </button>
             </div>
             <div className="flex gap-4 items-center mb-6">
-              <div className="h-16 w-16 bg-slate-100 rounded-xl overflow-hidden relative shadow-sm border border-slate-200">
+              <div className="h-16 w-16 bg-slate-100 dark:bg-[#112240] rounded-xl overflow-hidden relative shadow-sm border border-slate-200 dark:border-[#1c3a66]">
                 {selectedProductForOptions.imageUrl ? (
                   <Image src={selectedProductForOptions.imageUrl} alt="" fill className="object-cover" />
                 ) : (
@@ -1004,7 +1004,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                 )}
               </div>
               <div>
-                <div className="font-medium text-slate-900 line-clamp-2">{selectedProductForOptions.name}</div>
+                <div className="font-medium text-slate-900 dark:text-white line-clamp-2">{selectedProductForOptions.name}</div>
                 <div className="text-orange-500 font-bold mt-1">
                   <span className="font-mono">{formatCurrency(selectedProductForOptions.promotionalPrice || selectedProductForOptions.salePrice)}</span>
                 </div>
@@ -1014,7 +1014,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
             <div className="space-y-5 mb-6 max-h-[40vh] overflow-y-auto custom-scrollbar">
               {selectedProductForOptions.options?.map(opt => (
                 <div key={opt.name}>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">{opt.name}</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">{opt.name}</label>
                   <div className="flex flex-wrap gap-2">
                     {opt.values.map(val => (
                       <button
@@ -1024,7 +1024,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
                           "px-4 py-2 border rounded-xl text-sm font-semibold transition-all",
                           selectedOptions[opt.name] === val 
                             ? "border-[#0b213f] bg-[#0b213f] text-white shadow-md shadow-blue-900/20" 
-                            : "border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50"
+                            : "border-slate-200 dark:border-[#1c3a66] text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:border-[#244b82] hover:bg-slate-50 dark:bg-[#06101e]"
                         )}
                       >
                         {val}
@@ -1099,7 +1099,7 @@ export default function PublicShopPage({ params }: { params: Promise<{ shopId: s
 
   if (loading) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-slate-50 p-4">
+      <div className="min-h-dvh flex items-center justify-center bg-slate-50 dark:bg-[#06101e] p-4">
         <div className="animate-pulse flex flex-col items-center">
           <div className="h-16 w-16 bg-slate-200 rounded-full mb-4"></div>
           <div className="h-4 w-32 bg-slate-200 rounded"></div>
@@ -1110,13 +1110,13 @@ export default function PublicShopPage({ params }: { params: Promise<{ shopId: s
 
   if (!shopUuid) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-slate-50 p-4 text-center">
+      <div className="min-h-dvh flex items-center justify-center bg-slate-50 dark:bg-[#06101e] p-4 text-center">
         <div>
           <div className="h-16 w-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
              <span className="text-2xl">🏪</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-800">Boutique introuvable</h1>
-          <p className="text-slate-500 mt-2">L'adresse que vous avez saisie ne correspond à aucune boutique active.</p>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Boutique introuvable</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-2">L'adresse que vous avez saisie ne correspond à aucune boutique active.</p>
         </div>
       </div>
     );

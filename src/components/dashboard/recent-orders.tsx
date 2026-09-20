@@ -24,9 +24,9 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
   const recentOrders = orders.slice(0, 5); // Get top 5 most recent orders
 
   return (
-    <Card className="shadow-sm border-slate-200 col-span-full">
+    <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66] col-span-full">
       <CardHeader className="flex flex-row items-center justify-between pb-4">
-        <CardTitle className="text-base font-bold text-slate-900">
+        <CardTitle className="text-base font-bold text-slate-900 dark:text-white">
           Commandes récentes
         </CardTitle>
         <Link href="/dashboard/ventes" className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:translate-x-1 transition-transform duration-200">
@@ -36,7 +36,7 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
       <CardContent>
         <Table>
           <TableHeader>
-            <TableRow className="border-slate-100 hover:bg-transparent">
+            <TableRow className="border-slate-100 dark:border-[#152a4d] hover:bg-transparent">
               <TableHead className="text-xs font-bold text-slate-400 uppercase tracking-wider h-10">Commande</TableHead>
               <TableHead className="text-xs font-bold text-slate-400 uppercase tracking-wider h-10">Client</TableHead>
               <TableHead className="text-xs font-bold text-slate-400 uppercase tracking-wider h-10">Montant</TableHead>
@@ -47,7 +47,7 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
           <TableBody>
             {!isLoaded ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i} className="border-slate-100">
+                <TableRow key={i} className="border-slate-100 dark:border-[#152a4d]">
                   <TableCell><Skeleton className="h-4 w-16" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-32" /></TableCell>
                   <TableCell><Skeleton className="h-4 w-24" /></TableCell>
@@ -57,10 +57,10 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
               ))
             ) : (
               recentOrders.map((order) => (
-                <TableRow key={order.id} className="border-slate-100">
-                  <TableCell className="font-bold text-slate-900">{order.orderNumber}</TableCell>
-                  <TableCell className="text-slate-600">{order.clientName}</TableCell>
-                  <TableCell className="font-semibold text-slate-900">
+                <TableRow key={order.id} className="border-slate-100 dark:border-[#152a4d]">
+                  <TableCell className="font-bold text-slate-900 dark:text-white">{order.orderNumber}</TableCell>
+                  <TableCell className="text-slate-600 dark:text-slate-300">{order.clientName}</TableCell>
+                  <TableCell className="font-semibold text-slate-900 dark:text-white">
                     {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "XOF" }).format(order.totalAmount)}
                   </TableCell>
                   <TableCell>
@@ -71,13 +71,13 @@ export function RecentOrders({ orders }: RecentOrdersProps) {
                         order.status === "Payée" ? "bg-green-100 text-green-700 hover:bg-green-200" :
                         order.status === "En attente" ? "bg-orange-100 text-orange-700 hover:bg-orange-200" :
                         order.status === "Livrée" ? "bg-blue-100 text-blue-700 hover:bg-blue-200" :
-                        "bg-slate-100 text-slate-700"
+                        "bg-slate-100 dark:bg-[#112240] text-slate-700 dark:text-slate-200"
                       )}
                     >
                       {order.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right text-slate-500 text-sm">
+                  <TableCell className="text-right text-slate-500 dark:text-slate-400 text-sm">
                     {order.date ? new Date(order.date).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "-"}
                   </TableCell>
                 </TableRow>

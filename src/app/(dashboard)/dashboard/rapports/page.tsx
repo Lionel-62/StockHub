@@ -262,13 +262,13 @@ export default function RapportsPage() {
       {/* En-tête visible à l'écran */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900">Dashboard Overview</h1>
-          <p className="text-slate-500 text-sm mt-0.5">Sales Performance & Business Analytics.</p>
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Dashboard Overview</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">Sales Performance & Business Analytics.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           {/* Sélecteur de période */}
-          <div className="flex bg-white p-1 rounded-xl border border-slate-200 shadow-sm overflow-x-auto hide-scrollbar">
+          <div className="flex bg-white dark:bg-[#0a192f] p-1 rounded-xl border border-slate-200 dark:border-[#1c3a66] shadow-sm overflow-x-auto hide-scrollbar">
             {[
               { id: "today", label: "Aujourd'hui" },
               { id: "week", label: "Semaine" },
@@ -282,7 +282,7 @@ export default function RapportsPage() {
                 className={`px-3 py-1.5 text-xs font-bold rounded-lg whitespace-nowrap transition-all duration-300 ${
                   timeRange === range.id 
                     ? "bg-[#0b213f] text-white shadow-sm scale-100" 
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900 scale-95"
+                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:bg-[#06101e] hover:text-slate-900 dark:text-white scale-95"
                 }`}
               >
                 {range.label}
@@ -296,16 +296,16 @@ export default function RapportsPage() {
               onClick={exportReportToCSV}
               variant="outline"
               size="sm"
-              className="bg-white border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5 shadow-sm rounded-xl h-9"
+              className="bg-white dark:bg-[#0a192f] border-slate-200 dark:border-[#1c3a66] hover:bg-slate-50 dark:bg-[#06101e] transition-all flex items-center justify-center gap-1.5 shadow-sm rounded-xl h-9"
             >
-              <Download size={14} className="text-slate-500" />
-              <span className="hidden sm:inline text-xs font-semibold text-slate-700">Export</span>
+              <Download size={14} className="text-slate-500 dark:text-slate-400" />
+              <span className="hidden sm:inline text-xs font-semibold text-slate-700 dark:text-slate-200">Export</span>
             </Button>
             <Button
               onClick={() => window.print()}
               variant="outline"
               size="sm"
-              className="bg-white border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5 shadow-sm rounded-xl h-9"
+              className="bg-white dark:bg-[#0a192f] border-slate-200 dark:border-[#1c3a66] hover:bg-slate-50 dark:bg-[#06101e] transition-all flex items-center justify-center gap-1.5 shadow-sm rounded-xl h-9"
             >
               <Printer size={14} className="text-blue-600" />
               <span className="hidden sm:inline text-xs font-semibold text-blue-700">Print</span>
@@ -387,65 +387,65 @@ export default function RapportsPage() {
 
           {/* KPI CARDS (Glassmorphism/Premium White) */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <Card className="border-0 shadow-sm rounded-xl bg-white hover:shadow-md transition-shadow relative overflow-hidden">
+            <Card className="border-0 shadow-sm rounded-xl bg-white dark:bg-[#0a192f] hover:shadow-md transition-shadow relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1 h-full bg-blue-600"></div>
               <CardContent className="p-4 flex flex-col justify-between h-full">
                 <div className="flex justify-between items-start mb-3">
-                  <p className="text-xs font-semibold text-slate-500">Revenu Total</p>
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Revenu Total</p>
                   <div className="h-6 w-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
                     <DollarSign size={14} />
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight leading-none mb-1"><span className="font-mono">{formatCurrency(stats.ca)}</span></h3>
+                  <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1"><span className="font-mono">{formatCurrency(stats.ca)}</span></h3>
                   <p className="text-[10px] font-medium text-slate-400">Période sélectionnée</p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-sm rounded-xl bg-white hover:shadow-md transition-shadow relative overflow-hidden">
+            <Card className="border-0 shadow-sm rounded-xl bg-white dark:bg-[#0a192f] hover:shadow-md transition-shadow relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
               <CardContent className="p-4 flex flex-col justify-between h-full">
                 <div className="flex justify-between items-start mb-3">
-                  <p className="text-xs font-semibold text-slate-500">CA En ligne</p>
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">CA En ligne</p>
                   <div className="h-6 w-6 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center">
                     <DollarSign size={14} />
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight leading-none mb-1"><span className="font-mono">{formatCurrency(stats.caOnline)}</span></h3>
+                  <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1"><span className="font-mono">{formatCurrency(stats.caOnline)}</span></h3>
                   <p className="text-[10px] font-medium text-slate-400">Commandes Web</p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-sm rounded-xl bg-white hover:shadow-md transition-shadow relative overflow-hidden">
+            <Card className="border-0 shadow-sm rounded-xl bg-white dark:bg-[#0a192f] hover:shadow-md transition-shadow relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
               <CardContent className="p-4 flex flex-col justify-between h-full">
                 <div className="flex justify-between items-start mb-3">
-                  <p className="text-xs font-semibold text-slate-500">CA Sur place</p>
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">CA Sur place</p>
                   <div className="h-6 w-6 rounded-md bg-purple-50 text-purple-600 flex items-center justify-center">
                     <DollarSign size={14} />
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight leading-none mb-1"><span className="font-mono">{formatCurrency(stats.caInStore)}</span></h3>
+                  <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1"><span className="font-mono">{formatCurrency(stats.caInStore)}</span></h3>
                   <p className="text-[10px] font-medium text-slate-400">Ventes au comptoir</p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-sm rounded-xl bg-white hover:shadow-md transition-shadow relative overflow-hidden">
+            <Card className="border-0 shadow-sm rounded-xl bg-white dark:bg-[#0a192f] hover:shadow-md transition-shadow relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
               <CardContent className="p-4 flex flex-col justify-between h-full">
                 <div className="flex justify-between items-start mb-3">
-                  <p className="text-xs font-semibold text-slate-500">Panier Moyen</p>
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Panier Moyen</p>
                   <div className="h-6 w-6 rounded-md bg-orange-50 text-orange-600 flex items-center justify-center">
                     <ShoppingBag size={14} />
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight leading-none mb-1"><span className="font-mono">{formatCurrency(stats.averageBasket)}</span></h3>
+                  <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1"><span className="font-mono">{formatCurrency(stats.averageBasket)}</span></h3>
                   <p className="text-[10px] font-medium text-slate-400">Sur {stats.salesCount} ventes</p>
                 </div>
               </CardContent>
@@ -458,20 +458,20 @@ export default function RapportsPage() {
         <div className="lg:col-span-1 xl:col-span-1 h-full">
           
           {/* TOP SELLING PRODUCTS */}
-          <Card className="border-0 shadow-sm rounded-2xl bg-white h-full flex flex-col">
-            <CardHeader className="border-b border-slate-100 pb-3 px-4 pt-4 shrink-0">
+          <Card className="border-0 shadow-sm rounded-2xl bg-white dark:bg-[#0a192f] h-full flex flex-col">
+            <CardHeader className="border-b border-slate-100 dark:border-[#152a4d] pb-3 px-4 pt-4 shrink-0">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-bold text-slate-800">Top Ventes</CardTitle>
-                <div className="p-1 bg-slate-100 rounded-md text-slate-500"><TrendingUp size={14}/></div>
+                <CardTitle className="text-sm font-bold text-slate-800 dark:text-slate-100">Top Ventes</CardTitle>
+                <div className="p-1 bg-slate-100 dark:bg-[#112240] rounded-md text-slate-500 dark:text-slate-400"><TrendingUp size={14}/></div>
               </div>
             </CardHeader>
             <CardContent className="p-0 flex-1 overflow-auto">
               {topProducts.length > 0 ? (
                 <div className="flex flex-col divide-y divide-slate-50">
                   {topProducts.map((prod, idx) => (
-                    <div key={prod.id} className="flex items-center gap-3 p-3 hover:bg-slate-50/50 transition-colors group">
+                    <div key={prod.id} className="flex items-center gap-3 p-3 hover:bg-slate-50 dark:bg-[#06101e]/50 transition-colors group">
                       <div className="flex-shrink-0 w-4 font-bold text-slate-300 text-xs">{idx + 1}</div>
-                      <div className="h-8 w-8 rounded-full bg-slate-100 overflow-hidden relative shrink-0 border border-slate-200 group-hover:border-slate-300">
+                      <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-[#112240] overflow-hidden relative shrink-0 border border-slate-200 dark:border-[#1c3a66] group-hover:border-slate-300 dark:border-[#244b82]">
                         {prod.imageUrl && prod.imageUrl !== "undefined" && prod.imageUrl !== "null" ? (
                           <Image src={prod.imageUrl} alt={prod.name} fill className="object-cover" unoptimized/>
                         ) : (
@@ -479,11 +479,11 @@ export default function RapportsPage() {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-bold text-slate-800 truncate">{prod.name}</p>
-                        <p className="text-[10px] text-slate-500 font-medium mt-0.5">{prod.qty} vendus</p>
+                        <p className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">{prod.name}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">{prod.qty} vendus</p>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-xs font-black text-slate-900"><span className="font-mono">{formatCurrency(prod.revenue)}</span></p>
+                        <p className="text-xs font-black text-slate-900 dark:text-white"><span className="font-mono">{formatCurrency(prod.revenue)}</span></p>
                       </div>
                     </div>
                   ))}

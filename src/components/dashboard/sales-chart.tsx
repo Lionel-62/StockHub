@@ -40,21 +40,21 @@ export function SalesChart({ orders }: SalesChartProps) {
   const [activeIndex, setActiveIndex] = useState(data.length - 1);
 
   return (
-    <Card className="shadow-sm border-slate-200 col-span-2">
+    <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66] col-span-2">
       <CardHeader className="flex flex-row items-start justify-between pb-2">
         <div>
-          <CardTitle className="text-base font-bold text-slate-900">Ventes des {period} derniers jours</CardTitle>
+          <CardTitle className="text-base font-bold text-slate-900 dark:text-white">Ventes des {period} derniers jours</CardTitle>
           <p className="text-xs text-slate-400 mt-1">Boutique physique + boutique en ligne</p>
         </div>
-        <div className="flex bg-slate-100 rounded-full p-1">
+        <div className="flex bg-slate-100 dark:bg-[#112240] rounded-full p-1">
           <button 
-            className={cn("px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 active:scale-95", period === "7" ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50")}
+            className={cn("px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 active:scale-95", period === "7" ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-200 hover:bg-slate-200/50")}
             onClick={() => { setPeriod("7"); setActiveIndex(6); }}
           >
             7 jours
           </button>
           <button 
-            className={cn("px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 active:scale-95", period === "30" ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50")}
+            className={cn("px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 active:scale-95", period === "30" ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-200 hover:bg-slate-200/50")}
             onClick={() => { setPeriod("30"); setActiveIndex(29); }}
           >
             30 jours

@@ -22,7 +22,7 @@ export function Header() {
   return (
     <>
       <header className={`fixed top-4 inset-x-0 z-50 flex justify-center px-4 sm:px-6 transition-transform duration-300 ${isScrolled ? "translate-y-[-0.5rem]" : ""}`}>
-        <nav className="w-full max-w-6xl glass-nav border border-slate-200/80 rounded-full py-2.5 px-4 sm:px-6 flex items-center justify-between shadow-sm transition-all duration-300 hover:border-slate-300">
+        <nav className="w-full max-w-6xl glass-nav border border-slate-200 dark:border-[#1c3a66]/80 rounded-full py-2.5 px-4 sm:px-6 flex items-center justify-between shadow-sm transition-all duration-300 hover:border-slate-300 dark:border-[#244b82]">
           
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-2 group z-50">
@@ -30,7 +30,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-600">
+          <div className="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-600 dark:text-slate-300">
             <Link href="#fonctionnalites" className="hover:text-[#0b213f] transition-colors">Fonctionnalités</Link>
             <Link href="#comment-ca-marche" className="hover:text-[#0b213f] transition-colors">Comment ça marche</Link>
             <Link href="#pourquoi" className="hover:text-[#0b213f] transition-colors">Pourquoi nous choisir</Link>
@@ -55,7 +55,7 @@ export function Header() {
               <>
                 <Link 
                   href="/login" 
-                  className="text-sm font-semibold text-slate-700 hover:text-slate-900 px-3 py-2 rounded-full hover:bg-slate-100 transition-colors hidden sm:inline-block"
+                  className="text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:text-white px-3 py-2 rounded-full hover:bg-slate-100 dark:bg-[#112240] transition-colors hidden sm:inline-block"
                 >
                   Connexion
                 </Link>
@@ -74,7 +74,7 @@ export function Header() {
             
             {/* Mobile Menu Toggle */}
             <button 
-              className="lg:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-full"
+              className="lg:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:bg-[#112240] rounded-full"
               onClick={() => setMobileMenuOpen(true)}
             >
               <Menu className="w-5 h-5" />
@@ -98,27 +98,27 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute right-0 top-0 bottom-0 w-4/5 max-w-sm bg-white shadow-2xl p-6 flex flex-col"
+              className="absolute right-0 top-0 bottom-0 w-4/5 max-w-sm bg-white dark:bg-[#0a192f] shadow-2xl p-6 flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-8">
-                <span className="text-xl font-bold tracking-tight text-slate-900">
+                <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                   Stock<span className="text-[#0b213f]">Hub</span>
                 </span>
                 <button 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 bg-slate-100 rounded-full text-slate-500 hover:text-slate-900"
+                  className="p-2 bg-slate-100 dark:bg-[#112240] rounded-full text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="flex flex-col gap-4 text-lg font-medium text-slate-700">
-                <Link href="#fonctionnalites" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Fonctionnalités</Link>
-                <Link href="#comment-ca-marche" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Comment ça marche</Link>
-                <Link href="#pourquoi" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Pourquoi nous choisir</Link>
-                <Link href="#tarifs" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">Tarifs</Link>
-                <Link href="#faq" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100">FAQ</Link>
+              <div className="flex flex-col gap-4 text-lg font-medium text-slate-700 dark:text-slate-200">
+                <Link href="#fonctionnalites" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100 dark:border-[#152a4d]">Fonctionnalités</Link>
+                <Link href="#comment-ca-marche" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100 dark:border-[#152a4d]">Comment ça marche</Link>
+                <Link href="#pourquoi" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100 dark:border-[#152a4d]">Pourquoi nous choisir</Link>
+                <Link href="#tarifs" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100 dark:border-[#152a4d]">Tarifs</Link>
+                <Link href="#faq" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-slate-100 dark:border-[#152a4d]">FAQ</Link>
                 
                 {/* Mobile Actions */}
                 <div className="mt-6 flex flex-col gap-3">
@@ -132,7 +132,7 @@ export function Header() {
                   ) : (
                     <>
                       <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                        <button className="w-full text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 py-3 rounded-xl transition-colors border border-slate-200">
+                        <button className="w-full text-center text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:bg-[#06101e] py-3 rounded-xl transition-colors border border-slate-200 dark:border-[#1c3a66]">
                           Connexion
                         </button>
                       </Link>

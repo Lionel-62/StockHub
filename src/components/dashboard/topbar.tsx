@@ -145,7 +145,7 @@ export function Topbar() {
               <input 
                 type="text" 
                 placeholder="Rechercher un produit..." 
-                className="pl-9 pr-4 py-1.5 sm:py-2 border border-slate-200 rounded-xl text-xs sm:text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white w-full md:w-64 md:focus:w-80 transition-all duration-300"
+                className="pl-9 pr-4 py-1.5 sm:py-2 border border-slate-200 dark:border-[#1c3a66] rounded-xl text-xs sm:text-sm bg-slate-50 dark:bg-[#06101e] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:bg-[#0a192f] w-full md:w-64 md:focus:w-80 transition-all duration-300"
               />
             </div>
           )}
@@ -177,7 +177,7 @@ export function Topbar() {
           <Sidebar />
           <button 
             type="button"
-            className="absolute top-5 right-3 text-white/60 hover:text-white transition-colors bg-white/10 rounded-full p-1.5"
+            className="absolute top-5 right-3 text-white/60 hover:text-white transition-colors bg-white dark:bg-[#0a192f]/10 rounded-full p-1.5"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="Fermer le menu"
           >

@@ -79,7 +79,7 @@ export function AIAssistantButton() {
 
       {/* Interface de Chat IA */}
       <div
-        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[420px] bg-white rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 origin-bottom-right flex flex-col border border-slate-200 ${
+        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-32px)] sm:w-[420px] bg-white dark:bg-[#0a192f] rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 origin-bottom-right flex flex-col border border-slate-200 dark:border-[#1c3a66] ${
           isOpen
             ? "scale-100 opacity-100 h-[580px] max-h-[85vh]"
             : "scale-0 opacity-0 pointer-events-none h-0"
@@ -88,7 +88,7 @@ export function AIAssistantButton() {
         {/* Header */}
         <div className="bg-gradient-to-r from-[#0b213f] to-blue-900 p-4 flex items-center justify-between text-white flex-shrink-0">
           <div className="flex items-center gap-2 font-bold text-base sm:text-lg">
-            <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-white dark:bg-[#0a192f]/15 flex items-center justify-center">
               <Sparkles size={18} className="text-amber-300" />
             </div>
             <div>
@@ -98,22 +98,22 @@ export function AIAssistantButton() {
           </div>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-1.5 bg-white/10 hover:bg-white/20 rounded-full transition-colors"
+            className="p-1.5 bg-white dark:bg-[#0a192f]/10 hover:bg-white dark:bg-[#0a192f]/20 rounded-full transition-colors"
           >
             <X size={18} />
           </button>
         </div>
 
         {/* Zone de messages */}
-        <div className="flex-1 overflow-y-auto p-4 bg-slate-50 flex flex-col gap-3">
+        <div className="flex-1 overflow-y-auto p-4 bg-slate-50 dark:bg-[#06101e] flex flex-col gap-3">
           {messages.length === 0 ? (
             <div className="flex flex-col h-full justify-between">
               <div className="flex-1 flex flex-col items-center justify-center text-center py-4">
                 <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-3 shadow-inner">
                   <Bot size={28} />
                 </div>
-                <h3 className="font-bold text-slate-800 text-base">Bonjour ! Comment puis-je vous aider ?</h3>
-                <p className="text-xs text-slate-500 mt-1 max-w-[280px]">
+                <h3 className="font-bold text-slate-800 dark:text-slate-100 text-base">Bonjour ! Comment puis-je vous aider ?</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-[280px]">
                   Je réponds à vos questions sur vos stocks, vos ventes et vos produits en temps réel.
                 </p>
               </div>
@@ -126,7 +126,7 @@ export function AIAssistantButton() {
                   {exampleQuestions.map((q, i) => (
                     <button
                       key={i}
-                      className="text-left px-3.5 py-2 bg-white border border-slate-200 text-slate-700 text-xs rounded-xl shadow-xs hover:border-blue-400 hover:text-blue-700 hover:bg-blue-50/50 transition-all font-medium"
+                      className="text-left px-3.5 py-2 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] text-slate-700 dark:text-slate-200 text-xs rounded-xl shadow-xs hover:border-blue-400 hover:text-blue-700 hover:bg-blue-50/50 transition-all font-medium"
                       onClick={() => handleQuickQuestion(q)}
                     >
                       {q}
@@ -155,7 +155,7 @@ export function AIAssistantButton() {
                     <div
                       className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold ${
                         m.role === "user"
-                          ? "bg-slate-200 text-slate-700"
+                          ? "bg-slate-200 text-slate-700 dark:text-slate-200"
                           : "bg-[#0b213f] text-white"
                       }`}
                     >
@@ -165,7 +165,7 @@ export function AIAssistantButton() {
                       className={`p-3 rounded-2xl max-w-[85%] text-xs leading-relaxed ${
                         m.role === "user"
                           ? "bg-[#0b213f] text-white rounded-tr-xs"
-                          : "bg-white border border-slate-200 text-slate-800 rounded-tl-xs shadow-xs"
+                          : "bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] text-slate-800 dark:text-slate-100 rounded-tl-xs shadow-xs"
                       }`}
                     >
                       <div className="whitespace-pre-wrap">{textContent}</div>
@@ -179,9 +179,9 @@ export function AIAssistantButton() {
                   <div className="w-7 h-7 rounded-full bg-[#0b213f] text-white flex items-center justify-center flex-shrink-0">
                     <Sparkles size={13} className="text-amber-300 animate-spin" />
                   </div>
-                  <div className="px-3.5 py-2.5 bg-white border border-slate-200 rounded-2xl rounded-tl-xs shadow-xs flex items-center gap-2">
+                  <div className="px-3.5 py-2.5 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-2xl rounded-tl-xs shadow-xs flex items-center gap-2">
                     <Loader2 size={14} className="text-blue-600 animate-spin" />
-                    <span className="text-xs text-slate-500">L&apos;assistant réfléchit...</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">L&apos;assistant réfléchit...</span>
                   </div>
                 </div>
               )}
@@ -212,7 +212,7 @@ export function AIAssistantButton() {
         </div>
 
         {/* Input */}
-        <div className="p-3 bg-white border-t border-slate-200 flex items-center gap-2 flex-shrink-0">
+        <div className="p-3 bg-white dark:bg-[#0a192f] border-t border-slate-200 dark:border-[#1c3a66] flex items-center gap-2 flex-shrink-0">
           <input
             type="text"
             value={inputValue}
@@ -224,7 +224,7 @@ export function AIAssistantButton() {
               }
             }}
             placeholder="Posez votre question..."
-            className="flex-1 px-4 py-2 bg-slate-100 border border-transparent rounded-full text-xs focus:outline-none focus:bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-400"
+            className="flex-1 px-4 py-2 bg-slate-100 dark:bg-[#112240] border border-transparent rounded-full text-xs focus:outline-none focus:bg-white dark:bg-[#0a192f] focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-slate-400"
             disabled={isLoading}
           />
           <button

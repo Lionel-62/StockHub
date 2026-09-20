@@ -23,9 +23,9 @@ export function AlertList({ products }: AlertListProps) {
   const hasOutOfStock = allAlerts.some(p => p.stock === 0);
 
   return (
-    <Card className="shadow-sm border-slate-200">
-      <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-slate-100 mb-4">
-        <CardTitle className="text-base font-bold text-slate-900">
+    <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-slate-100 dark:border-[#152a4d] mb-4">
+        <CardTitle className="text-base font-bold text-slate-900 dark:text-white">
           Alertes de rupture
         </CardTitle>
         <Badge variant="secondary" className={cn(
@@ -49,7 +49,7 @@ export function AlertList({ products }: AlertListProps) {
                   </div>
                   <Skeleton className="h-6 w-20 rounded-md" />
                 </div>
-                {index < 4 && <div className="h-px bg-slate-100 w-full mt-2" />}
+                {index < 4 && <div className="h-px bg-slate-100 dark:bg-[#112240] w-full mt-2" />}
               </div>
             ))
           ) : (
@@ -57,7 +57,7 @@ export function AlertList({ products }: AlertListProps) {
               <div key={alert.id}>
                 <div className="flex items-center justify-between py-2">
                   <div>
-                    <p className="font-semibold text-sm text-slate-900">{alert.name}</p>
+                    <p className="font-semibold text-sm text-slate-900 dark:text-white">{alert.name}</p>
                     <p className="text-xs text-slate-400 mt-0.5">
                       {alert.sku}
                     </p>
@@ -74,7 +74,7 @@ export function AlertList({ products }: AlertListProps) {
                     {alert.stock === 0 ? "Épuisé" : `${alert.stock} restant(s)`}
                   </Badge>
                 </div>
-                {index < alerts.length - 1 && <div className="h-px bg-slate-100 w-full mt-2" />}
+                {index < alerts.length - 1 && <div className="h-px bg-slate-100 dark:bg-[#112240] w-full mt-2" />}
               </div>
             ))
           )}

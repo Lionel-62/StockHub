@@ -65,7 +65,7 @@ export default function EmployeLoginPage({ params }: { params: { shopSlug: strin
 
   if (!isLoaded) {
     return (
-      <div className="min-h-[calc(100dvh-4rem)] bg-slate-50 flex items-center justify-center">
+      <div className="min-h-[calc(100dvh-4rem)] bg-slate-50 dark:bg-[#06101e] flex items-center justify-center">
         <LogoLoader message="Chargement de l'espace vendeur..." />
       </div>
     );
@@ -74,13 +74,13 @@ export default function EmployeLoginPage({ params }: { params: { shopSlug: strin
   if (currentUser && currentUser.role === "employee") return null; // Avoid flicker before redirect
 
   return (
-    <div className="min-h-[calc(100dvh-4rem)] bg-slate-50 flex flex-col justify-center items-center p-4">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+    <div className="min-h-[calc(100dvh-4rem)] bg-slate-50 dark:bg-[#06101e] flex flex-col justify-center items-center p-4">
+      <div className="w-full max-w-sm bg-white dark:bg-[#0a192f] rounded-2xl shadow-lg border border-slate-100 dark:border-[#152a4d] overflow-hidden">
         <div className="p-8 text-center flex flex-col items-center">
           <img src="/logo.png" alt="StockHub Logo" className="h-14 sm:h-16 w-auto object-contain mx-auto mb-6" />
-          <h1 className="text-2xl font-bold text-slate-800">Espace Vendeur</h1>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Espace Vendeur</h1>
           {shopName && <div className="inline-block mt-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-100">{shopName}</div>}
-          <p className="text-slate-500 mt-2 text-sm">Identifiez-vous pour accéder à votre espace</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">Identifiez-vous pour accéder à votre espace</p>
         </div>
 
         <div className="px-8 pb-8">
@@ -101,7 +101,7 @@ export default function EmployeLoginPage({ params }: { params: { shopSlug: strin
                   type="text"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  className="pl-10 w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="pl-10 w-full p-3 bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] rounded-xl focus:bg-white dark:bg-[#0a192f] focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                   placeholder="Identifiant"
                 />
               </div>
@@ -117,7 +117,7 @@ export default function EmployeLoginPage({ params }: { params: { shopSlug: strin
                   maxLength={4}
                   value={pinCode}
                   onChange={(e) => setPinCode(e.target.value.replace(/[^0-9]/g, ''))}
-                  className="pl-10 w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all tracking-widest text-lg"
+                  className="pl-10 w-full p-3 bg-slate-50 dark:bg-[#06101e] border border-slate-200 dark:border-[#1c3a66] rounded-xl focus:bg-white dark:bg-[#0a192f] focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all tracking-widest text-lg"
                   placeholder="Code PIN"
                 />
               </div>

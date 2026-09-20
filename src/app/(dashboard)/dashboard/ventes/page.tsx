@@ -161,7 +161,7 @@ export default function SalesPage() {
       case "Annulée":
         return "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100/70";
       default:
-        return "bg-slate-50 text-slate-700 border-slate-200";
+        return "bg-slate-50 dark:bg-[#06101e] text-slate-700 dark:text-slate-200 border-slate-200 dark:border-[#1c3a66]";
     }
   };
 
@@ -197,8 +197,8 @@ export default function SalesPage() {
       {/* En-tête de la page */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Ventes & Commandes</h1>
-          <p className="text-slate-500 mt-1">Gérez vos commandes en ligne et sur place avec modification de statut instantanée.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Ventes & Commandes</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Gérez vos commandes en ligne et sur place avec modification de statut instantanée.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -209,7 +209,7 @@ export default function SalesPage() {
               placeholder="Rechercher (n° commande, client)..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-4 py-2 w-full sm:w-64 border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+              className="pl-9 pr-4 py-2 w-full sm:w-64 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-white dark:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
             />
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
@@ -229,7 +229,7 @@ export default function SalesPage() {
                       setDateFilter(""); 
                       setCurrentPage(1); 
                     }}
-                    className="absolute z-10 text-slate-400 hover:text-red-500 transition-colors p-1 right-2 bg-white rounded-full"
+                    className="absolute z-10 text-slate-400 hover:text-red-500 transition-colors p-1 right-2 bg-white dark:bg-[#0a192f] rounded-full"
                     title="Effacer la date"
                   >
                     <X size={14} />
@@ -249,7 +249,7 @@ export default function SalesPage() {
               </div>
             </div>
             <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-              <Button onClick={exportToCSV} variant="outline" className="w-full sm:w-auto hover:bg-slate-100 transition-colors border-slate-200 flex items-center justify-center">
+              <Button onClick={exportToCSV} variant="outline" className="w-full sm:w-auto hover:bg-slate-100 dark:bg-[#112240] transition-colors border-slate-200 dark:border-[#1c3a66] flex items-center justify-center">
                 <Download size={16} className="mr-2" />
                 <span>Exporter CSV</span>
               </Button>
@@ -265,11 +265,11 @@ export default function SalesPage() {
       </div>
 
       {/* Tableau des commandes */}
-      <Card className="shadow-none border-0 ring-0 bg-transparent sm:bg-white sm:shadow-sm sm:ring-1 sm:ring-slate-200 rounded-none sm:rounded-xl overflow-visible border-x-0 sm:border-x">
+      <Card className="shadow-none border-0 ring-0 bg-transparent sm:bg-white dark:bg-[#0a192f] sm:shadow-sm sm:ring-1 sm:ring-slate-200 rounded-none sm:rounded-xl overflow-visible border-x-0 sm:border-x">
         <CardContent className="p-0 overflow-visible">
           <div className="overflow-x-auto overflow-y-visible min-h-[300px]">
             <Table>
-              <TableHeader className="bg-slate-50/50">
+              <TableHeader className="bg-slate-50 dark:bg-[#06101e]/50">
                 <TableRow>
                   <TableHead>Commande</TableHead>
                   <TableHead>Client & Source</TableHead>
@@ -283,7 +283,7 @@ export default function SalesPage() {
               <TableBody>
                 {!isLoaded ? (
                   Array.from({ length: 8 }).map((_, i) => (
-                    <TableRow key={i} className="hover:bg-slate-50 transition-colors">
+                    <TableRow key={i} className="hover:bg-slate-50 dark:bg-[#06101e] transition-colors">
                       <TableCell>
                         <Skeleton className="h-4 w-20 mb-1" />
                         <Skeleton className="h-3 w-16" />
@@ -310,32 +310,32 @@ export default function SalesPage() {
                     return (
                       <TableRow 
                         key={order.id} 
-                        className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                        className="hover:bg-slate-50 dark:bg-[#06101e]/80 transition-colors group cursor-pointer"
                         onClick={() => setSelectedOrderForDetail(order)}
                       >
                         <TableCell>
-                          <div className="font-semibold text-slate-900 flex items-center gap-1.5">
+                          <div className="font-semibold text-slate-900 dark:text-white flex items-center gap-1.5">
                             <span className="font-mono">{order.orderNumber}</span>
                           </div>
-                          <div className="text-xs text-slate-500 mt-0.5">{order.itemsCount} article(s)</div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{order.itemsCount} article(s)</div>
                         </TableCell>
 
                         <TableCell>
-                          <div className="font-medium text-slate-800">{order.clientName}</div>
+                          <div className="font-medium text-slate-800 dark:text-slate-100">{order.clientName}</div>
                           <div className="mt-0.5">
                             {isOnline ? (
                               <span className="inline-flex items-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200/80 px-2 py-0.5 rounded-full">
                                 <Globe size={10} /> Vitrine en ligne
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-[#112240] px-2 py-0.5 rounded-full">
                                 <Store size={10} /> Sur place
                               </span>
                             )}
                           </div>
                         </TableCell>
 
-                        <TableCell className="text-slate-500 text-sm">
+                        <TableCell className="text-slate-500 dark:text-slate-400 text-sm">
                           {new Date(order.date).toLocaleDateString("fr-FR", { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                         </TableCell>
 
@@ -358,8 +358,8 @@ export default function SalesPage() {
 
                             {/* Menu Déroulant Statuts */}
                             {isDropdownOpen && (
-                              <div className="absolute left-0 top-full mt-1.5 z-40 w-44 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 text-xs font-medium animate-in fade-in zoom-in-95">
-                                <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-slate-400 border-b border-slate-100 mb-1">
+                              <div className="absolute left-0 top-full mt-1.5 z-40 w-44 bg-white dark:bg-[#0a192f] rounded-xl shadow-xl border border-slate-200 dark:border-[#1c3a66] py-1.5 text-xs font-medium animate-in fade-in zoom-in-95">
+                                <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-slate-400 border-b border-slate-100 dark:border-[#152a4d] mb-1">
                                   Changer le statut
                                 </div>
                                 {(["Payée", "Livrée", "En attente", "Annulée"] as Order["status"][]).map((st) => (
@@ -368,7 +368,7 @@ export default function SalesPage() {
                                     type="button"
                                     onClick={() => handleStatusChange(order, st)}
                                     className={cn(
-                                      "w-full text-left px-3 py-2 flex items-center justify-between hover:bg-slate-50 transition-colors",
+                                      "w-full text-left px-3 py-2 flex items-center justify-between hover:bg-slate-50 dark:bg-[#06101e] transition-colors",
                                       order.status === st && "font-bold text-[#0b213f] bg-blue-50/50"
                                     )}
                                   >
@@ -384,12 +384,12 @@ export default function SalesPage() {
                           </div>
                         </TableCell>
 
-                        <TableCell className="text-right font-bold text-slate-900">
+                        <TableCell className="text-right font-bold text-slate-900 dark:text-white">
                           <span className="font-mono">{formatCurrency(order.totalAmount)}</span>
                         </TableCell>
 
                         <TableCell className="text-right">
-                          <div className="text-xs sm:text-sm text-slate-600 font-medium">{order.paymentMethod}</div>
+                          <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium">{order.paymentMethod}</div>
                         </TableCell>
 
                         <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
@@ -427,7 +427,7 @@ export default function SalesPage() {
                 
                 {isLoaded && paginatedOrders.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-32 text-center text-slate-500">
+                    <TableCell colSpan={7} className="h-32 text-center text-slate-500 dark:text-slate-400">
                       Aucune commande trouvée.
                     </TableCell>
                   </TableRow>
@@ -438,8 +438,8 @@ export default function SalesPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 bg-slate-50/50">
-              <span className="text-sm text-slate-500">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-[#152a4d] bg-slate-50 dark:bg-[#06101e]/50">
+              <span className="text-sm text-slate-500 dark:text-slate-400">
                 Affichage de {((currentPage - 1) * itemsPerPage) + 1} à {Math.min(currentPage * itemsPerPage, filteredOrders.length)} sur {filteredOrders.length} commandes
               </span>
               <div className="flex gap-1">
@@ -484,13 +484,13 @@ export default function SalesPage() {
           onClick={() => setSelectedOrderForDetail(null)}
         >
           <div 
-            className="bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 border border-slate-100"
+            className="bg-white dark:bg-[#0a192f] rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 border border-slate-100 dark:border-[#152a4d]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header Modal */}
             <div className="p-5 bg-gradient-to-r from-[#0b213f] to-blue-900 text-white flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-amber-300">
+                <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#0a192f]/10 flex items-center justify-center text-amber-300">
                   <ShoppingBag size={20} />
                 </div>
                 <div>
@@ -501,7 +501,7 @@ export default function SalesPage() {
                         🌐 En ligne
                       </span>
                     ) : (
-                      <span className="text-[10px] font-bold bg-white/10 text-slate-200 px-2 py-0.5 rounded-full">
+                      <span className="text-[10px] font-bold bg-white dark:bg-[#0a192f]/10 text-slate-200 px-2 py-0.5 rounded-full">
                         🏬 Sur place
                       </span>
                     )}
@@ -515,7 +515,7 @@ export default function SalesPage() {
               </div>
               <button 
                 onClick={() => setSelectedOrderForDetail(null)}
-                className="p-2 hover:bg-white/10 rounded-full transition-colors text-white/80 hover:text-white"
+                className="p-2 hover:bg-white dark:bg-[#0a192f]/10 rounded-full transition-colors text-white/80 hover:text-white"
               >
                 <X size={20} />
               </button>
@@ -525,12 +525,12 @@ export default function SalesPage() {
             <div className="p-5 overflow-y-auto space-y-5 flex-1">
               
               {/* Carte Client */}
-              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center justify-between">
+              <div className="p-4 bg-slate-50 dark:bg-[#06101e] rounded-2xl border border-slate-200 dark:border-[#1c3a66]/80 flex items-center justify-between">
                 <div>
                   <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Client</div>
-                  <div className="text-base font-bold text-slate-900 mt-0.5">{selectedOrderForDetail.clientName}</div>
+                  <div className="text-base font-bold text-slate-900 dark:text-white mt-0.5">{selectedOrderForDetail.clientName}</div>
                   {getClientPhone(selectedOrderForDetail.clientName) ? (
-                    <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-1 font-mono">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1 font-mono">
                       <span>WhatsApp : {getClientPhone(selectedOrderForDetail.clientName)}</span>
                     </div>
                   ) : (
@@ -553,7 +553,7 @@ export default function SalesPage() {
 
               {/* Sélecteur de Statut */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                   Statut de la commande :
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -572,7 +572,7 @@ export default function SalesPage() {
                                 st === "Livrée" ? "ring-blue-500 font-extrabold" :
                                 st === "En attente" ? "ring-amber-500 font-extrabold" : "ring-rose-500 font-extrabold"
                               )
-                            : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                            : "bg-white dark:bg-[#0a192f] border-slate-200 dark:border-[#1c3a66] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:bg-[#06101e]"
                         )}
                       >
                         {getStatusIcon(st)}
@@ -586,36 +586,36 @@ export default function SalesPage() {
               {/* Articles commandés */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Articles ({selectedOrderForDetail.itemsCount})</span>
-                  <span className="text-xs text-slate-500">Paiement : <strong>{selectedOrderForDetail.paymentMethod}</strong></span>
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">Articles ({selectedOrderForDetail.itemsCount})</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">Paiement : <strong>{selectedOrderForDetail.paymentMethod}</strong></span>
                 </div>
 
-                <div className="border border-slate-200 rounded-2xl overflow-hidden">
+                <div className="border border-slate-200 dark:border-[#1c3a66] rounded-2xl overflow-hidden">
                   <div className="divide-y divide-slate-100">
                     {selectedOrderForDetail.items && selectedOrderForDetail.items.length > 0 ? (
                       selectedOrderForDetail.items.map((it, idx) => (
-                        <div key={idx} className="p-3 bg-white flex items-center justify-between text-xs sm:text-sm">
+                        <div key={idx} className="p-3 bg-white dark:bg-[#0a192f] flex items-center justify-between text-xs sm:text-sm">
                           <div>
-                            <div className="font-semibold text-slate-900">{it.name}</div>
-                            <div className="text-slate-500 text-[11px]">
+                            <div className="font-semibold text-slate-900 dark:text-white">{it.name}</div>
+                            <div className="text-slate-500 dark:text-slate-400 text-[11px]">
                               {it.quantity} × {formatCurrency(it.unitPrice)}
                             </div>
                           </div>
-                          <div className="font-bold font-mono text-slate-900">
+                          <div className="font-bold font-mono text-slate-900 dark:text-white">
                             {formatCurrency(it.quantity * it.unitPrice)}
                           </div>
                         </div>
                       ))
                     ) : (
-                      <div className="p-4 bg-white text-xs text-slate-500 italic text-center">
+                      <div className="p-4 bg-white dark:bg-[#0a192f] text-xs text-slate-500 dark:text-slate-400 italic text-center">
                         Détail des articles non disponible (commande groupée)
                       </div>
                     )}
                   </div>
                   
                   {/* Total */}
-                  <div className="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
-                    <span className="font-bold text-slate-900 text-sm">Montant Total :</span>
+                  <div className="p-3.5 bg-slate-50 dark:bg-[#06101e] border-t border-slate-200 dark:border-[#1c3a66] flex items-center justify-between">
+                    <span className="font-bold text-slate-900 dark:text-white text-sm">Montant Total :</span>
                     <span className="font-extrabold text-base sm:text-lg text-[#0b213f] font-mono">
                       {formatCurrency(selectedOrderForDetail.totalAmount)}
                     </span>
@@ -626,13 +626,13 @@ export default function SalesPage() {
             </div>
 
             {/* Footer Modal Actions */}
-            <div className="p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0">
+            <div className="p-4 bg-slate-50 dark:bg-[#06101e] border-t border-slate-200 dark:border-[#1c3a66] flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0">
               <Button
                 variant="outline"
                 onClick={() => {
                   router.push(`/dashboard/factures/nouvelle?orderId=${selectedOrderForDetail.id}`);
                 }}
-                className="w-full sm:w-auto text-xs font-semibold flex items-center justify-center gap-1.5 border-slate-300 hover:bg-white"
+                className="w-full sm:w-auto text-xs font-semibold flex items-center justify-center gap-1.5 border-slate-300 dark:border-[#244b82] hover:bg-white dark:bg-[#0a192f]"
               >
                 <ReceiptText size={15} />
                 <span>Générer Facture / Reçu</span>

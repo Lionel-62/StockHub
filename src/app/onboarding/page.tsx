@@ -94,7 +94,7 @@ export default function OnboardingPage() {
         <div className="absolute top-[-20%] right-[-10%] w-[30%] h-[150%] bg-[#0d9488] rotate-[-15deg] opacity-20 blur-3xl"></div>
       </div>
 
-      <div className="w-full max-w-2xl bg-white/70 backdrop-blur-xl border border-white rounded-3xl shadow-2xl overflow-hidden mt-8 transition-all relative z-10">
+      <div className="w-full max-w-2xl bg-white dark:bg-[#0a192f]/70 backdrop-blur-xl border border-white rounded-3xl shadow-2xl overflow-hidden mt-8 transition-all relative z-10">
         
         {/* Header */}
         <div className="bg-[#161726] p-8 text-white relative overflow-hidden">
@@ -133,16 +133,16 @@ export default function OnboardingPage() {
               <div className="w-24 h-24 bg-teal-50 rounded-full flex items-center justify-center mb-6 text-[#0d9488]">
                 <CheckCircle2 className="w-12 h-12" />
               </div>
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Félicitations {currentUser.name} !</h2>
-              <p className="text-slate-500 text-center">Votre boutique est prête. Vous allez être redirigé vers votre tableau de bord.</p>
+              <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">Félicitations {currentUser.name} !</h2>
+              <p className="text-slate-500 dark:text-slate-400 text-center">Votre boutique est prête. Vous allez être redirigé vers votre tableau de bord.</p>
             </div>
           ) : step === 1 ? (
             <div className="animate-in fade-in slide-in-from-right-4 duration-300">
               <div className="mb-8">
-                <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                   Quelle est votre activité principale ?
                 </h2>
-                <p className="text-slate-500 text-sm mt-1">Cela nous permet d'adapter l'expérience à vos besoins.</p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Cela nous permet d'adapter l'expérience à vos besoins.</p>
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
@@ -153,7 +153,7 @@ export default function OnboardingPage() {
                     className={`flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all ${
                       category === cat.id 
                         ? "border-[#0d9488] bg-teal-50/50 text-[#0d9488] shadow-sm scale-105" 
-                        : "border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50 text-slate-600"
+                        : "border-slate-100 dark:border-[#152a4d] bg-white dark:bg-[#0a192f] hover:border-slate-200 dark:border-[#1c3a66] hover:bg-slate-50 dark:bg-[#06101e] text-slate-600 dark:text-slate-300"
                     }`}
                   >
                     <div className={`mb-3 ${category === cat.id ? 'text-[#0d9488]' : 'text-slate-400'}`}>
@@ -164,7 +164,7 @@ export default function OnboardingPage() {
                 ))}
               </div>
 
-              <div className="flex justify-end mt-8 border-t border-slate-100 pt-6">
+              <div className="flex justify-end mt-8 border-t border-slate-100 dark:border-[#152a4d] pt-6">
                 <Button 
                   onClick={handleNextStep}
                   className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-6 rounded-xl font-semibold flex items-center gap-2"
@@ -179,19 +179,19 @@ export default function OnboardingPage() {
                 <button 
                   type="button" 
                   onClick={() => setStep(1)}
-                  className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+                  className="p-2 rounded-full bg-slate-100 dark:bg-[#112240] hover:bg-slate-200 text-slate-600 dark:text-slate-300 transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
                 <div>
-                  <h2 className="text-xl font-bold text-slate-800">Détails de la boutique</h2>
-                  <p className="text-slate-500 text-sm">Dernière étape avant d'accéder au tableau de bord.</p>
+                  <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Détails de la boutique</h2>
+                  <p className="text-slate-500 dark:text-slate-400 text-sm">Dernière étape avant d'accéder au tableau de bord.</p>
                 </div>
               </div>
 
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2 flex items-center gap-2">
                     <Store size={16} className="text-[#0d9488]" />
                     Nom de votre boutique <span className="text-red-500">*</span>
                   </label>
@@ -199,14 +199,14 @@ export default function OnboardingPage() {
                     type="text"
                     value={shopName}
                     onChange={(e) => setShopName(e.target.value)}
-                    className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
+                    className="w-full px-4 py-3.5 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
                     placeholder="Ex: L'Élégance Paris"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
                       Pays <span className="text-red-500">*</span>
                     </label>
                     <select
@@ -216,7 +216,7 @@ export default function OnboardingPage() {
                         setCountry(c);
                         setCountryCode(code);
                       }}
-                      className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
+                      className="w-full px-4 py-3.5 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
                     >
                       <option value="Bénin|+229">Bénin (+229)</option>
                       <option value="Côte d'Ivoire|+225">Côte d'Ivoire (+225)</option>
@@ -229,41 +229,41 @@ export default function OnboardingPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
                       Ville <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
+                      className="w-full px-4 py-3.5 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
                       placeholder="Ex: Cotonou"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2 flex items-center gap-2">
                     <Phone size={16} className="text-[#0d9488]" />
                     Numéro WhatsApp (pour les commandes) <span className="text-red-500">*</span>
                   </label>
                   <div className="flex">
-                    <span className="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-slate-200 bg-slate-50 text-slate-500 text-sm font-medium">
+                    <span className="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-slate-200 dark:border-[#1c3a66] bg-slate-50 dark:bg-[#06101e] text-slate-500 dark:text-slate-400 text-sm font-medium">
                       {countryCode}
                     </span>
                     <input
                       type="tel"
                       value={whatsapp}
                       onChange={(e) => setWhatsapp(e.target.value)}
-                      className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-r-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
+                      className="w-full px-4 py-3.5 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-r-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm"
                       placeholder="Ex: 01 02 03 04 05"
                     />
                   </div>
-                  <p className="text-xs text-slate-500 mt-1.5 ml-1">Ce numéro servira à recevoir les commandes de vos clients.</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 ml-1">Ce numéro servira à recevoir les commandes de vos clients.</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2 flex items-center gap-2">
                     <FileText size={16} className="text-[#0d9488]" />
                     Petite description (Optionnel)
                   </label>
@@ -271,13 +271,13 @@ export default function OnboardingPage() {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     rows={3}
-                    className="w-full px-4 py-3.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm resize-none"
+                    className="w-full px-4 py-3.5 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-xl focus:ring-2 focus:ring-[#0d9488]/20 focus:border-[#0d9488]/50 outline-none transition-all text-sm shadow-sm resize-none"
                     placeholder="Vente de vêtements pour hommes et femmes..."
                   />
                 </div>
               </div>
 
-              <div className="flex mt-10 border-t border-slate-100 pt-6">
+              <div className="flex mt-10 border-t border-slate-100 dark:border-[#152a4d] pt-6">
                 <Button 
                   type="submit"
                   disabled={isLoading}

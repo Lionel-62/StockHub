@@ -146,7 +146,7 @@ export function Sidebar() {
     <div className="flex h-full w-64 flex-col bg-[#0b213f] text-slate-300">
       {/* Logo */}
       <div className="flex h-20 items-center px-5 border-b border-white/10 shrink-0">
-        <Link href="/dashboard" className="bg-white rounded-lg p-2 w-full flex items-center justify-center hover:opacity-90 transition-opacity">
+        <Link href="/dashboard" className="bg-white dark:bg-[#0a192f] rounded-lg p-2 w-full flex items-center justify-center hover:opacity-90 transition-opacity">
           <Image 
             src="/logo.png" 
             alt="StockHub" 
@@ -164,7 +164,7 @@ export function Sidebar() {
           <button
             type="button"
             onClick={() => setShopDropdownOpen(!shopDropdownOpen)}
-            className="w-full flex items-center justify-between p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-left group"
+            className="w-full flex items-center justify-between p-2 rounded-xl bg-white dark:bg-[#0a192f]/5 hover:bg-white dark:bg-[#0a192f]/10 border border-white/10 transition-all text-left group"
           >
             <div className="flex items-center gap-2.5 overflow-hidden min-w-0">
               <div className="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300 shrink-0">
@@ -190,7 +190,7 @@ export function Sidebar() {
             <div className="mt-2 bg-[#0d2647] border border-white/15 rounded-xl shadow-2xl overflow-hidden p-1.5 flex flex-col gap-1">
               <div className="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
                 <span>Vos boutiques</span>
-                <span className="text-[10px] bg-white/10 px-1.5 py-0.2 rounded font-mono text-slate-300">
+                <span className="text-[10px] bg-white dark:bg-[#0a192f]/10 px-1.5 py-0.2 rounded font-mono text-slate-300">
                   {userShops.length}
                 </span>
               </div>
@@ -202,7 +202,7 @@ export function Sidebar() {
                       key={shop.id} 
                       className={cn(
                         "flex items-center justify-between rounded-lg p-1.5 transition-colors group",
-                        isCurrent ? "bg-blue-600/30 border border-blue-500/30" : "hover:bg-white/10"
+                        isCurrent ? "bg-blue-600/30 border border-blue-500/30" : "hover:bg-white dark:bg-[#0a192f]/10"
                       )}
                     >
                       <button
@@ -331,7 +331,7 @@ export function Sidebar() {
           </div>
           <button 
             onClick={handleLogout}
-            className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors shrink-0"
+            className="p-1.5 hover:bg-white dark:bg-[#0a192f]/10 rounded-lg text-slate-400 hover:text-white transition-colors shrink-0"
             title="Se déconnecter"
           >
             <LogOut size={16} />

@@ -139,7 +139,7 @@ function LoginForm() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-dvh flex items-center justify-center bg-slate-50">
+      <div className="min-h-dvh flex items-center justify-center bg-slate-50 dark:bg-[#06101e]">
         <LogoLoader message="Préparation de l'interface..." />
       </div>
     );
@@ -148,29 +148,29 @@ function LoginForm() {
   if (currentUser) return null;
 
   return (
-    <div className="min-h-dvh bg-slate-50 flex flex-col justify-center items-center p-4 relative overflow-hidden">
+    <div className="min-h-dvh bg-slate-50 dark:bg-[#06101e] flex flex-col justify-center items-center p-4 relative overflow-hidden">
       
       {/* Animated Glassmorphism Background Blobs */}
       <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-400/20 blur-[100px] pointer-events-none"></div>
       <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-teal-400/20 blur-[100px] pointer-events-none"></div>
       
-      <div className="w-full max-w-[420px] bg-white/70 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden border border-white/80 p-8 z-10 transition-all">
+      <div className="w-full max-w-[420px] bg-white dark:bg-[#0a192f]/70 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden border border-white/80 p-8 z-10 transition-all">
         
         {/* Header */}
         <div className="text-center mb-8">
           <img src="/logo.png" alt="StockHub Logo" className="h-14 sm:h-16 w-auto object-contain mx-auto mb-4 drop-shadow-sm" />
-          <p className="text-slate-500 text-sm font-medium">Gérez votre boutique en toute simplicité.</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Gérez votre boutique en toute simplicité.</p>
         </div>
 
         {/* Tabs */}
-        <div className="bg-slate-100/50 p-1.5 rounded-2xl flex items-center mb-8 border border-white/50 shadow-inner">
+        <div className="bg-slate-100 dark:bg-[#112240]/50 p-1.5 rounded-2xl flex items-center mb-8 border border-white/50 shadow-inner">
           <button 
             type="button"
             onClick={() => { setActiveTab("login"); setError(""); setSuccess(""); }}
             className={`flex-1 text-sm font-semibold py-2.5 rounded-xl transition-all ${
               activeTab === "login" 
-                ? "bg-white text-slate-900 shadow-sm border border-slate-200/50" 
-                : "text-slate-500 hover:text-slate-700"
+                ? "bg-white dark:bg-[#0a192f] text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-[#1c3a66]/50" 
+                : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-200"
             }`}
           >
             Connexion
@@ -180,8 +180,8 @@ function LoginForm() {
             onClick={() => { setActiveTab("register"); setError(""); setSuccess(""); }}
             className={`flex-1 text-sm font-semibold py-2.5 rounded-xl transition-all ${
               activeTab === "register" 
-                ? "bg-white text-slate-900 shadow-sm border border-slate-200/50" 
-                : "text-slate-500 hover:text-slate-700"
+                ? "bg-white dark:bg-[#0a192f] text-slate-900 dark:text-white shadow-sm border border-slate-200 dark:border-[#1c3a66]/50" 
+                : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-200"
             }`}
           >
             Inscription
@@ -208,20 +208,20 @@ function LoginForm() {
         {activeTab === "login" ? (
           <form onSubmit={handleLogin} className="space-y-5 animate-in fade-in slide-in-from-left-2 duration-300">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
+              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">Email</label>
               <input
                 type="email"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-white/80 border border-slate-200/80 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all text-sm placeholder:text-slate-400 shadow-sm"
+                className="w-full px-4 py-3 bg-white dark:bg-[#0a192f]/80 border border-slate-200 dark:border-[#1c3a66]/80 rounded-xl focus:bg-white dark:bg-[#0a192f] focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all text-sm placeholder:text-slate-400 shadow-sm"
                 placeholder="vous@entreprise.com"
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-sm font-semibold text-slate-700">Mot de passe</label>
-                <button type="button" className="text-xs font-medium text-slate-500 hover:text-[#161726] transition-colors">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200">Mot de passe</label>
+                <button type="button" className="text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-[#161726] transition-colors">
                   Mot de passe oublié ?
                 </button>
               </div>
@@ -229,7 +229,7 @@ function LoginForm() {
                 type="password"
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-white/80 border border-slate-200/80 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-wide text-sm shadow-sm"
+                className="w-full px-4 py-3 bg-white dark:bg-[#0a192f]/80 border border-slate-200 dark:border-[#1c3a66]/80 rounded-xl focus:bg-white dark:bg-[#0a192f] focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-wide text-sm shadow-sm"
                 placeholder="••••••••"
               />
             </div>
@@ -244,10 +244,10 @@ function LoginForm() {
             
             <div className="relative mt-8 mb-6">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200/80"></div>
+                <div className="w-full border-t border-slate-200 dark:border-[#1c3a66]/80"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-3 bg-slate-50/50 backdrop-blur-md text-slate-500 font-medium rounded-full text-xs">ou continuer avec</span>
+                <span className="px-3 bg-slate-50 dark:bg-[#06101e]/50 backdrop-blur-md text-slate-500 dark:text-slate-400 font-medium rounded-full text-xs">ou continuer avec</span>
               </div>
             </div>
 
@@ -255,7 +255,7 @@ function LoginForm() {
               type="button" 
               onClick={() => handleGoogleLogin(false)}
               variant="outline"
-              className="w-full bg-white/80 hover:bg-white border border-slate-200/80 text-slate-700 py-6 text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3"
+              className="w-full bg-white dark:bg-[#0a192f]/80 hover:bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66]/80 text-slate-700 dark:text-slate-200 py-6 text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3"
             >
               <svg viewBox="0 0 24 24" className="w-5 h-5 drop-shadow-sm" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -271,45 +271,45 @@ function LoginForm() {
           <form onSubmit={handleRegister} className="relative">
             <div className="space-y-5 animate-in fade-in slide-in-from-right-2 duration-300">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Nom complet</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">Nom complet</label>
                 <input
                   type="text"
                   value={regName}
                   onChange={(e) => setRegName(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/80 border border-slate-200/80 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all text-sm placeholder:text-slate-400 shadow-sm"
+                  className="w-full px-4 py-3 bg-white dark:bg-[#0a192f]/80 border border-slate-200 dark:border-[#1c3a66]/80 rounded-xl focus:bg-white dark:bg-[#0a192f] focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all text-sm placeholder:text-slate-400 shadow-sm"
                   placeholder="Jean Dupont"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">Email</label>
                 <input
                   type="email"
                   value={regEmail}
                   onChange={(e) => setRegEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/80 border border-slate-200/80 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all text-sm placeholder:text-slate-400 shadow-sm"
+                  className="w-full px-4 py-3 bg-white dark:bg-[#0a192f]/80 border border-slate-200 dark:border-[#1c3a66]/80 rounded-xl focus:bg-white dark:bg-[#0a192f] focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all text-sm placeholder:text-slate-400 shadow-sm"
                   placeholder="vous@entreprise.com"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mot de passe</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">Mot de passe</label>
                   <input
                     type="password"
                     value={regPassword}
                     onChange={(e) => setRegPassword(e.target.value)}
-                    className="w-full px-4 py-3 bg-white/80 border border-slate-200/80 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-wide text-sm shadow-sm"
+                    className="w-full px-4 py-3 bg-white dark:bg-[#0a192f]/80 border border-slate-200 dark:border-[#1c3a66]/80 rounded-xl focus:bg-white dark:bg-[#0a192f] focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-wide text-sm shadow-sm"
                     placeholder="••••••••"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Confirmer</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1.5">Confirmer</label>
                   <input
                     type="password"
                     value={regConfirmPassword}
                     onChange={(e) => setRegConfirmPassword(e.target.value)}
-                    className="w-full px-4 py-3 bg-white/80 border border-slate-200/80 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-wide text-sm shadow-sm"
+                    className="w-full px-4 py-3 bg-white dark:bg-[#0a192f]/80 border border-slate-200 dark:border-[#1c3a66]/80 rounded-xl focus:bg-white dark:bg-[#0a192f] focus:ring-2 focus:ring-[#161726]/10 focus:border-[#161726]/30 outline-none transition-all tracking-wide text-sm shadow-sm"
                     placeholder="••••••••"
                   />
                 </div>
@@ -325,10 +325,10 @@ function LoginForm() {
               
               <div className="relative mt-8 mb-6">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-200/80"></div>
+                  <div className="w-full border-t border-slate-200 dark:border-[#1c3a66]/80"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-3 bg-slate-50/50 backdrop-blur-md text-slate-500 font-medium rounded-full text-xs">ou s'inscrire avec</span>
+                  <span className="px-3 bg-slate-50 dark:bg-[#06101e]/50 backdrop-blur-md text-slate-500 dark:text-slate-400 font-medium rounded-full text-xs">ou s'inscrire avec</span>
                 </div>
               </div>
 
@@ -336,7 +336,7 @@ function LoginForm() {
                 type="button" 
                 onClick={() => handleGoogleLogin(true)}
                 variant="outline"
-                className="w-full bg-white/80 hover:bg-white border border-slate-200/80 text-slate-700 py-6 text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3"
+                className="w-full bg-white dark:bg-[#0a192f]/80 hover:bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66]/80 text-slate-700 dark:text-slate-200 py-6 text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3"
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5 drop-shadow-sm" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -356,7 +356,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="h-dvh flex items-center justify-center bg-slate-50"><LogoLoader /></div>}>
+    <Suspense fallback={<div className="h-dvh flex items-center justify-center bg-slate-50 dark:bg-[#06101e]"><LogoLoader /></div>}>
       <LoginForm />
     </Suspense>
   );

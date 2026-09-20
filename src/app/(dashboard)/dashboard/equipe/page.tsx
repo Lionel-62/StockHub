@@ -120,42 +120,42 @@ export default function EquipePage() {
   return (
     <div className="p-3 md:p-0 max-w-5xl mx-auto space-y-8 relative pb-20 animate-in fade-in duration-300">
       {/* HEADER SECTION */}
-      <div className="bg-slate-50/50 rounded-2xl p-6 border border-slate-100 flex items-start gap-4">
+      <div className="bg-slate-50 dark:bg-[#06101e]/50 rounded-2xl p-6 border border-slate-100 dark:border-[#152a4d] flex items-start gap-4">
         <div className="w-12 h-12 rounded-full bg-[#0b213f]/10 flex items-center justify-center shrink-0">
           <Users className="text-[#0b213f] w-6 h-6" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Équipe</h1>
-          <p className="text-slate-500 text-sm mt-1">Génère des accès pour tes collègues pour gérer Stockhub avec toi.</p>
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white">Équipe</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Génère des accès pour tes collègues pour gérer Stockhub avec toi.</p>
         </div>
       </div>
 
       {/* INVITATION FORM */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white dark:bg-[#0a192f] rounded-2xl border border-slate-200 dark:border-[#1c3a66] p-6 shadow-sm">
         <form onSubmit={handleSubmit} className="flex flex-col md:flex-row items-end gap-4 relative">
           <div className="w-full flex-1 group">
-            <label className="block text-sm font-semibold text-slate-900 mb-2">Nom de l'employé</label>
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Nom de l'employé</label>
             <input 
               type="text" 
               value={formName}
               onChange={(e) => setFormName(e.target.value)}
               placeholder="Ex: Alice"
-              className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] outline-none transition-all text-sm shadow-sm hover:border-[#0b213f]/50"
+              className="w-full px-4 py-2.5 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-xl focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] outline-none transition-all text-sm shadow-sm hover:border-[#0b213f]/50"
               required
             />
           </div>
           <div className="w-full md:w-64 shrink-0">
-            <label className="block text-sm font-semibold text-slate-900 mb-2">Rôle</label>
+            <label className="block text-sm font-semibold text-slate-900 dark:text-white mb-2">Rôle</label>
             <div className="relative">
               <select
                 value={formRole}
                 onChange={(e) => setFormRole(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] outline-none transition-all text-sm shadow-sm cursor-pointer appearance-none hover:border-[#0b213f]/50"
+                className="w-full px-4 py-2.5 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-xl focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] outline-none transition-all text-sm shadow-sm cursor-pointer appearance-none hover:border-[#0b213f]/50"
               >
                 <option>Vendeur (Accès limité)</option>
                 <option>Gérant (Accès complet)</option>
               </select>
-              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-500">
+              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-500 dark:text-slate-400">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
               </div>
             </div>
@@ -178,8 +178,8 @@ export default function EquipePage() {
               <div>
                 <p className="text-emerald-900 font-semibold text-sm">Accès généré pour {generatedAccess.name} !</p>
                 <div className="flex flex-wrap items-center gap-4 mt-2">
-                  <p className="text-emerald-700 text-sm">ID: <span className="font-mono font-bold bg-white px-2 py-0.5 rounded border border-emerald-200 text-emerald-800">{generatedAccess.identifier}</span></p>
-                  <p className="text-emerald-700 text-sm">PIN: <span className="font-mono font-bold bg-white px-2 py-0.5 rounded border border-emerald-200 text-emerald-800 tracking-wider">{generatedAccess.pin}</span></p>
+                  <p className="text-emerald-700 text-sm">ID: <span className="font-mono font-bold bg-white dark:bg-[#0a192f] px-2 py-0.5 rounded border border-emerald-200 text-emerald-800">{generatedAccess.identifier}</span></p>
+                  <p className="text-emerald-700 text-sm">PIN: <span className="font-mono font-bold bg-white dark:bg-[#0a192f] px-2 py-0.5 rounded border border-emerald-200 text-emerald-800 tracking-wider">{generatedAccess.pin}</span></p>
                 </div>
               </div>
             </div>
@@ -192,7 +192,7 @@ export default function EquipePage() {
                   navigator.clipboard.writeText(loginUrl);
                   alert("Lien de connexion copié dans le presse-papier !");
                 }} 
-                className="bg-white hover:bg-slate-50 text-emerald-700 border-emerald-200 shrink-0 rounded-lg text-sm px-4 shadow-sm"
+                className="bg-white dark:bg-[#0a192f] hover:bg-slate-50 dark:bg-[#06101e] text-emerald-700 border-emerald-200 shrink-0 rounded-lg text-sm px-4 shadow-sm"
               >
                 Copier
               </Button>
@@ -220,15 +220,15 @@ export default function EquipePage() {
               placeholder="Rechercher par nom..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-4 py-2 w-full border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] transition-all shadow-sm"
+              className="pl-9 pr-4 py-2 w-full border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-white dark:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] transition-all shadow-sm"
             />
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-[#0a192f] rounded-2xl border border-slate-200 dark:border-[#1c3a66] shadow-sm overflow-hidden">
           <Table>
             <TableHeader className="bg-transparent hidden md:table-header-group">
-              <TableRow className="border-b border-slate-100 hover:bg-transparent">
+              <TableRow className="border-b border-slate-100 dark:border-[#152a4d] hover:bg-transparent">
                 <TableHead className="text-xs font-bold text-slate-400 tracking-wider uppercase h-12 pl-6">Membre</TableHead>
                 <TableHead className="text-xs font-bold text-slate-400 tracking-wider uppercase h-12 text-right">Rôle</TableHead>
                 <TableHead className="w-24 text-right pr-6"></TableHead>
@@ -237,34 +237,34 @@ export default function EquipePage() {
             <TableBody>
               {filteredUsers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center py-12 text-slate-500 text-sm">
+                  <TableCell colSpan={3} className="text-center py-12 text-slate-500 dark:text-slate-400 text-sm">
                     Aucun membre trouvé.
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredUsers.map((user) => (
-                  <TableRow key={user.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group flex flex-col md:table-row">
-                    <TableCell className="py-4 pl-6 flex-1 border-b md:border-b-0 border-slate-100">
+                  <TableRow key={user.id} className="border-b border-slate-50 hover:bg-slate-50 dark:bg-[#06101e]/50 transition-colors group flex flex-col md:table-row">
+                    <TableCell className="py-4 pl-6 flex-1 border-b md:border-b-0 border-slate-100 dark:border-[#152a4d]">
                       <div className="flex items-center gap-4">
                         <div className="h-10 w-10 rounded-full bg-[#0b213f] text-white flex items-center justify-center font-bold shrink-0 text-lg shadow-sm">
                           {user.name.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <div className="font-semibold text-slate-900">{user.name}</div>
-                          <div className="text-slate-500 text-xs font-mono mt-0.5 opacity-80 flex gap-3">
+                          <div className="font-semibold text-slate-900 dark:text-white">{user.name}</div>
+                          <div className="text-slate-500 dark:text-slate-400 text-xs font-mono mt-0.5 opacity-80 flex gap-3">
                             <span>ID: {user.identifier}</span>
                             <span>PIN: {user.pinCode}</span>
                           </div>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="text-left md:text-right py-3 md:py-4 pl-6 md:pl-0 border-b md:border-b-0 border-slate-100">
+                    <TableCell className="text-left md:text-right py-3 md:py-4 pl-6 md:pl-0 border-b md:border-b-0 border-slate-100 dark:border-[#152a4d]">
                       <Badge className={
                         user.role === "owner" 
                           ? "bg-amber-100 text-amber-700 hover:bg-amber-200 font-semibold border-0 px-3 py-1" 
                           : user.permissions.canViewDashboard 
                             ? "bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold border-0 px-3 py-1"
-                            : "bg-slate-100 text-slate-600 hover:bg-slate-200 font-semibold border-0 px-3 py-1"
+                            : "bg-slate-100 dark:bg-[#112240] text-slate-600 dark:text-slate-300 hover:bg-slate-200 font-semibold border-0 px-3 py-1"
                       }>
                         {user.role === "owner" ? "Propriétaire" : user.permissions.canViewDashboard ? "Gérant" : "Vendeur"}
                       </Badge>

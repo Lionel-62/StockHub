@@ -10,7 +10,7 @@ export default function DashboardLayout({
 }) {
   return (
     <AuthGuard>
-      <div className="flex h-dvh overflow-hidden bg-slate-50 dark:bg-slate-950 print:h-auto print:overflow-visible print:block print:bg-white transition-colors duration-200">
+      <div className="flex h-dvh overflow-hidden bg-slate-50 dark:bg-slate-950 print:h-auto print:overflow-visible print:block print:bg-white dark:bg-[#0a192f] transition-colors duration-200">
         <div className="flex flex-1 flex-col overflow-hidden print:block print:overflow-visible">
           <div className="print:hidden">
             <Topbar />

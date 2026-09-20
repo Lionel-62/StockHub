@@ -40,13 +40,13 @@ export function Faq() {
   };
 
   return (
-    <section className="py-24 bg-white" data-purpose="faq" id="faq">
+    <section className="py-24 bg-white dark:bg-[#0a192f]" data-purpose="faq" id="faq">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-16">
-          <span className="text-xs uppercase tracking-widest font-bold text-[#0b213f] bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+          <span className="text-xs uppercase tracking-widest font-bold text-[#0b213f] bg-slate-100 dark:bg-[#112240] px-3 py-1 rounded-full border border-slate-200 dark:border-[#1c3a66]">
             Foire Aux Questions
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mt-3">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-3">
             Questions Fréquentes
           </h2>
         </div>
@@ -59,17 +59,17 @@ export function Faq() {
                 key={index} 
                 className={cn(
                   "border rounded-2xl transition-colors duration-200 overflow-hidden",
-                  isOpen ? "border-[#0b213f]/30 bg-slate-50" : "border-slate-200 bg-white hover:border-slate-300"
+                  isOpen ? "border-[#0b213f]/30 bg-slate-50 dark:bg-[#06101e]" : "border-slate-200 dark:border-[#1c3a66] bg-white dark:bg-[#0a192f] hover:border-slate-300 dark:border-[#244b82]"
                 )}
               >
                 <button
                   onClick={() => toggleFaq(index)}
                   className="w-full flex items-center justify-between p-5 sm:p-6 text-left"
                 >
-                  <span className="font-bold text-slate-900 pr-4">{faq.question}</span>
+                  <span className="font-bold text-slate-900 dark:text-white pr-4">{faq.question}</span>
                   <ChevronDown 
                     className={cn(
-                      "w-5 h-5 text-slate-500 shrink-0 transition-transform duration-300",
+                      "w-5 h-5 text-slate-500 dark:text-slate-400 shrink-0 transition-transform duration-300",
                       isOpen && "rotate-180 text-[#0b213f]"
                     )} 
                   />
@@ -82,7 +82,7 @@ export function Faq() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
-                      <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-slate-600 leading-relaxed text-sm">
+                      <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
                         {faq.answer}
                       </div>
                     </motion.div>
@@ -95,12 +95,12 @@ export function Faq() {
 
         {/* Support direct WhatsApp */}
         <div className="mt-12 text-center">
-          <p className="text-slate-600 text-sm mb-3">Vous avez une autre question qui ne figure pas ici ?</p>
+          <p className="text-slate-600 dark:text-slate-300 text-sm mb-3">Vous avez une autre question qui ne figure pas ici ?</p>
           <a
             href="https://wa.me/2290162579394?text=Bonjour%20StockHub%2C%20j%27ai%20une%20question%20sur%20votre%20plateforme."
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-slate-800 hover:text-emerald-700 font-bold text-sm bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 px-5 py-2.5 rounded-full transition-all shadow-xs"
+            className="inline-flex items-center gap-2 text-slate-800 dark:text-slate-100 hover:text-emerald-700 font-bold text-sm bg-white dark:bg-[#0a192f] hover:bg-emerald-50 border border-slate-200 dark:border-[#1c3a66] hover:border-emerald-300 px-5 py-2.5 rounded-full transition-all shadow-xs"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>Discuter avec nous sur WhatsApp</span>

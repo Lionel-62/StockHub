@@ -63,11 +63,11 @@ export function CustomSelect({
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-full flex items-center justify-between px-3 py-2.5 bg-white border rounded-lg text-sm transition-all focus:outline-none",
+          "w-full flex items-center justify-between px-3 py-2.5 bg-white dark:bg-[#0a192f] border rounded-lg text-sm transition-all focus:outline-none",
           isOpen
             ? "border-blue-400 ring-2 ring-blue-100 shadow-sm"
-            : "border-slate-200 hover:border-blue-300",
-          disabled ? "bg-slate-50 text-slate-400 cursor-not-allowed" : "text-slate-800"
+            : "border-slate-200 dark:border-[#1c3a66] hover:border-blue-300",
+          disabled ? "bg-slate-50 dark:bg-[#06101e] text-slate-400 cursor-not-allowed" : "text-slate-800 dark:text-slate-100"
         )}
       >
         <span className={cn("truncate", !selectedOption && "text-slate-400")}>
@@ -83,7 +83,7 @@ export function CustomSelect({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-slate-100 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+        <div className="absolute z-50 w-full mt-2 bg-white dark:bg-[#0a192f] border border-slate-100 dark:border-[#152a4d] rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
           {searchable && (
             <div className="p-2 border-b border-slate-50 relative">
               <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -92,7 +92,7 @@ export function CustomSelect({
                 placeholder={searchPlaceholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 text-sm bg-slate-50 border-none rounded-md focus:outline-none focus:ring-1 focus:ring-blue-100"
+                className="w-full pl-8 pr-3 py-1.5 text-sm bg-slate-50 dark:bg-[#06101e] border-none rounded-md focus:outline-none focus:ring-1 focus:ring-blue-100"
                 autoFocus
               />
             </div>
@@ -100,7 +100,7 @@ export function CustomSelect({
           
           <div className="max-h-60 overflow-y-auto custom-scrollbar p-1.5 space-y-0.5">
             {filteredOptions.length === 0 && (!allowCreate || !searchTerm.trim()) ? (
-              <div className="p-3 text-center text-sm text-slate-500">Aucun résultat</div>
+              <div className="p-3 text-center text-sm text-slate-500 dark:text-slate-400">Aucun résultat</div>
             ) : (
               <>
                 {filteredOptions.map((opt) => {
@@ -118,7 +118,7 @@ export function CustomSelect({
                         "w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg transition-colors",
                         isSelected
                           ? "bg-blue-50 text-blue-700 font-medium"
-                          : "text-slate-700 hover:bg-slate-50"
+                          : "text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:bg-[#06101e]"
                       )}
                     >
                       <div className="flex items-center gap-2">

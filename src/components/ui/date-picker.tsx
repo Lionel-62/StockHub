@@ -106,36 +106,36 @@ export function DatePicker({
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-full flex items-center gap-2 px-3 py-2.5 bg-white border rounded-lg text-sm transition-all focus:outline-none",
+          "w-full flex items-center gap-2 px-3 py-2.5 bg-white dark:bg-[#0a192f] border rounded-lg text-sm transition-all focus:outline-none",
           isOpen
             ? "border-blue-400 ring-2 ring-blue-100 shadow-sm"
-            : "border-slate-200 hover:border-blue-300",
-          disabled ? "bg-slate-50 text-slate-400 cursor-not-allowed" : "text-slate-800"
+            : "border-slate-200 dark:border-[#1c3a66] hover:border-blue-300",
+          disabled ? "bg-slate-50 dark:bg-[#06101e] text-slate-400 cursor-not-allowed" : "text-slate-800 dark:text-slate-100"
         )}
       >
-        <CalendarIcon size={16} className="text-slate-500 shrink-0" />
+        <CalendarIcon size={16} className="text-slate-500 dark:text-slate-400 shrink-0" />
         <span className={cn("truncate flex-1 text-left", !value && "text-slate-400")}>
           {value ? formattedDisplayDate : placeholder}
         </span>
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-[260px] p-3 mt-2 bg-white border border-slate-100 rounded-xl shadow-xl animate-in fade-in zoom-in-95 duration-100 right-0 sm:right-auto sm:left-0">
+        <div className="absolute z-50 w-[260px] p-3 mt-2 bg-white dark:bg-[#0a192f] border border-slate-100 dark:border-[#152a4d] rounded-xl shadow-xl animate-in fade-in zoom-in-95 duration-100 right-0 sm:right-auto sm:left-0">
           <div className="flex items-center justify-between mb-4">
             <button
               type="button"
               onClick={handlePrevMonth}
-              className="p-1.5 rounded-md hover:bg-slate-100 text-slate-600 transition-colors"
+              className="p-1.5 rounded-md hover:bg-slate-100 dark:bg-[#112240] text-slate-600 dark:text-slate-300 transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
-            <div className="font-semibold text-slate-800 text-sm">
+            <div className="font-semibold text-slate-800 dark:text-slate-100 text-sm">
               {MONTHS[currentMonth]} {currentYear}
             </div>
             <button
               type="button"
               onClick={handleNextMonth}
-              className="p-1.5 rounded-md hover:bg-slate-100 text-slate-600 transition-colors"
+              className="p-1.5 rounded-md hover:bg-slate-100 dark:bg-[#112240] text-slate-600 dark:text-slate-300 transition-colors"
             >
               <ChevronRight size={16} />
             </button>
@@ -169,8 +169,8 @@ export function DatePicker({
                     isSelected
                       ? "bg-blue-600 text-white font-medium shadow-md shadow-blue-200"
                       : isToday
-                      ? "bg-slate-100 text-blue-600 font-semibold hover:bg-slate-200"
-                      : "text-slate-700 hover:bg-slate-100"
+                      ? "bg-slate-100 dark:bg-[#112240] text-blue-600 font-semibold hover:bg-slate-200"
+                      : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-[#112240]"
                   )}
                 >
                   {day}

@@ -51,8 +51,8 @@ export default function SubscriptionPage() {
         <div className="bg-red-100 p-4 rounded-full mb-4">
           <ShieldCheck className="w-12 h-12 text-red-600" />
         </div>
-        <h1 className="text-2xl font-bold text-slate-900 mb-2">Boutique Temporairement Suspendue</h1>
-        <p className="text-slate-600 max-w-md">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Boutique Temporairement Suspendue</h1>
+        <p className="text-slate-600 dark:text-slate-300 max-w-md">
           L'abonnement de cette boutique est arrivé à expiration. Veuillez contacter le propriétaire ou le gérant pour rétablir l'accès.
         </p>
       </div>
@@ -88,39 +88,39 @@ export default function SubscriptionPage() {
       )}
 
       <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-slate-900 mb-4">Prolongez votre accès à StockHub</h1>
-        <p className="text-slate-500 text-lg max-w-xl mx-auto">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Prolongez votre accès à StockHub</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-lg max-w-xl mx-auto">
           Profitez d'une gestion de stock simplifiée et de votre vitrine en ligne ouverte 24h/24.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
         {/* Carte Mensuelle Standard - 5000 */}
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden relative flex flex-col">
+        <div className="bg-white dark:bg-[#0a192f] rounded-2xl shadow-lg border border-slate-200 dark:border-[#1c3a66] overflow-hidden relative flex flex-col">
           <div className="p-8 flex-1">
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">Forfait Standard</h3>
-            <p className="text-slate-500 mb-6">L'essentiel pour bien démarrer votre activité.</p>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Forfait Standard</h3>
+            <p className="text-slate-500 dark:text-slate-400 mb-6">L'essentiel pour bien démarrer votre activité.</p>
             <div className="flex items-baseline gap-2 mb-6">
-              <span className="text-4xl font-extrabold text-slate-900">5 000</span>
-              <span className="text-lg font-medium text-slate-500">FCFA / mois</span>
+              <span className="text-4xl font-extrabold text-slate-900 dark:text-white">5 000</span>
+              <span className="text-lg font-medium text-slate-500 dark:text-slate-400">FCFA / mois</span>
             </div>
             
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700">Produits et ventes illimités</span>
+                <span className="text-slate-700 dark:text-slate-200">Produits et ventes illimités</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700">Gestion de stock basique</span>
+                <span className="text-slate-700 dark:text-slate-200">Gestion de stock basique</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700">Vitrine en ligne simple</span>
+                <span className="text-slate-700 dark:text-slate-200">Vitrine en ligne simple</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700">Support par email</span>
+                <span className="text-slate-700 dark:text-slate-200">Support par email</span>
               </li>
             </ul>
           </div>
@@ -128,7 +128,7 @@ export default function SubscriptionPage() {
             <button
               onClick={() => handleSubscribe(5000, "Standard")}
               disabled={loading}
-              className="w-full py-4 px-6 rounded-xl text-slate-700 font-medium bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+              className="w-full py-4 px-6 rounded-xl text-slate-700 dark:text-slate-200 font-medium bg-slate-100 dark:bg-[#112240] hover:bg-slate-200 border border-slate-300 dark:border-[#244b82] transition-all flex items-center justify-center gap-2 disabled:opacity-70"
             >
               <CreditCard className="w-5 h-5" />
               Choisir Standard
@@ -137,39 +137,39 @@ export default function SubscriptionPage() {
         </div>
 
         {/* Carte Mensuelle Pro - 8000 */}
-        <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-500 overflow-hidden relative flex flex-col transform md:-translate-y-4">
+        <div className="bg-white dark:bg-[#0a192f] rounded-2xl shadow-xl border-2 border-blue-500 overflow-hidden relative flex flex-col transform md:-translate-y-4">
           <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
           <div className="bg-blue-600 text-white text-center py-1.5 text-xs font-bold tracking-widest uppercase">
             Le plus populaire
           </div>
           <div className="p-8 flex-1">
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">Forfait Pro</h3>
-            <p className="text-slate-500 mb-6">Pour les commerçants qui veulent passer à la vitesse supérieure.</p>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Forfait Pro</h3>
+            <p className="text-slate-500 dark:text-slate-400 mb-6">Pour les commerçants qui veulent passer à la vitesse supérieure.</p>
             <div className="flex items-baseline gap-2 mb-6">
-              <span className="text-4xl font-extrabold text-slate-900">8 000</span>
-              <span className="text-lg font-medium text-slate-500">FCFA / mois</span>
+              <span className="text-4xl font-extrabold text-slate-900 dark:text-white">8 000</span>
+              <span className="text-lg font-medium text-slate-500 dark:text-slate-400">FCFA / mois</span>
             </div>
             
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700 font-medium">Tout ce qui est dans le Standard, plus :</span>
+                <span className="text-slate-700 dark:text-slate-200 font-medium">Tout ce qui est dans le Standard, plus :</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700">Accès multi-employés (illimité)</span>
+                <span className="text-slate-700 dark:text-slate-200">Accès multi-employés (illimité)</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700">Rapports financiers avancés</span>
+                <span className="text-slate-700 dark:text-slate-200">Rapports financiers avancés</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700">Vitrine en ligne personnalisable</span>
+                <span className="text-slate-700 dark:text-slate-200">Vitrine en ligne personnalisable</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700">Assistance prioritaire sur WhatsApp</span>
+                <span className="text-slate-700 dark:text-slate-200">Assistance prioritaire sur WhatsApp</span>
               </li>
             </ul>
           </div>

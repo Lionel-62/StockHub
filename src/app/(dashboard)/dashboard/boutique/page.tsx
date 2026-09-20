@@ -127,12 +127,12 @@ export default function BoutiquePage() {
     <div className="max-w-4xl mx-auto space-y-6 pb-20">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Boutique en ligne</h1>
-          <p className="text-sm text-slate-500">Gérez l'apparence et les informations de votre vitrine publique.</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Boutique en ligne</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Gérez l'apparence et les informations de votre vitrine publique.</p>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <a href={`/b/${formData.slug || 'ma-boutique'}`} target="_blank" rel="noreferrer" className="flex-1 sm:flex-none">
-            <Button variant="outline" className="w-full text-slate-700 bg-white shadow-sm border-slate-200 hover:bg-slate-50 hover:text-blue-600 transition-colors">
+            <Button variant="outline" className="w-full text-slate-700 dark:text-slate-200 bg-white dark:bg-[#0a192f] shadow-sm border-slate-200 dark:border-[#1c3a66] hover:bg-slate-50 dark:bg-[#06101e] hover:text-blue-600 transition-colors">
               <Eye size={16} className="mr-2" /> Voir la boutique
             </Button>
           </a>
@@ -148,27 +148,27 @@ export default function BoutiquePage() {
       </div>
 
       <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
-        <Card className="border-slate-200 shadow-sm rounded-2xl overflow-hidden">
-          <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-            <CardTitle className="text-lg text-slate-800">Personnalisation</CardTitle>
+        <Card className="border-slate-200 dark:border-[#1c3a66] shadow-sm rounded-2xl overflow-hidden">
+          <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+            <CardTitle className="text-lg text-slate-800 dark:text-slate-100">Personnalisation</CardTitle>
             <CardDescription>Ces informations seront visibles par vos clients sur votre vitrine.</CardDescription>
           </CardHeader>
           <CardContent className="p-6 space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">Nom de la boutique</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Nom de la boutique</label>
               <input 
                 type="text" 
                 value={formData.name || ""} 
                 onChange={handleNameChange}
-                className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white transition-colors" 
+                className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 dark:bg-[#06101e] focus:bg-white dark:bg-[#0a192f] transition-colors" 
                 placeholder="Nom de ma super boutique"
               />
             </div>
             
             <div className="space-y-3">
-              <label className="text-sm font-semibold text-slate-700">Logo de la vitrine</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Logo de la vitrine</label>
               <div className="flex items-center gap-6">
-                <div className="h-20 w-20 rounded-xl bg-slate-100 border-2 border-dashed border-slate-300 flex items-center justify-center overflow-hidden relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                <div className="h-20 w-20 rounded-xl bg-slate-100 dark:bg-[#112240] border-2 border-dashed border-slate-300 dark:border-[#244b82] flex items-center justify-center overflow-hidden relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                   {formData.logo ? (
                     <img src={formData.logo} alt="Logo" className="h-full w-full object-contain" />
                   ) : (
@@ -190,11 +190,11 @@ export default function BoutiquePage() {
                     variant="outline" 
                     size="sm"
                     onClick={() => fileInputRef.current?.click()}
-                    className="text-[#0b213f] border-slate-200"
+                    className="text-[#0b213f] border-slate-200 dark:border-[#1c3a66]"
                   >
                     Changer le logo
                   </Button>
-                  <p className="text-xs text-slate-500 mt-2">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
                     Affiché sur votre vitrine publique. (Max 2MB)
                   </p>
                 </div>
@@ -202,16 +202,16 @@ export default function BoutiquePage() {
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">Lien de la boutique (Slug)</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Lien de la boutique (Slug)</label>
               <div className="flex items-center">
-                <span className="bg-slate-100 border border-slate-200 border-r-0 text-slate-500 px-3 py-2.5 rounded-l-lg text-sm">
+                <span className="bg-slate-100 dark:bg-[#112240] border border-slate-200 dark:border-[#1c3a66] border-r-0 text-slate-500 dark:text-slate-400 px-3 py-2.5 rounded-l-lg text-sm">
                   stockhub.com/b/
                 </span>
                 <input 
                   type="text" 
                   value={formData.slug || ""} 
                   readOnly
-                  className="flex-1 min-w-0 p-2.5 border-y border-slate-200 text-sm bg-slate-50 text-slate-500 cursor-not-allowed outline-none" 
+                  className="flex-1 min-w-0 p-2.5 border-y border-slate-200 dark:border-[#1c3a66] text-sm bg-slate-50 dark:bg-[#06101e] text-slate-500 dark:text-slate-400 cursor-not-allowed outline-none" 
                   placeholder="nom-de-ma-boutique"
                 />
                 <button
@@ -223,7 +223,7 @@ export default function BoutiquePage() {
                       alert("Lien copié dans le presse-papier !");
                     }
                   }}
-                  className="bg-white border border-slate-200 border-l-0 text-slate-500 hover:text-blue-600 hover:bg-blue-50 px-3 py-2.5 rounded-r-lg transition-colors flex items-center"
+                  className="bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] border-l-0 text-slate-500 dark:text-slate-400 hover:text-blue-600 hover:bg-blue-50 px-3 py-2.5 rounded-r-lg transition-colors flex items-center"
                   title="Copier le lien"
                 >
                   <Copy size={16} />
@@ -232,22 +232,22 @@ export default function BoutiquePage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">Description (Slogan)</label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Description (Slogan)</label>
               <textarea 
                 value={formData.description || ""} 
                 onChange={e => setFormData({...formData, description: e.target.value})}
                 rows={2}
-                className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 focus:bg-white transition-colors resize-none" 
+                className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 dark:bg-[#06101e] focus:bg-white dark:bg-[#0a192f] transition-colors resize-none" 
                 placeholder="La meilleure boutique de la ville..."
               />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="border-slate-200 shadow-sm rounded-2xl overflow-hidden">
-          <CardHeader className="bg-slate-50/50 border-b border-slate-100 pb-4">
-            <CardTitle className="text-lg text-slate-800 flex items-center gap-2">
-              <HelpCircle className="h-5 w-5 text-slate-500" />
+        <Card className="border-slate-200 dark:border-[#1c3a66] shadow-sm rounded-2xl overflow-hidden">
+          <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+            <CardTitle className="text-lg text-slate-800 dark:text-slate-100 flex items-center gap-2">
+              <HelpCircle className="h-5 w-5 text-slate-500 dark:text-slate-400" />
               Foire Aux Questions (FAQ)
             </CardTitle>
             <CardDescription>Répondez aux questions fréquentes de vos clients pour les rassurer.</CardDescription>
@@ -256,19 +256,19 @@ export default function BoutiquePage() {
             <div className="divide-y divide-slate-100">
               {faqs.length === 0 && !isAddingFaq && (
                 <div className="p-8 text-center">
-                  <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 bg-slate-50 dark:bg-[#06101e] rounded-full flex items-center justify-center mx-auto mb-3">
                     <HelpCircle className="h-6 w-6 text-slate-400" />
                   </div>
-                  <h3 className="text-sm font-semibold text-slate-900">Aucune question</h3>
-                  <p className="text-sm text-slate-500 mt-1 mb-4">Ajoutez des questions pour aider vos clients.</p>
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Aucune question</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 mb-4">Ajoutez des questions pour aider vos clients.</p>
                 </div>
               )}
               
               {faqs.map((faq, index) => (
-                <div key={faq.id} className="p-4 flex items-start gap-4 hover:bg-slate-50 transition-colors">
+                <div key={faq.id} className="p-4 flex items-start gap-4 hover:bg-slate-50 dark:bg-[#06101e] transition-colors">
                   <div className="flex-1 space-y-1">
-                    <h4 className="text-sm font-semibold text-slate-900">{faq.question}</h4>
-                    <p className="text-sm text-slate-500">{faq.answer}</p>
+                    <h4 className="text-sm font-semibold text-slate-900 dark:text-white">{faq.question}</h4>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{faq.answer}</p>
                   </div>
                   <button 
                     onClick={() => deleteFaq(faq.id)}
@@ -280,22 +280,22 @@ export default function BoutiquePage() {
               ))}
             </div>
 
-            <div className="p-4 border-t border-slate-100 bg-slate-50/50">
+            <div className="p-4 border-t border-slate-100 dark:border-[#152a4d] bg-slate-50 dark:bg-[#06101e]/50">
               {isAddingFaq ? (
-                <div className="space-y-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-top-2">
+                <div className="space-y-3 bg-white dark:bg-[#0a192f] p-4 rounded-xl border border-slate-200 dark:border-[#1c3a66] shadow-sm animate-in fade-in slide-in-from-top-2">
                   <input 
                     type="text" 
                     value={newFaqQuestion}
                     onChange={(e) => setNewFaqQuestion(e.target.value)}
                     placeholder="Ex: Quels sont vos délais de livraison ?"
-                    className="w-full p-2 border border-slate-200 rounded-lg text-sm outline-none focus:border-blue-500"
+                    className="w-full p-2 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm outline-none focus:border-blue-500"
                   />
                   <textarea 
                     value={newFaqAnswer}
                     onChange={(e) => setNewFaqAnswer(e.target.value)}
                     placeholder="Nous livrons en 24h à Cotonou..."
                     rows={2}
-                    className="w-full p-2 border border-slate-200 rounded-lg text-sm outline-none focus:border-blue-500 resize-none"
+                    className="w-full p-2 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm outline-none focus:border-blue-500 resize-none"
                   />
                   <div className="flex justify-end gap-2 pt-2">
                     <Button 
@@ -306,7 +306,7 @@ export default function BoutiquePage() {
                         setNewFaqQuestion("");
                         setNewFaqAnswer("");
                       }}
-                      className="text-slate-500"
+                      className="text-slate-500 dark:text-slate-400"
                     >
                       Annuler
                     </Button>
@@ -324,7 +324,7 @@ export default function BoutiquePage() {
                 <Button 
                   variant="outline" 
                   onClick={() => setIsAddingFaq(true)}
-                  className="w-full text-slate-600 border-dashed border-2 bg-transparent hover:bg-slate-100"
+                  className="w-full text-slate-600 dark:text-slate-300 border-dashed border-2 bg-transparent hover:bg-slate-100 dark:bg-[#112240]"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Ajouter une question

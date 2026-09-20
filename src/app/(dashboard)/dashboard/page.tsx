@@ -72,7 +72,7 @@ export default function DashboardPage() {
             <AlertTriangle className="w-5 h-5 text-orange-600" />
             <span className="text-sm font-medium">Attention : {alertsCount} produit(s) en rupture ou stock faible.</span>
           </div>
-          <Link href="/dashboard/stock?filter=alert" className="text-xs font-bold bg-white text-orange-700 px-3 py-1.5 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors shadow-sm">
+          <Link href="/dashboard/stock?filter=alert" className="text-xs font-bold bg-white dark:bg-[#0a192f] text-orange-700 px-3 py-1.5 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors shadow-sm">
             Voir
           </Link>
         </div>
@@ -132,7 +132,7 @@ export default function DashboardPage() {
               trend={`${products.length} références`}
               trendType="neutral"
               icon={Package} 
-              iconColorClass="text-slate-600" 
+              iconColorClass="text-slate-600 dark:text-slate-300" 
               iconBgClass="bg-slate-200" 
             />
             </div>

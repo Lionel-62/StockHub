@@ -671,8 +671,8 @@ export default function ProductsPage() {
       {/* En-tête de la page */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Produits</h1>
-          <p className="text-slate-500 mt-1">Gérez votre catalogue d'articles et vos prix.</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Produits</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Gérez votre catalogue d'articles et vos prix.</p>
         </div>
         
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 w-full md:w-auto">
@@ -684,7 +684,7 @@ export default function ProductsPage() {
                 placeholder="Rechercher par nom, SKU..." 
                 value={searchTerm}
                 onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-                className="pl-9 pr-4 py-2 w-full border border-slate-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                className="pl-9 pr-4 py-2 w-full border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-white dark:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
               />
             </div>
             <div className="relative w-full sm:w-[160px]">
@@ -703,9 +703,9 @@ export default function ProductsPage() {
             <Button 
               onClick={exportProductsToCSV} 
               variant="outline" 
-              className="flex-1 sm:flex-initial text-slate-700 bg-white border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5 shadow-sm text-xs sm:text-sm h-9 px-3"
+              className="flex-1 sm:flex-initial text-slate-700 dark:text-slate-200 bg-white dark:bg-[#0a192f] border-slate-200 dark:border-[#1c3a66] hover:bg-slate-50 dark:bg-[#06101e] transition-all flex items-center justify-center gap-1.5 shadow-sm text-xs sm:text-sm h-9 px-3"
             >
-              <Download size={15} className="text-slate-500" />
+              <Download size={15} className="text-slate-500 dark:text-slate-400" />
               <span>Exporter CSV</span>
             </Button>
             
@@ -718,9 +718,9 @@ export default function ProductsPage() {
                 setIsImportModalOpen(true);
               }} 
               variant="outline" 
-              className="flex-1 sm:flex-initial text-slate-700 bg-white border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5 shadow-sm text-xs sm:text-sm h-9 px-3"
+              className="flex-1 sm:flex-initial text-slate-700 dark:text-slate-200 bg-white dark:bg-[#0a192f] border-slate-200 dark:border-[#1c3a66] hover:bg-slate-50 dark:bg-[#06101e] transition-all flex items-center justify-center gap-1.5 shadow-sm text-xs sm:text-sm h-9 px-3"
             >
-              <FileUp size={15} className="text-slate-500" />
+              <FileUp size={15} className="text-slate-500 dark:text-slate-400" />
               <span>Importer CSV</span>
             </Button>
             
@@ -740,7 +740,7 @@ export default function ProductsPage() {
         <CardContent className="p-0 overflow-visible">
           <div className="overflow-x-auto overflow-y-visible min-h-[300px]">
             <Table className="min-w-[800px]">
-              <TableHeader className="bg-slate-50/50">
+              <TableHeader className="bg-slate-50 dark:bg-[#06101e]/50">
                 <TableRow>
                   <TableHead className="w-[80px]">Image</TableHead>
                   <TableHead>Produit</TableHead>
@@ -753,9 +753,9 @@ export default function ProductsPage() {
               </TableHeader>
               <TableBody>
                 {paginatedProducts.map((product) => (
-                  <TableRow key={product.id} className="hover:bg-slate-50 transition-colors group">
+                  <TableRow key={product.id} className="hover:bg-slate-50 dark:bg-[#06101e] transition-colors group">
                     <TableCell>
-                      <div className="h-12 w-12 rounded-md overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center relative shrink-0">
+                      <div className="h-12 w-12 rounded-md overflow-hidden bg-slate-100 dark:bg-[#112240] border border-slate-200 dark:border-[#1c3a66] flex items-center justify-center relative shrink-0">
                         {product.imageUrl ? (
                           <Image 
                             src={product.imageUrl} 
@@ -770,18 +770,18 @@ export default function ProductsPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="font-semibold text-slate-900 line-clamp-1">{product.name}</div>
-                      <div className="text-xs text-slate-500 mt-0.5"><span className="font-mono">{product.sku}</span></div>
+                      <div className="font-semibold text-slate-900 dark:text-white line-clamp-1">{product.name}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5"><span className="font-mono">{product.sku}</span></div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 font-medium">
+                      <Badge variant="outline" className="bg-slate-50 dark:bg-[#06101e] text-slate-600 dark:text-slate-300 border-slate-200 dark:border-[#1c3a66] font-medium">
                         {product.category}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right text-slate-500 font-medium">
+                    <TableCell className="text-right text-slate-500 dark:text-slate-400 font-medium">
                       <span className="font-mono">{formatCurrency(product.purchasePrice)}</span>
                     </TableCell>
-                    <TableCell className="text-right font-bold text-slate-900">
+                    <TableCell className="text-right font-bold text-slate-900 dark:text-white">
                       <span className="font-mono">{formatCurrency(product.salePrice)}</span>
                     </TableCell>
                     <TableCell className="text-center">
@@ -800,7 +800,7 @@ export default function ProductsPage() {
                           En ligne
                         </div>
                       ) : (
-                        <div className="flex items-center justify-center mt-1 text-xs text-slate-500 bg-slate-100 w-fit mx-auto px-2 py-0.5 rounded-full gap-1" title="Non publié">
+                        <div className="flex items-center justify-center mt-1 text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#112240] w-fit mx-auto px-2 py-0.5 rounded-full gap-1" title="Non publié">
                           <StoreIcon size={10} />
                           Hors ligne
                         </div>
@@ -833,7 +833,7 @@ export default function ProductsPage() {
                 
                 {paginatedProducts.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-32 text-center text-slate-500">
+                    <TableCell colSpan={7} className="h-32 text-center text-slate-500 dark:text-slate-400">
                       Aucun produit ne correspond à votre recherche.
                     </TableCell>
                   </TableRow>
@@ -844,8 +844,8 @@ export default function ProductsPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 bg-slate-50/50">
-              <span className="text-sm text-slate-500">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-[#152a4d] bg-slate-50 dark:bg-[#06101e]/50">
+              <span className="text-sm text-slate-500 dark:text-slate-400">
                 Affichage de {((currentPage - 1) * itemsPerPage) + 1} à {Math.min(currentPage * itemsPerPage, filteredProducts.length)} sur {filteredProducts.length} produits
               </span>
               <div className="flex gap-1">
@@ -886,12 +886,12 @@ export default function ProductsPage() {
       {/* Modal Ajouter/Modifier Produit */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-slate-900/40 backdrop-blur-sm transition-opacity p-2 pt-12 sm:p-4 sm:pt-4 overflow-hidden">
-          <div className="bg-white flex flex-col rounded-xl shadow-lg w-full max-w-lg overflow-hidden border border-slate-200 transform scale-100 animate-in fade-in zoom-in-95 duration-200 max-h-[85vh] sm:max-h-[90vh]">
-            <div className="flex justify-between items-center p-4 sm:p-5 border-b border-slate-100 shrink-0">
-              <h2 className="text-lg font-bold text-slate-900">
+          <div className="bg-white dark:bg-[#0a192f] flex flex-col rounded-xl shadow-lg w-full max-w-lg overflow-hidden border border-slate-200 dark:border-[#1c3a66] transform scale-100 animate-in fade-in zoom-in-95 duration-200 max-h-[85vh] sm:max-h-[90vh]">
+            <div className="flex justify-between items-center p-4 sm:p-5 border-b border-slate-100 dark:border-[#152a4d] shrink-0">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                 {modalMode === "add" ? "Nouveau Produit" : "Modifier le Produit"}
               </h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-700 transition-colors">
+              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-700 dark:text-slate-200 transition-colors">
                 <X size={20} />
               </button>
             </div>
@@ -899,19 +899,19 @@ export default function ProductsPage() {
             <div className="p-4 sm:p-5 flex-1 overflow-y-auto custom-scrollbar space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5 md:col-span-2">
-                  <label className="text-sm font-medium text-slate-700">Nom du produit *</label>
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Nom du produit *</label>
                   <input 
                     type="text" 
                     value={currentProduct.name || ""}
                     onChange={(e) => setCurrentProduct({...currentProduct, name: e.target.value})}
-                    className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                    className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 dark:bg-[#06101e]"
                     placeholder="Ex: Riz parfumé"
                   />
                 </div>
 
                 <div className="space-y-1.5 md:col-span-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium text-slate-700">Description (Optionnelle)</label>
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Description (Optionnelle)</label>
                     {currentProduct.description && currentProduct.description.trim() !== "" && (
                       <button 
                         onClick={handleImproveDescription}
@@ -932,14 +932,14 @@ export default function ProductsPage() {
                     value={currentProduct.description || ""}
                     onChange={(e) => setCurrentProduct({...currentProduct, description: e.target.value})}
                     rows={4}
-                    className="w-full p-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-300 bg-slate-50 resize-none transition-all"
+                    className="w-full p-3 border border-slate-200 dark:border-[#1c3a66] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-300 bg-slate-50 dark:bg-[#06101e] resize-none transition-all"
                     placeholder="Ex: Sac de 5kg de riz très parfumé..."
                   />
                 </div>
 
                 <div className="space-y-1.5 md:col-span-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium text-slate-700">Image du produit</label>
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Image du produit</label>
                     {currentProduct.imageUrl && !currentProduct.imageUrl.startsWith("http") && (
                       <button 
                         onClick={handleImproveImage}
@@ -958,7 +958,7 @@ export default function ProductsPage() {
                     )}
                   </div>
                   <div className="flex items-center gap-4">
-                    <div className="h-20 w-20 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center overflow-hidden shrink-0 relative group">
+                    <div className="h-20 w-20 rounded-xl border-2 border-dashed border-slate-300 dark:border-[#244b82] bg-slate-50 dark:bg-[#06101e] flex items-center justify-center overflow-hidden shrink-0 relative group">
                       {currentProduct.imageUrl ? (
                         <Image src={currentProduct.imageUrl} alt="Preview" fill className="object-cover" unoptimized />
                       ) : (
@@ -967,8 +967,8 @@ export default function ProductsPage() {
                     </div>
                     <div className="flex-1">
                       <div className="flex flex-col sm:flex-row gap-2 w-full">
-                        <label className="cursor-pointer flex-1 inline-flex items-center justify-center px-3 py-2 bg-white border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 rounded-lg shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all">
-                          <Upload size={15} className="mr-1.5 text-slate-500" />
+                        <label className="cursor-pointer flex-1 inline-flex items-center justify-center px-3 py-2 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 rounded-lg shadow-sm hover:bg-slate-50 dark:bg-[#06101e] hover:border-slate-300 dark:border-[#244b82] transition-all">
+                          <Upload size={15} className="mr-1.5 text-slate-500 dark:text-slate-400" />
                           Ajouter une image
                           <input 
                             type="file" 
@@ -981,17 +981,17 @@ export default function ProductsPage() {
                           />
                         </label>
                       </div>
-                      <p className="text-xs text-slate-500 mt-2">Formats supportés : JPG, PNG, WEBP.</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Formats supportés : JPG, PNG, WEBP.</p>
                     </div>
                   </div>
                 </div>
 
                 {currentProduct.imageUrl && (
-                  <div className="space-y-1.5 md:col-span-2 pt-2 border-t border-slate-100">
-                    <label className="text-sm font-medium text-slate-700">Images supplémentaires (jusqu'à 3)</label>
+                  <div className="space-y-1.5 md:col-span-2 pt-2 border-t border-slate-100 dark:border-[#152a4d]">
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Images supplémentaires (jusqu'à 3)</label>
                     <div className="flex items-center gap-4 flex-wrap">
                       {Array.isArray(currentProduct.galleryUrls) && currentProduct.galleryUrls.map((url, idx) => (
-                        <div key={idx} className="h-16 w-16 rounded-xl border border-slate-200 bg-slate-50 relative group overflow-visible">
+                        <div key={idx} className="h-16 w-16 rounded-xl border border-slate-200 dark:border-[#1c3a66] bg-slate-50 dark:bg-[#06101e] relative group overflow-visible">
                           {improvingGalleryIdx === idx && (
                             <div className="absolute inset-0 z-20 bg-black/40 rounded-xl flex items-center justify-center backdrop-blur-[1px]">
                               <Loader2 size={16} className="text-white animate-spin" />
@@ -1025,7 +1025,7 @@ export default function ProductsPage() {
                       ))}
                       
                       {(!Array.isArray(currentProduct.galleryUrls) || currentProduct.galleryUrls.length < 3) && (
-                        <label className="cursor-pointer h-16 w-16 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 flex items-center justify-center text-slate-400 hover:text-blue-500 hover:border-blue-300 transition-colors relative">
+                        <label className="cursor-pointer h-16 w-16 rounded-xl border-2 border-dashed border-slate-300 dark:border-[#244b82] bg-slate-50 dark:bg-[#06101e] flex items-center justify-center text-slate-400 hover:text-blue-500 hover:border-blue-300 transition-colors relative">
                           <Plus size={20} />
                           <input 
                             type="file" 
@@ -1076,17 +1076,17 @@ export default function ProductsPage() {
                 )}
                 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700">SKU / Code *</label>
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-200">SKU / Code *</label>
                   <input 
                     type="text" 
                     value={currentProduct.sku || ""}
                     onChange={(e) => setCurrentProduct({...currentProduct, sku: e.target.value})}
-                    className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                    className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 dark:bg-[#06101e]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700">Catégorie</label>
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Catégorie</label>
                   <CustomSelect 
                     options={categoryOptions}
                     value={currentProduct.category || ""}
@@ -1098,7 +1098,7 @@ export default function ProductsPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700">Prix d'achat</label>
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Prix d'achat</label>
                   <input 
                     type="number"
                     min="0"
@@ -1110,12 +1110,12 @@ export default function ProductsPage() {
                       }
                     }}
                     onChange={(e) => setCurrentProduct({...currentProduct, purchasePrice: e.target.value !== "" ? Number(e.target.value) : undefined})}
-                    className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                    className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 dark:bg-[#06101e]"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700">Prix de vente *</label>
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Prix de vente *</label>
                   <input 
                     type="number"
                     min="0"
@@ -1127,12 +1127,12 @@ export default function ProductsPage() {
                       }
                     }}
                     onChange={(e) => setCurrentProduct({...currentProduct, salePrice: e.target.value !== "" ? Number(e.target.value) : undefined})}
-                    className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                    className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 dark:bg-[#06101e]"
                   />
                 </div>
 
                 <div className="space-y-1.5 md:col-span-1">
-                  <label className="text-sm font-medium text-slate-700">Stock initial *</label>
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Stock initial *</label>
                   <input 
                     type="number"
                     min="0"
@@ -1144,11 +1144,11 @@ export default function ProductsPage() {
                       }
                     }}
                     onChange={(e) => setCurrentProduct({...currentProduct, stock: e.target.value !== "" ? Number(e.target.value) : undefined})}
-                    className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                    className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 dark:bg-[#06101e]"
                   />
                 </div>
                 <div className="space-y-1.5 md:col-span-1">
-                  <label className="text-sm font-medium text-slate-700">Seuil d'alerte</label>
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Seuil d'alerte</label>
                   <input 
                     type="number"
                     min="1"
@@ -1160,11 +1160,11 @@ export default function ProductsPage() {
                       }
                     }}
                     onChange={(e) => setCurrentProduct({...currentProduct, alertThreshold: e.target.value !== "" ? Number(e.target.value) : undefined})}
-                    className="w-full p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                    className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 dark:bg-[#06101e]"
                   />
                 </div>
 
-                <div className="space-y-1.5 md:col-span-2 pt-2 border-t border-slate-100">
+                <div className="space-y-1.5 md:col-span-2 pt-2 border-t border-slate-100 dark:border-[#152a4d]">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <div className="relative">
                       <input 
@@ -1173,24 +1173,24 @@ export default function ProductsPage() {
                         checked={currentProduct.isPublishedOnStore !== false} // default to true if undefined
                         onChange={(e) => setCurrentProduct({...currentProduct, isPublishedOnStore: e.target.checked})}
                       />
-                      <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white dark:bg-[#0a192f] after:border-slate-300 dark:border-[#244b82] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
+                      <span className="text-sm font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
                         <StoreIcon size={14} className="text-blue-600" /> Afficher sur ma Boutique en Ligne
                       </span>
-                      <span className="text-xs text-slate-500">Si activé, ce produit sera visible par vos clients sur votre lien public.</span>
+                      <span className="text-xs text-slate-500 dark:text-slate-400">Si activé, ce produit sera visible par vos clients sur votre lien public.</span>
                     </div>
                   </label>
                 </div>
 
-                <div className="space-y-4 md:col-span-2 pt-4 border-t border-slate-100">
+                <div className="space-y-4 md:col-span-2 pt-4 border-t border-slate-100 dark:border-[#152a4d]">
                   {/* Promotion */}
-                  <div className="bg-white border border-slate-200 rounded-xl p-4">
+                  <div className="bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-xl p-4">
                     <label className="flex items-center justify-between cursor-pointer">
                       <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-slate-900">Promotion</span>
-                        <span className="text-xs text-slate-500">Activer une promotion pour ce produit</span>
+                        <span className="text-sm font-semibold text-slate-900 dark:text-white">Promotion</span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">Activer une promotion pour ce produit</span>
                       </div>
                       <div className="relative">
                         <input 
@@ -1199,12 +1199,12 @@ export default function ProductsPage() {
                           checked={currentProduct.promotionalPrice !== undefined && currentProduct.promotionalPrice !== null}
                           onChange={(e) => setCurrentProduct({...currentProduct, promotionalPrice: e.target.checked ? (Number(currentProduct.salePrice) || 0) : undefined})}
                         />
-                        <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white dark:bg-[#0a192f] after:border-slate-300 dark:border-[#244b82] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                       </div>
                     </label>
                     {currentProduct.promotionalPrice !== undefined && currentProduct.promotionalPrice !== null && (
-                      <div className="mt-4 pt-4 border-t border-slate-100">
-                        <label className="text-sm font-medium text-slate-700">Nouveau prix promotionnel</label>
+                      <div className="mt-4 pt-4 border-t border-slate-100 dark:border-[#152a4d]">
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Nouveau prix promotionnel</label>
                         <input 
                           type="number"
                           min="0"
@@ -1215,7 +1215,7 @@ export default function ProductsPage() {
                             }
                           }}
                           onChange={(e) => setCurrentProduct({...currentProduct, promotionalPrice: e.target.value !== "" ? Number(e.target.value) : ("" as any)})}
-                          className="w-full mt-1.5 p-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                          className="w-full mt-1.5 p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 dark:bg-[#06101e]"
                           placeholder="Ex: 4500"
                         />
                       </div>
@@ -1223,15 +1223,15 @@ export default function ProductsPage() {
                   </div>
 
                   {/* Offres en pack */}
-                  <div className="bg-white border border-slate-200 rounded-xl p-4">
+                  <div className="bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-xl p-4">
                     <label className="flex items-center justify-between cursor-pointer">
                       <div className="flex items-start gap-3">
                         <div className="mt-0.5 h-8 w-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center shrink-0">
                           <Package size={16} />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-sm font-semibold text-slate-900">Offres en pack</span>
-                          <span className="text-xs text-slate-500">Proposez des packs à prix réduit pour encourager les achats en quantité.</span>
+                          <span className="text-sm font-semibold text-slate-900 dark:text-white">Offres en pack</span>
+                          <span className="text-xs text-slate-500 dark:text-slate-400">Proposez des packs à prix réduit pour encourager les achats en quantité.</span>
                         </div>
                       </div>
                       <div className="relative">
@@ -1241,11 +1241,11 @@ export default function ProductsPage() {
                           checked={Array.isArray(currentProduct.packOffers) && currentProduct.packOffers.length > 0}
                           onChange={(e) => setCurrentProduct({...currentProduct, packOffers: e.target.checked ? [{ quantity: 2, price: Math.round((Number(currentProduct.salePrice) || 0) * 1.8) }] : undefined})}
                         />
-                        <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white dark:bg-[#0a192f] after:border-slate-300 dark:border-[#244b82] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                       </div>
                     </label>
                     {Array.isArray(currentProduct.packOffers) && currentProduct.packOffers.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
+                      <div className="mt-4 pt-4 border-t border-slate-100 dark:border-[#152a4d] space-y-3">
                         {currentProduct.packOffers.map((pack, idx) => (
                           <div key={idx} className="flex gap-2 items-center">
                             <div className="flex-1">
@@ -1265,7 +1265,7 @@ export default function ProductsPage() {
                                   newOffers[idx].quantity = e.target.value !== "" ? Number(e.target.value) : undefined as any;
                                   setCurrentProduct({...currentProduct, packOffers: newOffers});
                                 }}
-                                className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50"
+                                className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-slate-50 dark:bg-[#06101e]"
                               />
                             </div>
                             <div className="flex-1">
@@ -1285,7 +1285,7 @@ export default function ProductsPage() {
                                   newOffers[idx].price = e.target.value !== "" ? Number(e.target.value) : undefined as any;
                                   setCurrentProduct({...currentProduct, packOffers: newOffers});
                                 }}
-                                className="w-full p-2.5 border border-slate-200 rounded-lg text-sm bg-slate-50"
+                                className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-slate-50 dark:bg-[#06101e]"
                               />
                             </div>
                             <button 
@@ -1315,15 +1315,15 @@ export default function ProductsPage() {
                   </div>
 
                   {/* Options du produit */}
-                  <div className="bg-white border border-slate-200 rounded-xl p-4">
+                  <div className="bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-xl p-4">
                     <label className="flex items-center justify-between cursor-pointer">
                       <div className="flex items-start gap-3">
                         <div className="mt-0.5 h-8 w-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
                           <CheckSquare size={16} />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-sm font-semibold text-slate-900">Options du produit</span>
-                          <span className="text-xs text-slate-500">Optionnel - ajoutez les choix disponibles pour l'acheteur (couleur, taille, etc.).</span>
+                          <span className="text-sm font-semibold text-slate-900 dark:text-white">Options du produit</span>
+                          <span className="text-xs text-slate-500 dark:text-slate-400">Optionnel - ajoutez les choix disponibles pour l'acheteur (couleur, taille, etc.).</span>
                         </div>
                       </div>
                       <div className="relative">
@@ -1333,13 +1333,13 @@ export default function ProductsPage() {
                           checked={Array.isArray(currentProduct.options) && currentProduct.options.length > 0}
                           onChange={(e) => setCurrentProduct({...currentProduct, options: e.target.checked ? [{ name: "Taille", values: ["S", "M", "L"] }] : undefined})}
                         />
-                        <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white dark:bg-[#0a192f] after:border-slate-300 dark:border-[#244b82] after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                       </div>
                     </label>
                     {Array.isArray(currentProduct.options) && currentProduct.options.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
+                      <div className="mt-4 pt-4 border-t border-slate-100 dark:border-[#152a4d] space-y-3">
                         {currentProduct.options.map((opt, idx) => (
-                          <div key={idx} className="space-y-2 p-3 bg-slate-50 rounded-lg border border-slate-100">
+                          <div key={idx} className="space-y-2 p-3 bg-slate-50 dark:bg-[#06101e] rounded-lg border border-slate-100 dark:border-[#152a4d]">
                             <div className="flex gap-2">
                               <input 
                                 type="text" 
@@ -1350,14 +1350,14 @@ export default function ProductsPage() {
                                   newOpts[idx].name = e.target.value;
                                   setCurrentProduct({...currentProduct, options: newOpts});
                                 }}
-                                className="flex-1 p-2 border border-slate-200 rounded-lg text-sm bg-white"
+                                className="flex-1 p-2 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-white dark:bg-[#0a192f]"
                               />
                               <button 
                                 onClick={() => {
                                   const newOpts = (currentProduct.options || []).filter((_, i) => i !== idx);
                                   setCurrentProduct({...currentProduct, options: newOpts.length > 0 ? newOpts : undefined});
                                 }}
-                                className="p-2 text-slate-400 hover:text-red-500 rounded-lg transition-colors bg-white border border-slate-200"
+                                className="p-2 text-slate-400 hover:text-red-500 rounded-lg transition-colors bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66]"
                               >
                                 <Trash2 size={16} />
                               </button>
@@ -1371,7 +1371,7 @@ export default function ProductsPage() {
                                 newOpts[idx].values = e.target.value.split(",").map(s => s.trim()).filter(Boolean);
                                 setCurrentProduct({...currentProduct, options: newOpts});
                               }}
-                              className="w-full p-2 border border-slate-200 rounded-lg text-sm bg-white"
+                              className="w-full p-2 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-white dark:bg-[#0a192f]"
                             />
                           </div>
                         ))}
@@ -1393,8 +1393,8 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            <div className="p-4 sm:p-5 border-t border-slate-100 flex justify-end gap-3 bg-slate-50 shrink-0">
-              <Button variant="outline" onClick={() => setIsModalOpen(false)} className="bg-white">
+            <div className="p-4 sm:p-5 border-t border-slate-100 dark:border-[#152a4d] flex justify-end gap-3 bg-slate-50 dark:bg-[#06101e] shrink-0">
+              <Button variant="outline" onClick={() => setIsModalOpen(false)} className="bg-white dark:bg-[#0a192f]">
                 Annuler
               </Button>
               <Button onClick={handleSave} disabled={isUploadingImage} className="bg-[#0b213f] hover:bg-[#18355c] text-white">
@@ -1409,21 +1409,21 @@ export default function ProductsPage() {
       {/* Modal d'importation CSV */}
       {isImportModalOpen && (
         <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-slate-900/50 backdrop-blur-sm p-2 pt-12 sm:p-4 sm:pt-4 overflow-hidden">
-          <div className="bg-white flex flex-col rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[85vh] sm:max-h-[90vh]">
+          <div className="bg-white dark:bg-[#0a192f] flex flex-col rounded-2xl shadow-xl border border-slate-200 dark:border-[#1c3a66] w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[85vh] sm:max-h-[90vh]">
             {/* Entête */}
-            <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 shrink-0">
+            <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-[#152a4d] flex items-center justify-between bg-slate-50 dark:bg-[#06101e]/50 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0b213f]">
                   <FileSpreadsheet size={20} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 text-lg">Importer des produits (CSV / Excel)</h3>
-                  <p className="text-xs text-slate-500">Ajoutez rapidement vos articles en masse dans votre catalogue.</p>
+                  <h3 className="font-bold text-slate-900 dark:text-white text-lg">Importer des produits (CSV / Excel)</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Ajoutez rapidement vos articles en masse dans votre catalogue.</p>
                 </div>
               </div>
               <button 
                 onClick={() => setIsImportModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                className="text-slate-400 hover:text-slate-600 dark:text-slate-300 p-1.5 rounded-lg hover:bg-slate-100 dark:bg-[#112240] transition-colors"
               >
                 <X size={18} />
               </button>
@@ -1440,7 +1440,7 @@ export default function ProductsPage() {
                   onClick={downloadCSVTemplate}
                   variant="outline" 
                   size="sm"
-                  className="bg-white hover:bg-amber-100 text-amber-900 border-amber-300 shadow-sm shrink-0 flex items-center gap-1.5"
+                  className="bg-white dark:bg-[#0a192f] hover:bg-amber-100 text-amber-900 border-amber-300 shadow-sm shrink-0 flex items-center gap-1.5"
                 >
                   <Download size={14} />
                   <span>Télécharger le modèle</span>
@@ -1449,10 +1449,10 @@ export default function ProductsPage() {
 
               {/* Étape 2 : Zone d'upload */}
               <div>
-                <label className="block text-sm font-semibold text-slate-800 mb-2">
+                <label className="block text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2">
                   Sélectionnez votre fichier CSV
                 </label>
-                <div className="border-2 border-dashed border-slate-200 hover:border-blue-400 rounded-2xl p-6 text-center transition-colors bg-slate-50/50 hover:bg-blue-50/30 relative">
+                <div className="border-2 border-dashed border-slate-200 dark:border-[#1c3a66] hover:border-blue-400 rounded-2xl p-6 text-center transition-colors bg-slate-50 dark:bg-[#06101e]/50 hover:bg-blue-50/30 relative">
                   <input 
                     type="file" 
                     accept=".csv,text/csv" 
@@ -1460,18 +1460,18 @@ export default function ProductsPage() {
                     className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                   />
                   <div className="flex flex-col items-center justify-center gap-2 pointer-events-none">
-                    <div className="w-12 h-12 rounded-full bg-white shadow-sm border border-slate-200 flex items-center justify-center text-slate-600">
+                    <div className="w-12 h-12 rounded-full bg-white dark:bg-[#0a192f] shadow-sm border border-slate-200 dark:border-[#1c3a66] flex items-center justify-center text-slate-600 dark:text-slate-300">
                       <FileUp size={24} />
                     </div>
                     {importFile ? (
                       <div>
-                        <p className="text-sm font-bold text-slate-900">{importFile.name}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">{(importFile.size / 1024).toFixed(1)} Ko • Cliquez pour remplacer</p>
+                        <p className="text-sm font-bold text-slate-900 dark:text-white">{importFile.name}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{(importFile.size / 1024).toFixed(1)} Ko • Cliquez pour remplacer</p>
                       </div>
                     ) : (
                       <div>
-                        <p className="text-sm font-semibold text-slate-800">Glissez-déposez votre fichier ici, ou <span className="text-blue-600 underline">parcourir</span></p>
-                        <p className="text-xs text-slate-500 mt-1">Format supporté : .CSV encodé en UTF-8 (séparateur virgule ou point-virgule)</p>
+                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">Glissez-déposez votre fichier ici, ou <span className="text-blue-600 underline">parcourir</span></p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Format supporté : .CSV encodé en UTF-8 (séparateur virgule ou point-virgule)</p>
                       </div>
                     )}
                   </div>
@@ -1498,16 +1498,16 @@ export default function ProductsPage() {
               {parsedProducts.length > 0 && !importSuccessCount && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                    <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
                       <CheckCircle2 size={14} className="text-emerald-600" />
                       {parsedProducts.length} produit{parsedProducts.length > 1 ? "s" : ""} détecté{parsedProducts.length > 1 ? "s" : ""}
                     </span>
                     <span className="text-[11px] text-slate-400">Aperçu des 5 premiers articles</span>
                   </div>
 
-                  <div className="border border-slate-200 rounded-xl overflow-hidden max-h-48 overflow-y-auto text-xs">
+                  <div className="border border-slate-200 dark:border-[#1c3a66] rounded-xl overflow-hidden max-h-48 overflow-y-auto text-xs">
                     <table className="w-full text-left">
-                      <thead className="bg-slate-100 text-slate-600 font-semibold sticky top-0">
+                      <thead className="bg-slate-100 dark:bg-[#112240] text-slate-600 dark:text-slate-300 font-semibold sticky top-0">
                         <tr>
                           <th className="p-2">SKU</th>
                           <th className="p-2">Nom</th>
@@ -1518,11 +1518,11 @@ export default function ProductsPage() {
                       </thead>
                       <tbody className="divide-y divide-slate-100">
                         {parsedProducts.slice(0, 5).map((p, idx) => (
-                          <tr key={idx} className="hover:bg-slate-50">
-                            <td className="p-2 font-mono text-slate-500">{p.sku}</td>
-                            <td className="p-2 font-medium text-slate-800">{p.name}</td>
-                            <td className="p-2 text-slate-600">{p.category}</td>
-                            <td className="p-2 text-right font-semibold text-slate-900">{formatCurrency(p.salePrice)}</td>
+                          <tr key={idx} className="hover:bg-slate-50 dark:bg-[#06101e]">
+                            <td className="p-2 font-mono text-slate-500 dark:text-slate-400">{p.sku}</td>
+                            <td className="p-2 font-medium text-slate-800 dark:text-slate-100">{p.name}</td>
+                            <td className="p-2 text-slate-600 dark:text-slate-300">{p.category}</td>
+                            <td className="p-2 text-right font-semibold text-slate-900 dark:text-white">{formatCurrency(p.salePrice)}</td>
                             <td className="p-2 text-center">
                               <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${
                                 p.stock > 5 ? "bg-emerald-100 text-emerald-700" :
@@ -1537,19 +1537,19 @@ export default function ProductsPage() {
                     </table>
                   </div>
                   {parsedProducts.length > 5 && (
-                    <p className="text-[11px] text-slate-500 text-right italic">+ {parsedProducts.length - 5} autre(s) produit(s) dans le fichier</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 text-right italic">+ {parsedProducts.length - 5} autre(s) produit(s) dans le fichier</p>
                   )}
                 </div>
               )}
             </div>
 
             {/* Pied de modal */}
-            <div className="p-4 sm:p-5 border-t border-slate-100 flex items-center justify-end gap-3 bg-slate-50 shrink-0">
+            <div className="p-4 sm:p-5 border-t border-slate-100 dark:border-[#152a4d] flex items-center justify-end gap-3 bg-slate-50 dark:bg-[#06101e] shrink-0">
               <Button 
                 variant="outline" 
                 onClick={() => setIsImportModalOpen(false)}
                 disabled={isImporting}
-                className="bg-white"
+                className="bg-white dark:bg-[#0a192f]"
               >
                 Annuler
               </Button>
