@@ -17,7 +17,7 @@ import { updateProfileNameAction, syncSessionAction, deleteOwnerAccountAction } 
 import { supabase } from "@/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { updateShopAction } from "@/app/actions/shop.actions";
+import { updateShopSettingsAction } from "@/app/actions/shop.actions";
 import { useTheme } from "next-themes";
 
 const TABS = [
@@ -42,6 +42,9 @@ function SettingsContent() {
   const [isSaving, setIsSaving] = useState(false);
   const [isSubscribeLoading, setIsSubscribeLoading] = useState<string | false>(false);
   const [subscribeError, setSubscribeError] = useState("");
+  const [isSaved, setIsSaved] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const { theme, setTheme } = useTheme();
   
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
@@ -97,6 +100,7 @@ function SettingsContent() {
     }
 
     await saveSettings(finalFormData);
+    await updateShopSettingsAction(finalFormData);
     
     if (currentUser && ownerName !== currentUser.name) {
       const res = await updateProfileNameAction(currentUser.id, ownerName);
