@@ -13,11 +13,14 @@ interface AlertListProps {
 export function AlertList({ products }: AlertListProps) {
   const isLoaded = true; // Data is already loaded by the parent component
   
-  // Filter products with low stock (<= 15) and sort by stock ascending
-  const alerts = products
-    .filter(p => p.stock <= 15)
+  // Filter products with low stock based on alertThreshold
+  const allAlerts = products.filter(p => p.stock <= (p.alertThreshold ?? 5));
+  
+  const alerts = [...allAlerts]
     .sort((a, b) => a.stock - b.stock)
     .slice(0, 5); // Take top 5
+
+  const hasOutOfStock = allAlerts.some(p => p.stock === 0);
 
   return (
     <Card className="shadow-sm border-slate-200">
@@ -25,8 +28,13 @@ export function AlertList({ products }: AlertListProps) {
         <CardTitle className="text-base font-bold text-slate-900">
           Alertes de rupture
         </CardTitle>
-        <Badge variant="secondary" className="bg-red-50 text-red-600 hover:bg-red-100 font-bold rounded-full px-2.5 py-0.5">
-          {products.filter(p => p.stock <= 15).length}
+        <Badge variant="secondary" className={cn(
+          "font-bold rounded-full px-2.5 py-0.5",
+          hasOutOfStock 
+            ? "bg-red-50 text-red-600 hover:bg-red-100" 
+            : "bg-orange-50 text-orange-600 hover:bg-orange-100"
+        )}>
+          {allAlerts.length}
         </Badge>
       </CardHeader>
       <CardContent>
