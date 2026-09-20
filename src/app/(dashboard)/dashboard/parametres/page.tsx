@@ -17,6 +17,8 @@ import { updateProfileNameAction, syncSessionAction, deleteOwnerAccountAction } 
 import { supabase } from "@/lib/supabase/client";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { updateShopAction } from "@/app/actions/shop.actions";
+import { useTheme } from "next-themes";
 
 const TABS = [
   { id: "general", label: "Général", icon: Building2 },
@@ -33,9 +35,6 @@ function SettingsContent() {
   const [currency, setCurrency] = useState("XOF");
   const [language, setLanguage] = useState("FR");
   const [timezone, setTimezone] = useState("GMT+1");
-  const [isSaved, setIsSaved] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  
   const { settings, saveSettings, isLoaded } = useSettings();
   const { currentUser } = useAuth();
   const [formData, setFormData] = useState(settings);
@@ -512,16 +511,46 @@ function SettingsContent() {
                 </CardHeader>
                 <CardContent className="p-6">
                   <div className="flex items-center gap-6">
-                    <div className="flex-1 p-4 rounded-xl border-2 border-blue-600 bg-blue-50/50 cursor-pointer relative overflow-hidden">
-                      <div className="absolute top-2 right-2 h-4 w-4 rounded-full bg-blue-600 flex items-center justify-center text-white">
-                        <Check size={10} />
+                    <div 
+                      onClick={() => setTheme("light")}
+                      className={`flex-1 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                        theme !== 'dark' 
+                          ? 'border-blue-600 bg-blue-50/50' 
+                          : 'border-slate-200 bg-slate-50 hover:border-slate-300'
+                      } relative overflow-hidden`}
+                    >
+                      {theme !== 'dark' && (
+                        <div className="absolute top-2 right-2 h-4 w-4 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                          <Check size={10} />
+                        </div>
+                      )}
+                      <div className={`font-semibold mb-1 ${theme !== 'dark' ? 'text-blue-900' : 'text-slate-700'}`}>
+                        Thème Clair
                       </div>
-                      <div className="font-semibold text-blue-900 mb-1">Thème Clair</div>
-                      <div className="text-xs text-blue-700/70">Idéal pour les environnements de travail lumineux.</div>
+                      <div className={`text-xs ${theme !== 'dark' ? 'text-blue-700/70' : 'text-slate-500'}`}>
+                        Idéal pour les environnements de travail lumineux.
+                      </div>
                     </div>
-                    <div className="flex-1 p-4 rounded-xl border-2 border-slate-200 bg-slate-50 cursor-pointer hover:border-slate-300 transition-colors opacity-70">
-                      <div className="font-semibold text-slate-700 mb-1">Thème Sombre</div>
-                      <div className="text-xs text-slate-500">Bientôt disponible dans une prochaine mise à jour.</div>
+
+                    <div 
+                      onClick={() => setTheme("dark")}
+                      className={`flex-1 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                        theme === 'dark' 
+                          ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-900/20' 
+                          : 'border-slate-200 bg-slate-50 hover:border-slate-300'
+                      } relative overflow-hidden`}
+                    >
+                      {theme === 'dark' && (
+                        <div className="absolute top-2 right-2 h-4 w-4 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                          <Check size={10} />
+                        </div>
+                      )}
+                      <div className={`font-semibold mb-1 ${theme === 'dark' ? 'text-blue-900 dark:text-blue-300' : 'text-slate-700'}`}>
+                        Thème Sombre
+                      </div>
+                      <div className={`text-xs ${theme === 'dark' ? 'text-blue-700/70 dark:text-blue-400' : 'text-slate-500'}`}>
+                        Idéal pour les environnements sombres et reposer les yeux.
+                      </div>
                     </div>
                   </div>
                 </CardContent>

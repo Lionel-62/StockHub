@@ -86,7 +86,7 @@ export function Topbar() {
 
   return (
     <>
-      <header className={`flex flex-col md:flex-row items-center justify-between border-b bg-white px-3 py-2.5 sm:px-4 sm:py-3 shrink-0 gap-2.5 ${isDashboardHome ? "md:h-20 md:px-8 md:py-0 md:gap-0" : "md:h-16 md:px-6 md:py-0 md:gap-0"}`}>
+      <header className={`flex flex-col md:flex-row items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2.5 sm:px-4 sm:py-3 shrink-0 gap-2.5 transition-colors duration-200 ${isDashboardHome ? "md:h-20 md:px-8 md:py-0 md:gap-0" : "md:h-16 md:px-6 md:py-0 md:gap-0"}`}>
         
         {/* Top Row (Mobile) / Left Section (Desktop) */}
         <div className="flex items-center justify-between w-full md:w-auto gap-2">
@@ -94,7 +94,7 @@ export function Topbar() {
             {/* Hamburger Button */}
             <button 
               type="button"
-              className="text-slate-600 hover:bg-slate-100 p-2 rounded-xl transition-all duration-200 active:scale-95 border border-slate-200 shrink-0"
+              className="text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 p-2 rounded-xl transition-all duration-200 active:scale-95 border border-slate-200 dark:border-slate-700 shrink-0"
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Ouvrir le menu"
             >
@@ -118,7 +118,7 @@ export function Topbar() {
             {/* Desktop Greeting (Only on Dashboard Home) */}
             {isDashboardHome && currentUser && (
               <div className="hidden md:flex flex-col relative">
-                <h2 className="text-xl font-bold text-slate-900">Bonjour, {currentUser.name.split(' ')[0]}</h2>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">Bonjour, {currentUser.name.split(' ')[0]}</h2>
               </div>
             )}
           </div>
