@@ -11,11 +11,29 @@ export default function SubscriptionPage() {
   // Forcer à "expired" si on est ici avec un abonnement qui a expiré selon la date, 
   // mais que currentUser n'est pas encore mis à jour.
   let isExpired = false;
-  if (currentUser?.subscriptionStatus === "expired") {
-    isExpired = true;
-  } else if (currentUser?.subscriptionEndDate) {
-    if (new Date(currentUser.subscriptionEndDate).getTime() < new Date().getTime()) {
+  let endDateString = "Date inconnue";
+  
+  if (currentUser) {
+    if (currentUser.subscriptionStatus === "expired") {
       isExpired = true;
+    }
+    
+    // Fallback : si pas de subscriptionEndDate mais on a createdAt, on ajoute 7 jours
+    let effectiveEndDate = currentUser.subscriptionEndDate;
+    if (!effectiveEndDate && currentUser.createdAt) {
+      const d = new Date(currentUser.createdAt);
+      d.setDate(d.getDate() + 7);
+      effectiveEndDate = d.toISOString();
+    }
+    
+    if (effectiveEndDate) {
+      const d = new Date(effectiveEndDate);
+      if (!isNaN(d.getTime())) {
+        endDateString = d.toLocaleDateString("fr-FR");
+        if (d.getTime() < new Date().getTime()) {
+          isExpired = true;
+        }
+      }
     }
   }
 
@@ -63,7 +81,7 @@ export default function SubscriptionPage() {
           <div className="flex-1 text-center md:text-left">
             <h2 className="text-xl font-bold text-blue-900 mb-1">Abonnement Actif</h2>
             <p className="text-blue-700">
-              Votre abonnement est valide jusqu'au <span className="font-semibold">{new Date(currentUser?.subscriptionEndDate || "").toLocaleDateString("fr-FR")}</span>.
+              Votre abonnement est valide jusqu'au <span className="font-semibold">{endDateString}</span>.
             </p>
           </div>
         </div>
