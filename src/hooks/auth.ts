@@ -14,7 +14,7 @@ export interface User {
   shopId?: string;
   shopSlug?: string;
   shopName?: string;
-  myShops?: { id: string; name: string; slug: string }[];
+  myShops?: { id: string; name: string; slug: string; shop_type?: string; theme_color?: string; currency?: string }[];
   onboardingCompleted?: boolean;
   permissions: {
     canViewDashboard: boolean;
