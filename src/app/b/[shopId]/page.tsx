@@ -500,7 +500,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
           <div className="flex items-center gap-3">
             {shopSettings.logoUrl ? (
               <div className="w-10 h-10 rounded-xl overflow-hidden relative shadow-sm border border-slate-100">
-                <Image src={shopSettings.logoUrl} alt={shopSettings.name} fill className="object-cover" />
+                <Image src={shopSettings.logoUrl || ""} alt={shopSettings.name} fill className="object-cover" />
               </div>
             ) : (
               <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center shadow-md">
@@ -983,22 +983,22 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
             </div>
             <div className="flex gap-4 items-center mb-6">
               <div className="h-16 w-16 bg-slate-100 dark:bg-[#112240] rounded-xl overflow-hidden relative shadow-sm border border-slate-200 dark:border-[#1c3a66]">
-                {selectedProductForOptions.imageUrl ? (
-                  <Image src={selectedProductForOptions.imageUrl} alt="" fill className="object-cover" />
+                {selectedProductForOptions!.imageUrl ? (
+                  <Image src={selectedProductForOptions!.imageUrl || ""} alt="" fill className="object-cover" />
                 ) : (
                   <StoreIcon className="h-6 w-6 text-slate-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                 )}
               </div>
               <div>
-                <div className="font-medium text-slate-900 dark:text-white line-clamp-2">{selectedProductForOptions.name}</div>
+                <div className="font-medium text-slate-900 dark:text-white line-clamp-2">{selectedProductForOptions!.name}</div>
                 <div className="text-orange-500 font-bold mt-1">
-                  <span className="font-mono">{formatCurrency(selectedProductForOptions.promotionalPrice || selectedProductForOptions.salePrice)}</span>
+                  <span className="font-mono">{formatCurrency(selectedProductForOptions!.promotionalPrice || selectedProductForOptions!.salePrice)}</span>
                 </div>
               </div>
             </div>
             
             <div className="space-y-5 mb-6 max-h-[40vh] overflow-y-auto custom-scrollbar">
-              {selectedProductForOptions.options?.map(opt => (
+              {selectedProductForOptions!.options?.map(opt => (
                 <div key={opt.name}>
                   <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">{opt.name}</label>
                   <div className="flex flex-wrap gap-2">
@@ -1022,7 +1022,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
             </div>
             
             <Button 
-              onClick={() => addToCart(selectedProductForOptions, selectedOptions)}
+              onClick={() => addToCart(selectedProductForOptions!, selectedOptions)}
               className="w-full bg-[#0b213f] hover:bg-[#18355c] text-white rounded-xl py-6 font-bold shadow-lg shadow-blue-900/20"
             >
               Confirmer et Ajouter
