@@ -141,7 +141,7 @@ export function Features() {
 
         {/* Grid Block "Une plateforme complète, pas un simple gadget" */}
         <div className="mt-16 bg-[#0b213f] rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-white  rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
           
           <h3 className="text-2xl sm:text-3xl font-bold mb-10 text-center relative z-10">
             Une plateforme complète, pas un simple gadget
