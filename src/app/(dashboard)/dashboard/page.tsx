@@ -7,6 +7,9 @@ import { AlertList } from "@/components/dashboard/alert-list";
 import { RecentOrders } from "@/components/dashboard/recent-orders";
 import { useOrders } from "@/hooks/orders";
 import { useProducts } from "@/hooks/products";
+import { useAuth } from "@/hooks/auth";
+import { PackageOpen, Sparkles, Rocket, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 
@@ -63,6 +66,12 @@ export default function DashboardPage() {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("fr-FR").format(Math.round(amount));
   };
+  
+  const { currentUser } = useAuth();
+  const themeColor = currentUser?.themeColor || '#FACC15';
+
+  // L'empty state a été déplacé dans le dashboard digital.
+  // Pour le physique, on affiche directement les compteurs à 0.
 
   return (
     <div className="space-y-6">
@@ -97,8 +106,8 @@ export default function DashboardPage() {
               trendText="vs mois précédent"
               trendType={trendType}
               icon={DollarSign} 
-              iconColorClass="text-blue-600" 
-              iconBgClass="bg-blue-100" 
+              iconColorClass="text-[#0b213f] dark:text-blue-400" 
+              iconBgClass="bg-blue-50 dark:bg-[#18355c]" 
             />
             </div>
             <div className="min-w-[85vw] sm:min-w-[280px] md:min-w-0 shrink-0 snap-center">
@@ -109,42 +118,48 @@ export default function DashboardPage() {
               trendText=""
               trendType="up"
               icon={ShoppingCart} 
-              iconColorClass="text-green-600" 
-              iconBgClass="bg-green-100" 
+              iconColorClass="text-[#0b213f] dark:text-blue-400" 
+              iconBgClass="bg-blue-50 dark:bg-[#18355c]" 
             />
             </div>
-            <div className="min-w-[85vw] sm:min-w-[280px] md:min-w-0 shrink-0 snap-center">
-            <StatCard 
-              title="Produits en rupture" 
-              value={outOfStockCount.toString()} 
-              trend="À réapprovisionner"
-              trendType="alert"
-              icon={AlertTriangle} 
-              iconColorClass="text-red-600" 
-              iconBgClass="bg-red-100" 
-            />
-            </div>
-            <div className="min-w-[85vw] sm:min-w-[280px] md:min-w-0 shrink-0 snap-center">
-            <StatCard 
-              title="Valeur totale du stock" 
-              value={formatCurrency(totalStockValue)} 
-              subValue="FCFA"
-              trend={`${products.length} références`}
-              trendType="neutral"
-              icon={Package} 
-              iconColorClass="text-slate-600 dark:text-slate-300" 
-              iconBgClass="bg-slate-200" 
-            />
-            </div>
+            {currentUser?.shopType !== 'digital' && (
+              <>
+                <div className="min-w-[85vw] sm:min-w-[280px] md:min-w-0 shrink-0 snap-center">
+                  <StatCard 
+                    title="Produits en rupture" 
+                    value={outOfStockCount.toString()} 
+                    trend="À réapprovisionner"
+                    trendType="alert"
+                    icon={AlertTriangle} 
+                    iconColorClass="text-[#0b213f] dark:text-blue-400" 
+                    iconBgClass="bg-blue-50 dark:bg-[#18355c]" 
+                  />
+                </div>
+                <div className="min-w-[85vw] sm:min-w-[280px] md:min-w-0 shrink-0 snap-center">
+                  <StatCard 
+                    title="Valeur totale du stock" 
+                    value={formatCurrency(totalStockValue)} 
+                    subValue="FCFA"
+                    trend={`${products.length} références`}
+                    trendType="neutral"
+                    icon={Package} 
+                    iconColorClass="text-[#0b213f] dark:text-blue-400" 
+                    iconBgClass="bg-blue-50 dark:bg-[#18355c]" 
+                  />
+                </div>
+              </>
+            )}
           </>
         )}
       </div>
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
         <SalesChart orders={orders} />
-        <div className="md:col-span-1">
-          <AlertList products={products} />
-        </div>
+        {currentUser?.shopType !== 'digital' && (
+          <div className="md:col-span-1">
+            <AlertList products={products} />
+          </div>
+        )}
       </div>
 
       <RecentOrders orders={orders} />

@@ -127,8 +127,23 @@ export function useProducts(publicShopId?: string) {
           alertThreshold: alertThresholdNum
         };
       });
-      setProducts(mapped);
-      localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(mapped));
+
+      // Protection: Si Supabase renvoie un tableau vide mais que nous avons des données mockées en local, on ne les écrase pas.
+      const cachedStr = localStorage.getItem("stockhub_cache_products_" + shopId);
+      let shouldUpdate = true;
+      if (mapped.length === 0 && cachedStr) {
+        try {
+          const cached = JSON.parse(cachedStr);
+          if (Array.isArray(cached) && cached.length > 0) {
+            shouldUpdate = false; // On garde les données mockées locales
+          }
+        } catch {}
+      }
+
+      if (shouldUpdate) {
+        setProducts(mapped);
+        localStorage.setItem("stockhub_cache_products_" + shopId, JSON.stringify(mapped));
+      }
     }
     setIsLoaded(true);
   }, [publicShopId]);

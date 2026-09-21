@@ -1,0 +1,676 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import { 
+  Save, Building2, Bell, Shield, Wallet, 
+  Upload, Check, CreditCard, Lock, Mail, 
+  Smartphone, Globe, Paintbrush, FileText 
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { CustomSelect } from "@/components/ui/custom-select";
+import { cn } from "@/lib/utils";
+import { useSettings } from "@/hooks/settings";
+import { useAuth } from "@/hooks/auth";
+import { SuccessModal } from "@/components/ui/success-modal";
+import { updateProfileNameAction, syncSessionAction, deleteOwnerAccountAction } from "@/app/actions/auth.actions";
+import { supabase } from "@/lib/supabase/client";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import { updateShopSettingsAction } from "@/app/actions/shop.actions";
+import { useTheme } from "next-themes";
+
+const TABS = [
+  { id: "general", label: "Général", icon: Building2 },
+  { id: "facturation", label: "Facturation", icon: FileText },
+  { id: "preferences", label: "Préférences", icon: Paintbrush },
+  { id: "security", label: "Sécurité", icon: Shield },
+  { id: "notifications", label: "Notifications", icon: Bell },
+];
+
+function SettingsContent() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState(tabParam || "general");
+  const [currency, setCurrency] = useState("XOF");
+  const [language, setLanguage] = useState("FR");
+  const [timezone, setTimezone] = useState("GMT+1");
+  const { settings, saveSettings, isLoaded } = useSettings();
+  const { currentUser } = useAuth();
+  const [formData, setFormData] = useState(settings);
+  const [ownerName, setOwnerName] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSubscribeLoading, setIsSubscribeLoading] = useState<string | false>(false);
+  const [subscribeError, setSubscribeError] = useState("");
+  const [isSaved, setIsSaved] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const { theme, setTheme } = useTheme();
+  
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      setFormData(settings);
+    }
+  }, [isLoaded, settings]);
+
+  useEffect(() => {
+    if (currentUser?.name) {
+      setOwnerName(currentUser.name);
+    }
+  }, [currentUser]);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    
+    let finalFormData = { ...formData };
+
+    if (finalFormData.logo && finalFormData.logo.startsWith("data:")) {
+      try {
+        const base64Data = finalFormData.logo.split(",")[1];
+        const byteCharacters = atob(base64Data);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: "image/jpeg" });
+        const fileName = `logo_${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
+        
+        const { error } = await supabase.storage.from('shop_logos').upload(fileName, blob, {
+          contentType: 'image/jpeg',
+          upsert: true
+        });
+        
+        if (!error) {
+          const { data: publicData } = supabase.storage.from('shop_logos').getPublicUrl(fileName);
+          finalFormData.logo = publicData.publicUrl;
+        }
+      } catch (err) {
+        console.error("Erreur lors de l'upload du logo:", err);
+      }
+    }
+
+    await saveSettings(finalFormData);
+    await updateShopSettingsAction(finalFormData);
+    
+    if (currentUser && ownerName !== currentUser.name) {
+      const res = await updateProfileNameAction(currentUser.id, ownerName);
+      if (res.success) {
+        const updatedUser = { ...currentUser, name: ownerName };
+        localStorage.setItem("stockhub_session", JSON.stringify(updatedUser));
+        await syncSessionAction(updatedUser);
+        window.dispatchEvent(new Event("storage"));
+      }
+    }
+    
+    setIsSaved(true);
+    setShowModal(true);
+    setIsSaving(false);
+    setTimeout(() => setIsSaved(false), 3000);
+  };
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, logo: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmation !== "SUPPRIMER") return;
+    setIsDeleting(true);
+    const res = await deleteOwnerAccountAction();
+    if (res.success) {
+      localStorage.clear();
+      window.location.href = '/login';
+    } else {
+      alert("Erreur: " + res.error);
+      setIsDeleting(false);
+    }
+  };
+
+  return (
+    <>
+      <SuccessModal 
+        isOpen={showModal} 
+        onClose={() => setShowModal(false)}
+        title="Paramètres enregistrés !"
+        description="Les informations de votre entreprise ont été mises à jour avec succès. Elles apparaîtront désormais sur vos factures."
+      />
+      
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0a192f] rounded-2xl p-6 max-w-md w-full shadow-2xl animate-in fade-in zoom-in-95">
+            <h3 className="text-xl font-bold text-red-600 mb-2">Zone de Danger Absolu</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+              La suppression de votre compte entraînera la perte définitive de <strong>toutes vos boutiques</strong>, de vos produits, de vos ventes, et des accès de <strong>tous vos employés</strong>. Cette action est irréversible.
+            </p>
+            <div className="space-y-3 mb-6">
+              <label className="text-sm font-semibold text-slate-900 dark:text-white">Veuillez taper <span className="text-red-600 font-bold select-none">SUPPRIMER</span> pour confirmer</label>
+              <input 
+                type="text" 
+                value={deleteConfirmation}
+                onChange={(e) => setDeleteConfirmation(e.target.value)}
+                placeholder="SUPPRIMER"
+                className="w-full p-2.5 border-2 border-red-100 focus:border-red-500 rounded-lg text-center font-bold tracking-widest uppercase focus:outline-none focus:ring-4 focus:ring-red-500/20"
+              />
+            </div>
+            <div className="flex gap-3">
+              <Button 
+                variant="outline" 
+                onClick={() => { setShowDeleteModal(false); setDeleteConfirmation(""); }}
+                className="flex-1"
+                disabled={isDeleting}
+              >
+                Annuler
+              </Button>
+              <Button 
+                variant="destructive"
+                onClick={handleDeleteAccount}
+                disabled={deleteConfirmation !== "SUPPRIMER" || isDeleting}
+                className="flex-1"
+              >
+                {isDeleting ? "Suppression..." : "Adieu StockHub"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="p-3 md:p-0 max-w-[1200px] mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-300">
+        
+        {/* En-tête */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Paramètres</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">Gérez la configuration et les préférences de votre espace StockHub.</p>
+        </div>
+        <Button 
+          onClick={handleSave}
+          disabled={isSaving}
+          className={cn(
+            "bg-[#0b213f] hover:bg-[#18355c] text-white transition-all shadow-sm w-full md:w-auto",
+            isSaved && "bg-green-600 hover:bg-green-700"
+          )}
+        >
+          {isSaved ? <Check size={16} className="mr-2" /> : <Save size={16} className="mr-2" />}
+          {isSaved ? "Enregistré" : isSaving ? "Enregistrement..." : "Enregistrer les modifications"}
+        </Button>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-8">
+        
+        {/* Barre de navigation latérale */}
+        <div className="w-full lg:w-64 shrink-0">
+          <nav className="flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 custom-scrollbar sticky top-24">
+            {TABS.map((tab) => (
+              <button 
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all whitespace-nowrap",
+                  activeTab === tab.id 
+                    ? "bg-white dark:bg-[#0a192f] text-[#0b213f] shadow-sm border border-slate-200 dark:border-[#1c3a66]" 
+                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:bg-[#112240] hover:text-slate-900 dark:text-white border border-transparent"
+                )}
+              >
+                <tab.icon size={18} className={cn(
+                  "transition-colors",
+                  activeTab === tab.id ? "text-blue-600" : "text-slate-400"
+                )} />
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        {/* Contenu des Paramètres */}
+        <div className="flex-1 space-y-6 min-w-0">
+          
+          {/* TONGLET: GÉNÉRAL */}
+          {activeTab === "general" && (
+            <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
+              {/* Informations du compte (Lecture seule) */}
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66] overflow-hidden">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Informations du Compte</CardTitle>
+                  <CardDescription>L'email d'inscription est verrouillé, mais le nom reste modifiable.</CardDescription>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Nom / Propriétaire</label>
+                      <input 
+                        type="text" 
+                        value={ownerName} 
+                        onChange={(e) => setOwnerName(e.target.value)}
+                        className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-white dark:bg-[#0a192f] focus:outline-none focus:ring-2 focus:ring-[#0b213f]/20 focus:border-[#0b213f] transition-all text-slate-900 dark:text-white" 
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Adresse Email</label>
+                      <input 
+                        type="email" 
+                        value={currentUser?.identifier || ""} 
+                        readOnly
+                        className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm bg-slate-100 dark:bg-[#112240] text-slate-500 dark:text-slate-400 cursor-not-allowed outline-none" 
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66] overflow-hidden">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Profil de l'Entreprise</CardTitle>
+                  <CardDescription>Informations de base affichées sur vos documents.</CardDescription>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Email de contact</label>
+                      <div className="relative">
+                        <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input 
+                          type="email" 
+                          value={formData.email} 
+                          onChange={e => setFormData({...formData, email: e.target.value})}
+                          className="w-full pl-9 pr-3 p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Numéro WhatsApp</label>
+                      <div className="relative">
+                        <Smartphone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input 
+                          type="tel" 
+                          value={formData.phone} 
+                          onChange={e => setFormData({...formData, phone: e.target.value})}
+                          className="w-full pl-9 pr-3 p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
+                          placeholder="+229 01 02 03 04"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Pays</label>
+                      <select 
+                        value={formData.country || ""}
+                        onChange={e => {
+                          const country = e.target.value;
+                          let code = formData.countryCode;
+                          if (country === "Bénin") code = "+229";
+                          if (country === "Côte d'Ivoire") code = "+225";
+                          if (country === "Sénégal") code = "+221";
+                          if (country === "Cameroun") code = "+237";
+                          if (country === "Mali") code = "+223";
+                          if (country === "Togo") code = "+228";
+                          if (country === "Burkina Faso") code = "+226";
+                          if (country === "France") code = "+33";
+                          
+                          setFormData({...formData, country, countryCode: code});
+                        }}
+                        className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-[#0a192f]"
+                      >
+                        <option value="Bénin">Bénin</option>
+                        <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+                        <option value="Sénégal">Sénégal</option>
+                        <option value="Cameroun">Cameroun</option>
+                        <option value="Mali">Mali</option>
+                        <option value="Togo">Togo</option>
+                        <option value="Burkina Faso">Burkina Faso</option>
+                        <option value="France">France</option>
+                      </select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Ville</label>
+                      <input 
+                        type="text" 
+                        value={formData.city || ""} 
+                        onChange={e => setFormData({...formData, city: e.target.value})}
+                        className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
+                        placeholder="Ex: Cotonou"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Catégorie</label>
+                      <select 
+                        value={formData.category || "autre"}
+                        onChange={e => setFormData({...formData, category: e.target.value})}
+                        className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-[#0a192f]"
+                      >
+                        <option value="vetements">Vêtements & Mode</option>
+                        <option value="electronique">Électronique & Tech</option>
+                        <option value="alimentation">Alimentation & Restauration</option>
+                        <option value="informatique">Informatique</option>
+                        <option value="services">Services</option>
+                        <option value="autre">Autre / Général</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Adresse complète</label>
+                    <textarea 
+                      rows={2} 
+                      value={formData.address} 
+                      onChange={e => setFormData({...formData, address: e.target.value})}
+                      className="w-full p-3 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none" 
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Réseaux Sociaux & Site Web</CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Site Web</label>
+                    <div className="relative">
+                      <Globe size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input 
+                        type="url" 
+                        value={formData.website} 
+                        onChange={e => setFormData({...formData, website: e.target.value})}
+                        placeholder="https://" 
+                        className="w-full pl-9 pr-3 p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" 
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* ONGLET: FACTURATION */}
+          {activeTab === "facturation" && (
+            <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
+              {/* Redirection vers la page Abonnement dédiée */}
+              <Card className="shadow-sm border-blue-200 bg-blue-50/50">
+                <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                      <CreditCard size={24} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 dark:text-white text-lg">Gérer votre Abonnement</h4>
+                      <p className="text-slate-600 dark:text-slate-300 text-sm mt-1">Consultez votre forfait actuel, la date d'expiration et gérez vos paiements sur la page dédiée.</p>
+                    </div>
+                  </div>
+                  <Button 
+                    onClick={() => window.location.href = '/dashboard/abonnement'}
+                    className="bg-blue-600 hover:bg-blue-700 text-white whitespace-nowrap"
+                  >
+                    Voir mon Abonnement
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Paramètres de Facturation</CardTitle>
+                  <CardDescription>Configurez la TVA et les informations légales.</CardDescription>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-1.5 relative z-20">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Devise principale</label>
+                      <CustomSelect
+                        options={[
+                          { value: "XOF", label: "Franc CFA (XOF)" },
+                          { value: "EUR", label: "Euro (€)" },
+                          { value: "USD", label: "Dollar ($)" }
+                        ]}
+                        value={currency}
+                        onChange={setCurrency}
+                        searchable={false}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Taux de TVA par défaut (%)</label>
+                      <input type="number" defaultValue="18" className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Préfixe des factures</label>
+                      <input type="text" defaultValue="FAC-" className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50 dark:bg-[#06101e] font-mono" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Numéro IFU / SIRET</label>
+                      <input type="text" placeholder="Entrez votre numéro d'identification" className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-1.5 pt-4 border-t border-slate-100 dark:border-[#152a4d]">
+                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Pied de page des factures (Mention légale)</label>
+                    <textarea rows={2} defaultValue="Merci pour votre confiance. Le paiement est dû sous 30 jours." className="w-full p-3 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none text-slate-600 dark:text-slate-300" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* ONGLET: PRÉFÉRENCES */}
+          {activeTab === "preferences" && (
+            <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Préférences Régionales</CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-1.5 relative z-20">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Langue de l'interface</label>
+                      <CustomSelect
+                        options={[
+                          { value: "FR", label: "Français" },
+                          { value: "EN", label: "Anglais" },
+                        ]}
+                        value={language}
+                        onChange={setLanguage}
+                        searchable={false}
+                      />
+                    </div>
+                    <div className="space-y-1.5 relative z-10">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Fuseau Horaire</label>
+                      <CustomSelect
+                        options={[
+                          { value: "GMT+1", label: "Afrique de l'Ouest (GMT+1)" },
+                          { value: "GMT+2", label: "Europe Centrale (GMT+2)" },
+                          { value: "GMT+0", label: "Temps Universel (GMT)" },
+                        ]}
+                        value={timezone}
+                        onChange={setTimezone}
+                        searchable={false}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Apparence</CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-6">
+                    <div 
+                      onClick={() => setTheme("light")}
+                      className={`flex-1 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                        theme !== 'dark' 
+                          ? 'border-blue-600 bg-blue-50/50' 
+                          : 'border-slate-200 dark:border-[#1c3a66] bg-slate-50 dark:bg-[#06101e] hover:border-slate-300 dark:border-[#244b82]'
+                      } relative overflow-hidden`}
+                    >
+                      {theme !== 'dark' && (
+                        <div className="absolute top-2 right-2 h-4 w-4 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                          <Check size={10} />
+                        </div>
+                      )}
+                      <div className={`font-semibold mb-1 ${theme !== 'dark' ? 'text-blue-900' : 'text-slate-700 dark:text-slate-200'}`}>
+                        Thème Clair
+                      </div>
+                      <div className={`text-xs ${theme !== 'dark' ? 'text-blue-700/70' : 'text-slate-500 dark:text-slate-400'}`}>
+                        Idéal pour les environnements de travail lumineux.
+                      </div>
+                    </div>
+
+                    <div 
+                      onClick={() => setTheme("dark")}
+                      className={`flex-1 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                        theme === 'dark' 
+                          ? 'border-blue-600 bg-blue-50/50 dark:bg-blue-900/20' 
+                          : 'border-slate-200 dark:border-[#1c3a66] bg-slate-50 dark:bg-[#06101e] hover:border-slate-300 dark:border-[#244b82]'
+                      } relative overflow-hidden`}
+                    >
+                      {theme === 'dark' && (
+                        <div className="absolute top-2 right-2 h-4 w-4 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                          <Check size={10} />
+                        </div>
+                      )}
+                      <div className={`font-semibold mb-1 ${theme === 'dark' ? 'text-blue-900 dark:text-blue-300' : 'text-slate-700 dark:text-slate-200'}`}>
+                        Thème Sombre
+                      </div>
+                      <div className={`text-xs ${theme === 'dark' ? 'text-blue-700/70 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400'}`}>
+                        Idéal pour les environnements sombres et reposer les yeux.
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* ONGLET: SÉCURITÉ */}
+          {activeTab === "security" && (
+            <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Mot de passe</CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 space-y-6">
+                  <div className="space-y-4 max-w-md">
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Mot de passe actuel</label>
+                      <div className="relative">
+                        <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input type="password" placeholder="••••••••" className="w-full pl-9 pr-3 p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Nouveau mot de passe</label>
+                      <div className="relative">
+                        <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input type="password" placeholder="••••••••" className="w-full pl-9 pr-3 p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                      </div>
+                    </div>
+                    <Button variant="outline" className="w-full bg-white dark:bg-[#0a192f] border-slate-200 dark:border-[#1c3a66] text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:bg-[#06101e]">
+                      Mettre à jour le mot de passe
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {currentUser?.role === 'owner' && (
+                <Card className="shadow-sm border-red-200 mt-6">
+                  <CardHeader className="bg-red-50/50 border-b border-red-100 pb-4">
+                    <CardTitle className="text-lg font-bold text-red-900">Zone de Danger</CardTitle>
+                    <CardDescription className="text-red-700/80">Ces actions sont irréversibles. Soyez certain de votre choix.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div>
+                        <h4 className="font-semibold text-slate-900 dark:text-white">Supprimer mon compte définitivement</h4>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xl">
+                          Cette action effacera immédiatement toutes vos boutiques, vos employés associés, vos produits et votre compte de connexion.
+                        </p>
+                      </div>
+                      <Button 
+                        variant="destructive" 
+                        onClick={() => setShowDeleteModal(true)}
+                        className="w-full md:w-auto"
+                      >
+                        Supprimer le compte
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+          
+          {/* ONGLET: NOTIFICATIONS */}
+          {activeTab === "notifications" && (
+            <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
+              <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+                <CardHeader className="bg-slate-50 dark:bg-[#06101e]/50 border-b border-slate-100 dark:border-[#152a4d] pb-4">
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">Préférences de Notification</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0 divide-y divide-slate-100">
+                  <div className="flex items-center justify-between p-6">
+                    <div>
+                      <h4 className="font-semibold text-slate-900 dark:text-white text-sm">Rappels de stock faible</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Recevoir un email quand un produit passe sous le seuil d'alerte.</p>
+                    </div>
+                    <div className="w-11 h-6 bg-blue-600 rounded-full relative cursor-pointer shadow-inner">
+                      <div className="absolute right-1 top-1 w-4 h-4 bg-white dark:bg-[#0a192f] rounded-full shadow-sm"></div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between p-6">
+                    <div>
+                      <h4 className="font-semibold text-slate-900 dark:text-white text-sm">Rapport de ventes quotidien</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Un résumé de vos encaissements envoyé chaque soir.</p>
+                    </div>
+                    <div className="w-11 h-6 bg-slate-200 rounded-full relative cursor-pointer shadow-inner">
+                      <div className="absolute left-1 top-1 w-4 h-4 bg-white dark:bg-[#0a192f] rounded-full shadow-sm"></div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between p-6">
+                    <div>
+                      <h4 className="font-semibold text-slate-900 dark:text-white text-sm">Nouvelle connexion</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Alerte de sécurité lors d'une connexion depuis un nouvel appareil.</p>
+                    </div>
+                    <div className="w-11 h-6 bg-blue-600 rounded-full relative cursor-pointer shadow-inner">
+                      <div className="absolute right-1 top-1 w-4 h-4 bg-white dark:bg-[#0a192f] rounded-full shadow-sm"></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+        </div>
+      </div>
+    </div>
+    </>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <SettingsContent />
+    </Suspense>
+  );
+}

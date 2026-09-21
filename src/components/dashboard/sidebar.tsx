@@ -66,12 +66,26 @@ export function Sidebar() {
   const isEmployee = currentUser.role === "employee";
   
   const filteredMainMenu = mainMenu.filter(item => {
+    // 1. Employee permissions
     if (isEmployee) {
       if (item.name === "Tableau de bord" && !currentUser.permissions.canViewDashboard) return false;
       const allowedForEmployee = ["Ventes & commandes", "Factures", "Stock", "Clients", "Produits", "Tableau de bord"];
-      return allowedForEmployee.includes(item.name);
+      if (!allowedForEmployee.includes(item.name)) return false;
     }
+
+    // 2. Shop Type filtering
+    if (currentUser.shopType === 'digital') {
+      const hiddenForDigital = ["Stock", "Fournisseurs"];
+      if (hiddenForDigital.includes(item.name)) return false;
+    }
+
     return true;
+  }).map(item => {
+    // Rename "Produits" if it's a 100% digital shop (optional, for better UX)
+    if (item.name === "Produits" && currentUser.shopType === 'digital') {
+      return { ...item, name: "Produits Digitaux" };
+    }
+    return item;
   });
 
   const filteredOtherMenu = otherMenu.filter(item => {
@@ -146,7 +160,7 @@ export function Sidebar() {
     <div className="flex h-full w-64 flex-col bg-[#0b213f] text-slate-300">
       {/* Logo */}
       <div className="flex h-20 items-center px-5 border-b border-white/10 shrink-0">
-        <Link href="/dashboard" className="bg-white dark:bg-[#0a192f] rounded-lg p-2 w-full flex items-center justify-center hover:opacity-90 transition-opacity">
+        <Link href="/dashboard" className="bg-white/5 hover:bg-white/10 rounded-lg p-2 w-full flex items-center justify-center transition-all">
           <Image 
             src="/logo.png" 
             alt="StockHub" 
@@ -160,11 +174,36 @@ export function Sidebar() {
 
       {/* Sélecteur de Boutique (Visible sur desktop et mobile) */}
       <div className="px-4 py-3 border-b border-white/10 bg-[#07172c] shrink-0">
+        
+        {/* Switcher d'Espace (pour Mixte & Libre) */}
+        {currentUser.shopType === 'libre' && (
+          <div className="flex bg-black/20 p-1 rounded-lg mb-3">
+            <Link 
+              href="/dashboard"
+              className={cn(
+                "flex-1 text-center text-[11px] font-bold py-1.5 rounded-md transition-colors",
+                !pathname.includes("dashboard_digital") ? "bg-[#0d8f76] text-white shadow-sm" : "text-slate-400 hover:text-white hover:bg-white/5"
+              )}
+            >
+              Physique
+            </Link>
+            <Link 
+              href="/dashboard_digital"
+              className={cn(
+                "flex-1 text-center text-[11px] font-bold py-1.5 rounded-md transition-colors",
+                pathname.includes("dashboard_digital") ? "bg-[#0d8f76] text-white shadow-sm" : "text-slate-400 hover:text-white hover:bg-white/5"
+              )}
+            >
+              Digital
+            </Link>
+          </div>
+        )}
+
         <div className="relative">
           <button
             type="button"
             onClick={() => setShopDropdownOpen(!shopDropdownOpen)}
-            className="w-full flex items-center justify-between p-2 rounded-xl bg-white dark:bg-[#0a192f]/5 hover:bg-white dark:bg-[#0a192f]/10 border border-white/10 transition-all text-left group"
+            className="w-full flex items-center justify-between p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-left group"
           >
             <div className="flex items-center gap-2.5 overflow-hidden min-w-0">
               <div className="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300 shrink-0">

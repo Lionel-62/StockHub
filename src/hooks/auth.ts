@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { loginAction, logoutAction, syncSessionAction, completeGoogleSignupAction } from "@/app/actions/auth.actions";
@@ -19,6 +21,9 @@ export interface User {
   };
   subscriptionStatus?: "trial" | "active" | "expired";
   subscriptionEndDate?: string;
+  themeColor?: string;
+  shopType?: string;
+  currency?: string;
   createdAt: string;
 }
 
@@ -76,10 +81,27 @@ export function useAuth() {
         if (profileErr) console.error("Profile fetch error:", profileErr);
         
         let profile: any = profileRow;
+        const profileAlreadyExisted = !!profile;
+        
         if (profile && profile.shop_id) {
-          const { data: activeShop } = await supabase.from('shops').select('slug, name').eq('id', profile.shop_id).single();
+          const { data: activeShop } = await supabase.from('shops').select('slug, name, theme_color').eq('id', profile.shop_id).single();
           profile.shops = activeShop;
         }
+
+        // If they tried to sign up but already have an older profile
+        const isNewUser = (Date.now() - new Date(session.user.created_at).getTime()) < 60000;
+        
+        if (profileAlreadyExisted && isSignupFlow && !isNewUser) {
+          await supabase.auth.signOut();
+          localStorage.removeItem("stockhub_session");
+          setCurrentUser(null);
+          setIsLoaded(true);
+          if (typeof window !== 'undefined') {
+            window.location.href = '/login?error=already_registered';
+          }
+          return;
+        }
+
         if (!profile && isSignupFlow) {
           const res = await completeGoogleSignupAction(
             session.user.id,
@@ -90,7 +112,7 @@ export function useAuth() {
             const { data: newProfileRow } = await supabase.from('profiles').select('shop_id, onboarding_completed, subscription_status, subscription_end_date').eq('id', session.user.id).single();
             profile = newProfileRow;
             if (profile && profile.shop_id) {
-              const { data: activeShop } = await supabase.from('shops').select('slug, name').eq('id', profile.shop_id).single();
+              const { data: activeShop } = await supabase.from('shops').select('slug, name, theme_color, shop_type, currency').eq('id', profile.shop_id).single();
               profile.shops = activeShop;
             }
           }
@@ -111,9 +133,9 @@ export function useAuth() {
         // STEP 4: Profile found → create session
         const needsOnboarding = !profile.onboarding_completed || !profile.shop_id;
         
-        let myShops: { id: string; name: string; slug: string }[] = [];
+        let myShops: { id: string; name: string; slug: string; theme_color?: string; shop_type?: string; currency?: string }[] = [];
         if (!needsOnboarding) {
-          const { data: shops } = await supabase.from('shops').select('id, name, slug').eq('owner_id', session.user.id).order('created_at', { ascending: true });
+          const { data: shops } = await supabase.from('shops').select('id, name, slug, theme_color, shop_type, currency').eq('owner_id', session.user.id).order('created_at', { ascending: true });
           if (shops) {
             myShops = shops;
           }
@@ -123,6 +145,9 @@ export function useAuth() {
         let activeShopId = profile.shop_id;
         let activeShopSlug = Array.isArray(profile.shops) ? profile.shops[0]?.slug : (profile.shops as any)?.slug;
         let activeShopName = Array.isArray(profile.shops) ? profile.shops[0]?.name : (profile.shops as any)?.name;
+        let activeThemeColor = Array.isArray(profile.shops) ? profile.shops[0]?.theme_color : (profile.shops as any)?.theme_color;
+        let activeShopType = Array.isArray(profile.shops) ? profile.shops[0]?.shop_type : (profile.shops as any)?.shop_type;
+        let activeCurrency = Array.isArray(profile.shops) ? profile.shops[0]?.currency : (profile.shops as any)?.currency;
 
         if (parsedSession && parsedSession.shopId && myShops.some(s => s.id === parsedSession.shopId)) {
           const selectedShop = myShops.find(s => s.id === parsedSession.shopId);
@@ -130,6 +155,9 @@ export function useAuth() {
             activeShopId = selectedShop.id;
             activeShopSlug = selectedShop.slug;
             activeShopName = selectedShop.name;
+            activeThemeColor = selectedShop.theme_color || activeThemeColor;
+            activeShopType = selectedShop.shop_type || activeShopType;
+            activeCurrency = selectedShop.currency || activeCurrency;
           }
         }
 
@@ -147,6 +175,9 @@ export function useAuth() {
           permissions: { canViewDashboard: true },
           subscriptionStatus: profile.subscription_status || "trial",
           subscriptionEndDate: profile.subscription_end_date,
+          themeColor: activeThemeColor || parsedSession?.themeColor,
+          shopType: activeShopType || parsedSession?.shopType || 'physique',
+          currency: activeCurrency || parsedSession?.currency || 'FCFA',
           createdAt: session.user.created_at
         };
         setCurrentUser(user);

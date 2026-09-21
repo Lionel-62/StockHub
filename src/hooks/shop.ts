@@ -14,6 +14,7 @@ export interface ShopSettings {
   metaPhoneNumberId?: string;
   metaAccessToken?: string;
   logoUrl?: string;
+  shopType?: string;
 }
 
 const defaultShopSettings: ShopSettings = {
@@ -76,6 +77,7 @@ export function useShopSettings(publicShopId?: string) {
           metaPhoneNumberId: data.meta_phone_number_id || "",
           metaAccessToken: data.meta_access_token || "",
           logoUrl: data.logo_url || "",
+          shopType: data.shop_type || "physique",
         };
         setShopSettings(newSettings);
         localStorage.setItem("stockhub_settings_shop_" + shopId, JSON.stringify(newSettings));

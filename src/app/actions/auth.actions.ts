@@ -15,7 +15,7 @@ export async function loginAction(identifier: string, pinCode: string, allowedRo
   
   let query = supabase
     .from('profiles')
-    .select('*, shops!profiles_shop_id_fkey!inner(slug, name), subscription_status, subscription_end_date')
+    .select('*, shops!profiles_shop_id_fkey!inner(slug, name, shop_type, currency), subscription_status, subscription_end_date')
     .eq('identifier', identifier)
     .eq('pin_code', pinCode);
     
@@ -46,6 +46,8 @@ export async function loginAction(identifier: string, pinCode: string, allowedRo
       permissions: typeof userRecord.permissions === 'string' ? JSON.parse(userRecord.permissions) : userRecord.permissions,
       subscriptionStatus: userRecord.subscription_status,
       subscriptionEndDate: userRecord.subscription_end_date,
+      shopType: userRecord.shops?.shop_type || userRecord.shop_type || 'physique',
+      currency: userRecord.shops?.currency || userRecord.currency || 'FCFA',
       createdAt: userRecord.created_at || new Date().toISOString()
     };
 
@@ -186,7 +188,7 @@ export async function completeGoogleSignupAction(userId: string, email: string, 
   }
 }
 
-export async function createShopAction(userId: string, shopName: string, category: string, whatsapp: string, description: string, country?: string, city?: string, countryCode?: string) {
+export async function createShopAction(userId: string, shopName: string, category: string, whatsapp: string, description: string, country?: string, city?: string, countryCode?: string, themeColor: string = '#FACC15', experienceLevel: string = 'debutant', shopType: string = 'physique', currency: string = 'FCFA') {
   try {
     const supabase = createAdminClient();
     
@@ -207,6 +209,10 @@ export async function createShopAction(userId: string, shopName: string, categor
         country_code: countryCode || null,
         is_active: true,
         owner_id: userId,
+        theme_color: themeColor,
+        experience_level: experienceLevel,
+        shop_type: shopType,
+        currency: currency
       })
       .select()
       .single();
@@ -316,6 +322,9 @@ export async function createShopAction(userId: string, shopName: string, categor
         permissions: typeof profile.permissions === 'string' ? JSON.parse(profile.permissions) : profile.permissions,
         subscriptionStatus: updatedProfile?.subscription_status || 'trial',
         subscriptionEndDate: updatedProfile?.subscription_end_date,
+        themeColor: themeColor,
+        shopType: shopType,
+        currency: currency,
         createdAt: profile.created_at
       };
       await setSession(sessionData);

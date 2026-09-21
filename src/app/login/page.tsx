@@ -47,6 +47,9 @@ function LoginForm() {
     if (errorParam === 'account_not_found') {
       setActiveTab("register");
       setError("Aucun compte trouvé avec cette adresse Google. Veuillez vous inscrire d'abord.");
+    } else if (errorParam === 'already_registered') {
+      setActiveTab("login");
+      setError("Vous avez déjà un compte avec cette adresse. Veuillez vous connecter.");
     }
   }, [searchParams]);
 

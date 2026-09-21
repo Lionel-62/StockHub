@@ -28,7 +28,7 @@ export function StatCard({
 }: StatCardProps) {
   
   return (
-    <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+    <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66] bg-white dark:bg-[#06101e]">
       <CardContent className="p-5">
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
@@ -75,7 +75,7 @@ export function StatCard({
 
 export function StatCardSkeleton() {
   return (
-    <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66]">
+    <Card className="shadow-sm border-slate-200 dark:border-[#1c3a66] bg-white dark:bg-[#06101e]">
       <CardContent className="p-5">
         <div className="flex items-center justify-between mb-4">
           <Skeleton className="h-4 w-24" />

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/hooks/auth";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
@@ -16,6 +16,7 @@ export function Topbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const isDashboardHome = pathname === "/dashboard";
   const { currentUser } = useAuth();
   const [shopToDelete, setShopToDelete] = useState<{ id: string; name: string } | null>(null);
@@ -126,12 +127,10 @@ export function Topbar() {
           {/* Mobile Right Actions */}
           <div className="flex md:hidden items-center gap-2 shrink-0">
             {isDashboardHome && (
-              <Link href="/dashboard/ventes/nouvelle">
-                <Button className="bg-[#0b213f] hover:bg-[#18355c] text-white flex items-center gap-1.5 rounded-xl px-2.5 py-1 h-8 shadow-xs transition-all active:scale-95">
+              <button onClick={() => router.push("/dashboard/ventes/nouvelle")} className="bg-[#0b213f] hover:bg-[#18355c] text-white flex items-center gap-1.5 rounded-xl px-2.5 py-1 h-8 shadow-xs transition-all active:scale-95">
                   <Plus size={15} />
                   <span className="text-xs font-semibold">Vente</span>
-                </Button>
-              </Link>
+              </button>
             )}
           </div>
         </div>
@@ -153,12 +152,10 @@ export function Topbar() {
           {/* Desktop Right Actions */}
           <div className="hidden md:flex items-center gap-4">
             {isDashboardHome && (
-              <Link href="/dashboard/ventes/nouvelle">
-                <Button className="bg-[#0b213f] hover:bg-[#18355c] text-white flex items-center gap-2 rounded-xl px-4 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-md active:scale-95">
+              <button onClick={() => router.push("/dashboard/ventes/nouvelle")} className="bg-[#0b213f] hover:bg-[#18355c] text-white flex items-center gap-2 rounded-xl px-4 py-2 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-md active:scale-95">
                   <Plus size={18} />
-                  <span>Nouvelle vente</span>
-                </Button>
-              </Link>
+                  <span className="font-medium text-sm">Nouvelle vente</span>
+              </button>
             )}
           </div>
         </div>
@@ -177,7 +174,7 @@ export function Topbar() {
           <Sidebar />
           <button 
             type="button"
-            className="absolute top-5 right-3 text-white/60 hover:text-white transition-colors bg-white dark:bg-[#0a192f]/10 rounded-full p-1.5"
+            className="absolute top-5 right-3 text-white/70 hover:text-white transition-colors bg-white/10 hover:bg-white/20 rounded-full p-1.5"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="Fermer le menu"
           >

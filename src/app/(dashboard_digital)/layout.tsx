@@ -15,16 +15,14 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  
   return (
     <AuthGuard>
       <ThemeInjector />
-      <div className="flex h-dvh overflow-hidden bg-slate-50 dark:bg-slate-950 print:h-auto print:overflow-visible print:block print:bg-white transition-colors duration-200">
-        <div className="flex flex-1 flex-col overflow-hidden print:block print:overflow-visible">
-          <div className="print:hidden">
-            <Topbar />
-          </div>
-          <main className="flex-1 overflow-y-auto px-0 pt-0 pb-24 md:p-8 print:overflow-visible print:block print:p-0">
+      <div className="flex h-dvh overflow-hidden bg-white transition-colors duration-200 font-sans">
+        <DigitalSidebar />
+        <div className="flex flex-1 flex-col overflow-hidden bg-white">
+          <DigitalTopbar />
+          <main className="flex-1 overflow-y-auto px-4 md:px-8 py-10 bg-white">
             {children}
           </main>
         </div>
