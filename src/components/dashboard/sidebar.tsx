@@ -106,7 +106,7 @@ export function Sidebar() {
       ? [{ id: currentUser.shopId, name: currentUser.shopName || "Ma Boutique", slug: currentUser.shopSlug || "" }]
       : [];
 
-  const handleSwitchShop = (shop: { id: string; name: string; slug: string }) => {
+  const handleSwitchShop = (shop: { id: string; name: string; slug: string; shop_type?: string; theme_color?: string; currency?: string }) => {
     if (shop.id === currentUser.shopId) {
       setShopDropdownOpen(false);
       return;
@@ -115,11 +115,18 @@ export function Sidebar() {
       ...currentUser,
       shopId: shop.id,
       shopName: shop.name,
-      shopSlug: shop.slug
+      shopSlug: shop.slug,
+      shopType: shop.shop_type || currentUser.shopType,
+      themeColor: shop.theme_color || currentUser.themeColor,
+      currency: shop.currency || currentUser.currency,
     };
     localStorage.setItem("stockhub_session", JSON.stringify(newUser));
     setShopDropdownOpen(false);
-    window.location.reload();
+    if (newUser.shopType === 'digital') {
+      window.location.href = '/dashboard_digital';
+    } else {
+      window.location.href = '/dashboard';
+    }
   };
 
   const handleDeleteShop = async () => {

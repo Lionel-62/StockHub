@@ -6,16 +6,16 @@ import Link from "next/link";
 
 export function Pricing() {
   return (
-    <section className="py-24 bg-slate-50 dark:bg-[#06101e]/80 border-t border-slate-200 dark:border-[#1c3a66]/70" data-purpose="pricing" id="tarifs">
+    <section className="py-24 bg-slate-50  border-t border-slate-200 " data-purpose="pricing" id="tarifs">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs uppercase tracking-widest font-bold text-[#0b213f] bg-slate-100 dark:bg-[#112240] px-3 py-1 rounded-full border border-slate-200 dark:border-[#1c3a66]">
+          <span className="text-xs uppercase tracking-widest font-bold text-[#0b213f] bg-slate-100  px-3 py-1 rounded-full border border-slate-200 ">
             Tarification Transparente
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mt-3">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900  tracking-tight mt-3">
             Un investissement rentabilisé dès la première semaine
           </h2>
-          <p className="text-slate-600 dark:text-slate-300 mt-3 text-base sm:text-lg">
+          <p className="text-slate-600  mt-3 text-base sm:text-lg">
             Sans engagement. Aucun frais caché. Choisissez l&apos;offre qui correspond à votre volume de vente.
           </p>
         </div>
@@ -29,19 +29,19 @@ export function Pricing() {
             viewport={{ once: true, margin: "-20px" }}
             transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
-            className="bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-3xl p-8 flex flex-col justify-between hover:border-slate-300 dark:border-[#244b82] transition-all"
+            className="bg-white  border border-slate-200  rounded-3xl p-8 flex flex-col justify-between hover:border-slate-300  transition-all"
           >
             <div>
               <div className="flex justify-between items-center">
-                <div className="text-lg font-bold text-slate-900 dark:text-white">Plan Gratuit</div>
+                <div className="text-lg font-bold text-slate-900 ">Plan Gratuit</div>
                 <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-100 uppercase tracking-wide">Gratuit à vie</div>
               </div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Pour tester et démarrer sereinement</div>
+              <div className="text-xs text-slate-500  mt-1">Pour tester et démarrer sereinement</div>
               <div className="my-6">
-                <span className="text-4xl font-extrabold text-slate-900 dark:text-white">0</span>
-                <span className="text-slate-500 dark:text-slate-400 font-medium"> FCFA /mois</span>
+                <span className="text-4xl font-extrabold text-slate-900 ">0</span>
+                <span className="text-slate-500  font-medium"> FCFA /mois</span>
               </div>
-              <ul className="space-y-3.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-8">
+              <ul className="space-y-3.5 text-xs sm:text-sm text-slate-600  mb-8">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> 1 boutique connectée
                 </li>
@@ -61,7 +61,7 @@ export function Pricing() {
             </div>
             <Link 
               href="/login?plan=gratuit"
-              className="w-full text-center bg-slate-100 dark:bg-[#112240] hover:bg-slate-200 text-slate-800 dark:text-slate-100 font-semibold py-3 px-6 rounded-full transition-colors text-sm"
+              className="w-full text-center bg-slate-100  hover:bg-slate-200 text-slate-800  font-semibold py-3 px-6 rounded-full transition-colors text-sm"
             >
               Démarrer sans frais
             </Link>
@@ -74,19 +74,19 @@ export function Pricing() {
             viewport={{ once: true, margin: "-20px" }}
             transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
-            className="bg-white dark:bg-[#0a192f] border-2 border-[#0b213f] rounded-3xl p-8 flex flex-col justify-between shadow-glow relative transform lg:-translate-y-2"
+            className="bg-white  border-2 border-[#0b213f] rounded-3xl p-8 flex flex-col justify-between shadow-glow relative transform lg:-translate-y-2"
           >
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#0b213f] text-white text-[11px] font-bold uppercase tracking-wider px-4 py-1 rounded-full shadow-md">
               ⭐ Le Plus Populaire
             </div>
             <div>
               <div className="text-lg font-bold text-[#0b213f]">Plan Pro</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Pour les boutiques actives en pleine croissance</div>
+              <div className="text-xs text-slate-500  mt-1">Pour les boutiques actives en pleine croissance</div>
               <div className="my-6">
                 <span className="text-4xl font-extrabold text-[#0b213f]">5 000</span>
-                <span className="text-slate-500 dark:text-slate-400 font-medium"> FCFA /mois</span>
+                <span className="text-slate-500  font-medium"> FCFA /mois</span>
               </div>
-              <ul className="space-y-3.5 text-xs sm:text-sm text-slate-700 dark:text-slate-200 mb-8 font-medium">
+              <ul className="space-y-3.5 text-xs sm:text-sm text-slate-700  mb-8 font-medium">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> <strong>Produits & ventes illimités</strong>
                 </li>
@@ -131,16 +131,16 @@ export function Pricing() {
             viewport={{ once: true, margin: "-20px" }}
             transition={{ duration: 0.4 }}
             whileHover={{ y: -5 }}
-            className="bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] rounded-3xl p-8 flex flex-col justify-between hover:border-slate-300 dark:border-[#244b82] transition-all"
+            className="bg-white  border border-slate-200  rounded-3xl p-8 flex flex-col justify-between hover:border-slate-300  transition-all"
           >
             <div>
-              <div className="text-lg font-bold text-slate-900 dark:text-white">Plan Business</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Pour chaînes de magasins & franchises</div>
+              <div className="text-lg font-bold text-slate-900 ">Plan Business</div>
+              <div className="text-xs text-slate-500  mt-1">Pour chaînes de magasins & franchises</div>
               <div className="my-6">
-                <span className="text-4xl font-extrabold text-slate-900 dark:text-white">8 000</span>
-                <span className="text-slate-500 dark:text-slate-400 font-medium"> FCFA /mois</span>
+                <span className="text-4xl font-extrabold text-slate-900 ">8 000</span>
+                <span className="text-slate-500  font-medium"> FCFA /mois</span>
               </div>
-              <ul className="space-y-3.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-8">
+              <ul className="space-y-3.5 text-xs sm:text-sm text-slate-600  mb-8">
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Tout ce qui est inclus dans le Plan Pro
                 </li>
@@ -163,7 +163,7 @@ export function Pricing() {
             </div>
             <Link 
               href="/login?plan=business"
-              className="w-full text-center bg-slate-100 dark:bg-[#112240] hover:bg-slate-200 text-slate-800 dark:text-slate-100 font-semibold py-3 px-6 rounded-full transition-colors text-sm"
+              className="w-full text-center bg-slate-100  hover:bg-slate-200 text-slate-800  font-semibold py-3 px-6 rounded-full transition-colors text-sm"
             >
               Choisir le Plan Business (7j d'essai)
             </Link>
@@ -172,18 +172,18 @@ export function Pricing() {
         </div>
 
         {/* Payment methods note */}
-        <div className="mt-12 text-center text-xs text-slate-500 dark:text-slate-400 flex flex-wrap items-center justify-center gap-4">
-          <span className="font-medium text-slate-500 dark:text-slate-400 mr-1">Règlement mensuel sans engagement via :</span>
-          <span className="inline-flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-100 bg-white dark:bg-[#0a192f] border border-orange-200 px-3 py-1.5 rounded-lg shadow-sm">
+        <div className="mt-12 text-center text-xs text-slate-500  flex flex-wrap items-center justify-center gap-4">
+          <span className="font-medium text-slate-500  mr-1">Règlement mensuel sans engagement via :</span>
+          <span className="inline-flex items-center gap-1.5 font-bold text-slate-800  bg-white  border border-orange-200 px-3 py-1.5 rounded-lg shadow-sm">
             <span className="w-3.5 h-3.5 rounded-full bg-orange-500 text-white text-[8px] font-black flex items-center justify-center">OM</span>Orange Money
           </span>
-          <span className="font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-[#0a192f] border border-cyan-200 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5">
+          <span className="font-bold text-slate-700  bg-white  border border-cyan-200 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-cyan-400"></span>Wave
           </span>
-          <span className="font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-[#0a192f] border border-amber-200 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5">
+          <span className="font-bold text-slate-700  bg-white  border border-amber-200 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-yellow-400"></span>MTN MoMo
           </span>
-          <span className="font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-[#0a192f] border border-blue-200 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5">
+          <span className="font-bold text-slate-700  bg-white  border border-blue-200 px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-blue-500"></span>Moov Money
           </span>
         </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/hooks/auth";
+import { deleteShopAction } from "@/app/actions/shop.actions";
 import {
   Home,
   ShoppingBag,
@@ -47,8 +48,38 @@ export function DigitalSidebar() {
   const pathname = usePathname();
   const { currentUser, logout, isLoaded } = useAuth();
   const router = useRouter();
-
+  const [shopDropdownOpen, setShopDropdownOpen] = useState(false);
+  
   if (!isLoaded || !currentUser) return null;
+  
+  const userShops = (currentUser.myShops && currentUser.myShops.length > 0)
+    ? currentUser.myShops
+    : currentUser.shopId
+      ? [{ id: currentUser.shopId, name: currentUser.shopName || "Ma Boutique", slug: currentUser.shopSlug || "" }]
+      : [];
+
+  const handleSwitchShop = (shop: { id: string; name: string; slug: string; shop_type?: string; theme_color?: string; currency?: string }) => {
+    if (shop.id === currentUser.shopId) {
+      setShopDropdownOpen(false);
+      return;
+    }
+    const newUser = {
+      ...currentUser,
+      shopId: shop.id,
+      shopName: shop.name,
+      shopSlug: shop.slug,
+      shopType: shop.shop_type || currentUser.shopType,
+      themeColor: shop.theme_color || currentUser.themeColor,
+      currency: shop.currency || currentUser.currency,
+    };
+    localStorage.setItem("stockhub_session", JSON.stringify(newUser));
+    setShopDropdownOpen(false);
+    if (newUser.shopType === 'digital') {
+      window.location.href = '/dashboard_digital';
+    } else {
+      window.location.href = '/dashboard';
+    }
+  };
   
   const handleLogout = () => {
     logout();
@@ -59,18 +90,73 @@ export function DigitalSidebar() {
     <div className="hidden md:flex flex-col bg-[#F7F7F8] w-[260px] h-screen transition-all duration-300 font-sans border-r border-[#EAEBEB]">
       
       {/* Top Shop Dropdown (Chariow style) */}
-      <div className="p-4 pt-5 pb-2">
-        <div className="flex items-center justify-between bg-white border border-slate-200/60 rounded-[10px] px-3 py-2 cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:border-slate-300 transition-colors">
-          <div className="flex items-center gap-2.5">
-            <div className="w-[22px] h-[22px] bg-[#111] rounded-[6px] flex items-center justify-center">
+      <div className="p-4 pt-5 pb-2 relative z-50">
+        <button 
+          onClick={() => setShopDropdownOpen(!shopDropdownOpen)}
+          className="w-full flex items-center justify-between bg-white border border-slate-200/60 rounded-[10px] px-3 py-2 cursor-pointer shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:border-slate-300 transition-colors"
+        >
+          <div className="flex items-center gap-2.5 overflow-hidden">
+            <div className="w-[22px] h-[22px] bg-[#111] rounded-[6px] flex items-center justify-center shrink-0">
               <Store size={12} className="text-white" strokeWidth={2.5} />
             </div>
-            <span className="font-semibold text-[13px] text-[#222]">
+            <span className="font-semibold text-[13px] text-[#222] truncate">
               {currentUser?.shopName || "Dova chop"}
             </span>
           </div>
-          <ChevronDown size={14} className="text-[#888]" strokeWidth={2.5} />
-        </div>
+          <ChevronDown size={14} className={cn("text-[#888] shrink-0 transition-transform duration-200", shopDropdownOpen && "rotate-180")} strokeWidth={2.5} />
+        </button>
+
+        {/* Dropdown Menu */}
+        {shopDropdownOpen && (
+          <div className="absolute top-full left-4 right-4 mt-1 bg-white border border-slate-200 rounded-[10px] shadow-lg overflow-hidden flex flex-col gap-1 p-1 z-50">
+            <div className="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+              <span>Vos boutiques</span>
+              <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded font-mono text-slate-500">
+                {userShops.length}
+              </span>
+            </div>
+            <div className="max-h-48 overflow-y-auto flex flex-col gap-1 scrollbar-thin">
+              {userShops.map((shop) => {
+                const isCurrent = shop.id === currentUser.shopId;
+                return (
+                  <button
+                    key={shop.id}
+                    onClick={() => handleSwitchShop(shop)}
+                    className={cn(
+                      "flex items-center justify-between rounded-lg p-1.5 transition-colors text-left",
+                      isCurrent ? "bg-slate-50" : "hover:bg-slate-50"
+                    )}
+                  >
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <div className={cn(
+                        "w-7 h-7 rounded-md flex items-center justify-center shrink-0 border",
+                        isCurrent ? "bg-white border-slate-200" : "bg-white border-slate-100"
+                      )}>
+                        <Store size={12} className={isCurrent ? "text-[#111]" : "text-slate-400"} />
+                      </div>
+                      <div className="flex flex-col min-w-0 overflow-hidden">
+                        <span className={cn(
+                          "text-[12px] truncate",
+                          isCurrent ? "font-bold text-[#111]" : "font-medium text-slate-600"
+                        )}>
+                          {shop.name}
+                        </span>
+                        {shop.shop_type && (
+                          <span className="text-[9px] text-slate-400 capitalize">
+                            {shop.shop_type}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {isCurrent && (
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2 shrink-0"></div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Switcher d'Espace (pour Mixte & Libre) */}

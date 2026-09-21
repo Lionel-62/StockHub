@@ -28,6 +28,10 @@ export default function OnboardingPage() {
   const colorInputRef = useRef<HTMLInputElement>(null);
   const [description, setDescription] = useState("");
   
+  // Nouveaux états pour la boutique digitale quand "Mixte" est choisi
+  const [shopNameDigital, setShopNameDigital] = useState("");
+  const [descriptionDigital, setDescriptionDigital] = useState("");
+  
   const [country, setCountry] = useState("Bénin");
   const [countryCode, setCountryCode] = useState("+229");
   const [currency, setCurrency] = useState("FCFA");
@@ -61,9 +65,18 @@ export default function OnboardingPage() {
       setError("Veuillez choisir un type de produit.");
       return;
     }
-    if (step === 3 && (!shopName || !description)) {
-      setError("Veuillez remplir tous les champs obligatoires (*).");
-      return;
+    if (step === 3) {
+      if (shopType === 'libre') {
+        if (!shopName || !description || !shopNameDigital || !descriptionDigital) {
+          setError("Veuillez remplir tous les champs obligatoires (*).");
+          return;
+        }
+      } else {
+        if (!shopName || !description) {
+          setError("Veuillez remplir tous les champs obligatoires (*).");
+          return;
+        }
+      }
     }
     setError("");
     setStep((prev) => (prev + 1) as any);
@@ -85,42 +98,59 @@ export default function OnboardingPage() {
 
     try {
       const fullNumber = whatsapp.startsWith("+") ? whatsapp : `${countryCode}${whatsapp.startsWith("0") ? whatsapp.substring(1) : whatsapp}`;
-      const categoryStr = shopType === "digital" ? "Produits Digitaux" : shopType === "physique" ? "Produits Physiques" : "Général";
-      const result = await createShopAction(
-        currentUser.id, 
-        shopName, 
-        categoryStr, 
-        fullNumber, 
-        description, 
-        country, 
-        "", 
-        countryCode,
-        themeColor,
-        experience,
-        shopType,
-        currency
-      );
-      if (result.success && result.user) {
-        localStorage.setItem("stockhub_session", JSON.stringify(result.user));
-        setSuccess(true);
-        setTimeout(() => {
-          if (shopType === "digital") {
-            window.location.href = "/dashboard_digital";
-          } else {
+      if (shopType === "libre") {
+        // Créer les deux boutiques distinctes
+        const resultPhysique = await createShopAction(
+          currentUser.id, shopName, "Général", fullNumber, description, country, "", countryCode, themeColor, experience, "physique", currency
+        );
+        const resultDigital = await createShopAction(
+          currentUser.id, shopNameDigital, "Produits Digitaux", fullNumber, descriptionDigital, country, "", countryCode, themeColor, experience, "digital", currency
+        );
+        
+        if (resultPhysique.success && resultDigital.success && resultPhysique.user) {
+          // Add the digital shop to myShops so they appear in the dropdown immediately
+          const enhancedUser = {
+            ...resultPhysique.user,
+            myShops: [
+              { id: resultPhysique.user.shopId, name: resultPhysique.user.shopName, slug: resultPhysique.user.shopSlug, shop_type: 'physique', theme_color: themeColor, currency: currency },
+              { id: resultDigital.user?.shopId, name: resultDigital.user?.shopName, slug: resultDigital.user?.shopSlug, shop_type: 'digital', theme_color: themeColor, currency: currency }
+            ]
+          };
+          localStorage.setItem("stockhub_session", JSON.stringify(enhancedUser));
+          setSuccess(true);
+          setTimeout(() => {
             window.location.href = "/dashboard";
-          }
-        }, 1500);
-      } else if (result.success) {
-        setSuccess(true);
-        setTimeout(() => {
-          if (shopType === "digital") {
-            window.location.href = "/dashboard_digital";
-          } else {
-            window.location.href = "/dashboard";
-          }
-        }, 1500);
+          }, 1500);
+        } else {
+          throw new Error("Erreur lors de la création d'une des boutiques.");
+        }
       } else {
-        throw new Error(result.error);
+        const categoryStr = shopType === "digital" ? "Produits Digitaux" : shopType === "physique" ? "Produits Physiques" : "Général";
+        const result = await createShopAction(
+          currentUser.id, shopName, categoryStr, fullNumber, description, country, "", countryCode, themeColor, experience, shopType, currency
+        );
+        if (result.success && result.user) {
+          localStorage.setItem("stockhub_session", JSON.stringify(result.user));
+          setSuccess(true);
+          setTimeout(() => {
+            if (shopType === "digital") {
+              window.location.href = "/dashboard_digital";
+            } else {
+              window.location.href = "/dashboard";
+            }
+          }, 1500);
+        } else if (result.success) {
+          setSuccess(true);
+          setTimeout(() => {
+            if (shopType === "digital") {
+              window.location.href = "/dashboard_digital";
+            } else {
+              window.location.href = "/dashboard";
+            }
+          }, 1500);
+        } else {
+          throw new Error(result.error);
+        }
       }
     } catch (err: any) {
       setError(err.message || "Erreur lors de la création de la boutique.");
@@ -357,38 +387,94 @@ export default function OnboardingPage() {
                   <p className="text-gray-500 text-lg">Construisons la devanture de votre vitrine numérique.</p>
                 </div>
                 
-                <div className="space-y-6 mb-12 flex-1">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2.5 ml-1">
-                      Nom de la boutique <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={shopName}
-                      placeholder="Ex: Dova Chop, MaBoutique..."
-                      onChange={(e) => setShopName(e.target.value)}
-                      className="w-full px-5 py-4.5 bg-gray-50/50 border-2 border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-[#0d8f76]/10 focus:border-[#0d8f76] outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
-                    />
-                  </div>
-
-                  {/* Theme color picker removed per user request (landing page remains white) */}
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2.5 ml-1">
-                      Une petite bio ou description <span className="text-red-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <textarea
-                        value={description}
-                        placeholder="Qu'allez-vous proposer à vos clients ?"
-                        onChange={(e) => setDescription(e.target.value.substring(0, 150))}
-                        rows={3}
-                        className="w-full px-5 py-4 bg-gray-50/50 border-2 border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-[#0d8f76]/10 focus:border-[#0d8f76] outline-none transition-all resize-none font-medium text-gray-900 placeholder:text-gray-400"
-                      />
-                      <div className={`absolute bottom-4 right-4 text-xs font-bold px-2 py-1 rounded-md transition-colors ${description.length >= 140 ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
-                        {description.length}/150
+                <div className="space-y-6 mb-12 flex-1 overflow-y-auto px-1 custom-scrollbar">
+                  {shopType === 'libre' ? (
+                    <>
+                      <div className="p-5 bg-white border-2 border-emerald-100 rounded-2xl shadow-sm mb-4">
+                        <h3 className="font-extrabold text-gray-900 mb-4 flex items-center gap-2"><Layout className="w-5 h-5 text-[#0d8f76]"/> Espace Physique</h3>
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Nom de la boutique <span className="text-red-500">*</span></label>
+                            <input
+                              type="text"
+                              value={shopName}
+                              placeholder="Ex: Dova Chop Physique"
+                              onChange={(e) => setShopName(e.target.value)}
+                              className="w-full px-4 py-3 bg-gray-50/50 border-2 border-gray-100 rounded-xl focus:bg-white focus:ring-4 focus:ring-[#0d8f76]/10 focus:border-[#0d8f76] outline-none transition-all font-medium text-gray-900"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Description <span className="text-red-500">*</span></label>
+                            <textarea
+                              value={description}
+                              placeholder="Que vendez-vous en boutique ?"
+                              onChange={(e) => setDescription(e.target.value.substring(0, 150))}
+                              rows={2}
+                              className="w-full px-4 py-3 bg-gray-50/50 border-2 border-gray-100 rounded-xl focus:bg-white focus:ring-4 focus:ring-[#0d8f76]/10 focus:border-[#0d8f76] outline-none transition-all resize-none font-medium text-gray-900"
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+
+                      <div className="p-5 bg-white border-2 border-blue-100 rounded-2xl shadow-sm">
+                        <h3 className="font-extrabold text-gray-900 mb-4 flex items-center gap-2"><FolderOpen className="w-5 h-5 text-blue-500"/> Espace Digital</h3>
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Nom de la vitrine <span className="text-red-500">*</span></label>
+                            <input
+                              type="text"
+                              value={shopNameDigital}
+                              placeholder="Ex: Dova Digital"
+                              onChange={(e) => setShopNameDigital(e.target.value)}
+                              className="w-full px-4 py-3 bg-gray-50/50 border-2 border-gray-100 rounded-xl focus:bg-white focus:ring-4 focus:ring-[#0d8f76]/10 focus:border-[#0d8f76] outline-none transition-all font-medium text-gray-900"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-1.5 ml-1">Description <span className="text-red-500">*</span></label>
+                            <textarea
+                              value={descriptionDigital}
+                              placeholder="Que proposez-vous en ligne ?"
+                              onChange={(e) => setDescriptionDigital(e.target.value.substring(0, 150))}
+                              rows={2}
+                              className="w-full px-4 py-3 bg-gray-50/50 border-2 border-gray-100 rounded-xl focus:bg-white focus:ring-4 focus:ring-[#0d8f76]/10 focus:border-[#0d8f76] outline-none transition-all resize-none font-medium text-gray-900"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2.5 ml-1">
+                          Nom de la boutique <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={shopName}
+                          placeholder="Ex: Dova Chop, MaBoutique..."
+                          onChange={(e) => setShopName(e.target.value)}
+                          className="w-full px-5 py-4.5 bg-gray-50/50 border-2 border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-[#0d8f76]/10 focus:border-[#0d8f76] outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2.5 ml-1">
+                          Une petite bio ou description <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <textarea
+                            value={description}
+                            placeholder="Qu'allez-vous proposer à vos clients ?"
+                            onChange={(e) => setDescription(e.target.value.substring(0, 150))}
+                            rows={3}
+                            className="w-full px-5 py-4 bg-gray-50/50 border-2 border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-[#0d8f76]/10 focus:border-[#0d8f76] outline-none transition-all resize-none font-medium text-gray-900 placeholder:text-gray-400"
+                          />
+                          <div className={`absolute bottom-4 right-4 text-xs font-bold px-2 py-1 rounded-md transition-colors ${description.length >= 140 ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
+                            {description.length}/150
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="flex justify-between mt-auto pt-8 border-t border-gray-100">
