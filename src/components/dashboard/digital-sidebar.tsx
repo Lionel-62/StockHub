@@ -55,7 +55,7 @@ export function DigitalSidebar() {
   const userShops = (currentUser.myShops && currentUser.myShops.length > 0)
     ? currentUser.myShops
     : currentUser.shopId
-      ? [{ id: currentUser.shopId, name: currentUser.shopName || "Ma Boutique", slug: currentUser.shopSlug || "" }]
+      ? [{ id: currentUser.shopId, name: currentUser.shopName || "Ma Boutique", slug: currentUser.shopSlug || "", shop_type: currentUser.shopType || "digital" }]
       : [];
 
   const handleSwitchShop = (shop: { id: string; name: string; slug: string; shop_type?: string; theme_color?: string; currency?: string }) => {
