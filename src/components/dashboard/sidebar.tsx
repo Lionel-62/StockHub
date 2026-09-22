@@ -101,10 +101,44 @@ export function Sidebar() {
   };
 
   const userShops = (currentUser.myShops && currentUser.myShops.length > 0)
-    ? currentUser.myShops
+    ? currentUser.myShops.filter((s: any) => s.shop_type !== 'digital')
     : currentUser.shopId
       ? [{ id: currentUser.shopId, name: currentUser.shopName || "Ma Boutique", slug: currentUser.shopSlug || "" }]
       : [];
+
+  const handleSwitchEnvironment = (env: 'physique' | 'digital') => {
+    if (env === 'digital') {
+      const firstDigital = currentUser.myShops?.find((s: any) => s.shop_type === 'digital');
+      if (firstDigital && firstDigital.id !== currentUser.shopId) {
+        const newUser = {
+          ...currentUser,
+          shopId: firstDigital.id,
+          shopName: firstDigital.name,
+          shopSlug: firstDigital.slug,
+          shopType: 'digital',
+          themeColor: firstDigital.theme_color || currentUser.themeColor,
+          currency: firstDigital.currency || currentUser.currency,
+        };
+        localStorage.setItem("stockhub_session", JSON.stringify(newUser));
+      }
+      window.location.href = '/dashboard_digital';
+    } else {
+      const firstPhysique = currentUser.myShops?.find((s: any) => s.shop_type !== 'digital');
+      if (firstPhysique && firstPhysique.id !== currentUser.shopId) {
+        const newUser = {
+          ...currentUser,
+          shopId: firstPhysique.id,
+          shopName: firstPhysique.name,
+          shopSlug: firstPhysique.slug,
+          shopType: firstPhysique.shop_type || 'physique',
+          themeColor: firstPhysique.theme_color || currentUser.themeColor,
+          currency: firstPhysique.currency || currentUser.currency,
+        };
+        localStorage.setItem("stockhub_session", JSON.stringify(newUser));
+      }
+      window.location.href = '/dashboard';
+    }
+  };
 
   const handleSwitchShop = (shop: { id: string; name: string; slug: string; shop_type?: string; theme_color?: string; currency?: string }) => {
     if (shop.id === currentUser.shopId) {
@@ -185,24 +219,24 @@ export function Sidebar() {
         {/* Switcher d'Espace (pour Mixte/Libre ou si l'utilisateur a les deux types de boutiques) */}
         {(currentUser.shopType === 'libre' || (currentUser.myShops && currentUser.myShops.some(s => s.shop_type === 'digital') && currentUser.myShops.some(s => s.shop_type === 'physique'))) && (
           <div className="flex bg-black/20 p-1 rounded-lg mb-3">
-            <Link 
-              href="/dashboard"
+            <button 
+              onClick={() => handleSwitchEnvironment('physique')}
               className={cn(
                 "flex-1 text-center text-[11px] font-bold py-1.5 rounded-md transition-colors",
                 !pathname.includes("dashboard_digital") ? "bg-[#0d8f76] text-white shadow-sm" : "text-slate-400 hover:text-white hover:bg-white/5"
               )}
             >
               Physique
-            </Link>
-            <Link 
-              href="/dashboard_digital"
+            </button>
+            <button 
+              onClick={() => handleSwitchEnvironment('digital')}
               className={cn(
                 "flex-1 text-center text-[11px] font-bold py-1.5 rounded-md transition-colors",
                 pathname.includes("dashboard_digital") ? "bg-[#0d8f76] text-white shadow-sm" : "text-slate-400 hover:text-white hover:bg-white/5"
               )}
             >
               Digital
-            </Link>
+            </button>
           </div>
         )}
 

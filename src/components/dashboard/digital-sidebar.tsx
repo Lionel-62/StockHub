@@ -53,10 +53,44 @@ export function DigitalSidebar() {
   if (!isLoaded || !currentUser) return null;
   
   const userShops = (currentUser.myShops && currentUser.myShops.length > 0)
-    ? currentUser.myShops
+    ? currentUser.myShops.filter((s: any) => s.shop_type === 'digital')
     : currentUser.shopId
       ? [{ id: currentUser.shopId, name: currentUser.shopName || "Ma Boutique", slug: currentUser.shopSlug || "", shop_type: currentUser.shopType || "digital" }]
       : [];
+
+  const handleSwitchEnvironment = (env: 'physique' | 'digital') => {
+    if (env === 'digital') {
+      const firstDigital = currentUser.myShops?.find((s: any) => s.shop_type === 'digital');
+      if (firstDigital && firstDigital.id !== currentUser.shopId) {
+        const newUser = {
+          ...currentUser,
+          shopId: firstDigital.id,
+          shopName: firstDigital.name,
+          shopSlug: firstDigital.slug,
+          shopType: 'digital',
+          themeColor: firstDigital.theme_color || currentUser.themeColor,
+          currency: firstDigital.currency || currentUser.currency,
+        };
+        localStorage.setItem("stockhub_session", JSON.stringify(newUser));
+      }
+      window.location.href = '/dashboard_digital';
+    } else {
+      const firstPhysique = currentUser.myShops?.find((s: any) => s.shop_type !== 'digital');
+      if (firstPhysique && firstPhysique.id !== currentUser.shopId) {
+        const newUser = {
+          ...currentUser,
+          shopId: firstPhysique.id,
+          shopName: firstPhysique.name,
+          shopSlug: firstPhysique.slug,
+          shopType: firstPhysique.shop_type || 'physique',
+          themeColor: firstPhysique.theme_color || currentUser.themeColor,
+          currency: firstPhysique.currency || currentUser.currency,
+        };
+        localStorage.setItem("stockhub_session", JSON.stringify(newUser));
+      }
+      window.location.href = '/dashboard';
+    }
+  };
 
   const handleSwitchShop = (shop: { id: string; name: string; slug: string; shop_type?: string; theme_color?: string; currency?: string }) => {
     if (shop.id === currentUser.shopId) {
@@ -163,18 +197,28 @@ export function DigitalSidebar() {
       {(currentUser.shopType === 'libre' || (currentUser.myShops && currentUser.myShops.some(s => s.shop_type === 'digital') && currentUser.myShops.some(s => s.shop_type === 'physique'))) && (
         <div className="px-4 mt-1 mb-2 shrink-0">
           <div className="flex bg-[#EAEBEB] p-1 rounded-lg border border-slate-200/50">
-            <Link 
-              href="/dashboard"
-              className="flex-1 text-center text-[11.5px] font-bold py-1.5 rounded-md transition-colors text-[#555] hover:text-[#111] hover:bg-black/5"
+            <button 
+              onClick={() => handleSwitchEnvironment('physique')}
+              className={cn(
+                "flex-1 text-center text-[12px] font-semibold py-1.5 rounded-md transition-all duration-200",
+                !pathname.includes("dashboard_digital") 
+                  ? "bg-white text-[#111] shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-slate-200/50" 
+                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
+              )}
             >
               Physique
-            </Link>
-            <Link 
-              href="/dashboard_digital"
-              className="flex-1 text-center text-[11.5px] font-bold py-1.5 rounded-md transition-colors bg-white text-[#111] shadow-sm border border-slate-200/50"
+            </button>
+            <button 
+              onClick={() => handleSwitchEnvironment('digital')}
+              className={cn(
+                "flex-1 text-center text-[12px] font-semibold py-1.5 rounded-md transition-all duration-200",
+                pathname.includes("dashboard_digital") 
+                  ? "bg-white text-[#111] shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-slate-200/50" 
+                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
+              )}
             >
               Digital
-            </Link>
+            </button>
           </div>
         </div>
       )}
