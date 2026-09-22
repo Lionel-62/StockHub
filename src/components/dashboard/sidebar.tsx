@@ -328,7 +328,7 @@ export function Sidebar() {
 
               {currentUser.role === 'owner' && (
                 <Link
-                  href="/onboarding?action=new-shop"
+                  href="/onboarding?action=new-shop&type=physique"
                   onClick={() => setShopDropdownOpen(false)}
                   className="mt-1 flex items-center justify-center gap-1.5 py-1.5 px-2 bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 hover:text-white border border-blue-500/30 rounded-lg text-xs font-semibold transition-all"
                 >

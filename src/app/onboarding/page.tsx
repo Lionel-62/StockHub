@@ -40,10 +40,18 @@ export default function OnboardingPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  
+  const [urlType, setUrlType] = useState<string | null>(null);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const isNewShop = searchParams.get("action") === "new-shop";
+    const typeParam = searchParams.get("type");
+    
+    if (typeParam === 'physique' || typeParam === 'digital') {
+      setUrlType(typeParam);
+      setShopType(typeParam);
+    }
     
     if (isLoaded && currentUser && currentUser.onboardingCompleted && !isNewShop) {
       router.push("/dashboard");
@@ -79,12 +87,20 @@ export default function OnboardingPage() {
       }
     }
     setError("");
-    setStep((prev) => (prev + 1) as any);
+    if (step === 1 && urlType) {
+      setStep(3);
+    } else {
+      setStep((prev) => (prev + 1) as any);
+    }
   };
 
   const handlePrevStep = () => {
     setError("");
-    setStep((prev) => (prev - 1) as any);
+    if (step === 3 && urlType) {
+      setStep(1);
+    } else {
+      setStep((prev) => (prev - 1) as any);
+    }
   };
 
   const handleSubmit = async () => {

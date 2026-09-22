@@ -21,7 +21,8 @@ import {
   LogOut,
   ChevronDown,
   Store,
-  LayoutDashboard
+  LayoutDashboard,
+  Plus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -189,6 +190,19 @@ export function DigitalSidebar() {
                 );
               })}
             </div>
+            
+            {currentUser?.role === 'owner' && (
+              <div className="p-1.5 pt-1 mt-1 border-t border-slate-100">
+                <Link
+                  href="/onboarding?action=new-shop&type=digital"
+                  onClick={() => setShopDropdownOpen(false)}
+                  className="flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-[#111] text-xs font-semibold transition-colors border border-slate-200/50"
+                >
+                  <Plus size={13} />
+                  Nouvelle boutique
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </div>
