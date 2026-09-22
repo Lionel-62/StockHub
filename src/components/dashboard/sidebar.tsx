@@ -182,8 +182,8 @@ export function Sidebar() {
       {/* Sélecteur de Boutique (Visible sur desktop et mobile) */}
       <div className="px-4 py-3 border-b border-white/10 bg-[#07172c] shrink-0">
         
-        {/* Switcher d'Espace (pour Mixte & Libre) */}
-        {currentUser.shopType === 'libre' && (
+        {/* Switcher d'Espace (pour Mixte/Libre ou si l'utilisateur a les deux types de boutiques) */}
+        {(currentUser.shopType === 'libre' || (currentUser.myShops && currentUser.myShops.some(s => s.shop_type === 'digital') && currentUser.myShops.some(s => s.shop_type === 'physique'))) && (
           <div className="flex bg-black/20 p-1 rounded-lg mb-3">
             <Link 
               href="/dashboard"

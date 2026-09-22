@@ -159,8 +159,8 @@ export function DigitalSidebar() {
         )}
       </div>
 
-      {/* Switcher d'Espace (pour Mixte & Libre) */}
-      {currentUser?.shopType === 'libre' && (
+      {/* Switcher d'Espace (pour Mixte/Libre ou si l'utilisateur a les deux types de boutiques) */}
+      {(currentUser.shopType === 'libre' || (currentUser.myShops && currentUser.myShops.some(s => s.shop_type === 'digital') && currentUser.myShops.some(s => s.shop_type === 'physique'))) && (
         <div className="px-4 mt-1 mb-2 shrink-0">
           <div className="flex bg-[#EAEBEB] p-1 rounded-lg border border-slate-200/50">
             <Link 
