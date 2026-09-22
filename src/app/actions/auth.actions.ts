@@ -301,7 +301,7 @@ export async function createShopAction(userId: string, shopName: string, categor
     // Fetch updated user details to sync session
     const { data: profile } = await supabase
       .from('profiles')
-      .select('*, shops!inner(slug, name)')
+      .select('*, shops!profiles_shop_id_fkey!inner(slug, name)')
       .eq('id', userId)
       .single();
       
