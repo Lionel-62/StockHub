@@ -476,19 +476,21 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
 
   if (!shopLoaded || !productsLoaded) return null;
 
-  // FIX: Boutique en chantier
-  return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-      <div className="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center mb-6 shadow-md">
-        <StoreIcon size={32} />
+  // FIX: Boutique en chantier uniquement pour les boutiques digitales
+  if (shopSettings.shopType === 'digital') {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+        <div className="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center mb-6 shadow-md">
+          <StoreIcon size={32} />
+        </div>
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2 text-center">Boutique en construction 🚧</h1>
+        <p className="text-slate-500 text-center max-w-md">
+          La boutique digitale <strong>{shopSettings.name}</strong> est actuellement en cours de préparation. 
+          Revenez très bientôt pour découvrir nos produits !
+        </p>
       </div>
-      <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2 text-center">Boutique en construction 🚧</h1>
-      <p className="text-slate-500 text-center max-w-md">
-        La boutique digitale <strong>{shopSettings.name}</strong> est actuellement en cours de préparation. 
-        Revenez très bientôt pour découvrir nos produits !
-      </p>
-    </div>
-  );
+    );
+  }
 
   return (
     <div className="min-h-dvh bg-white font-sans pb-24">
