@@ -476,117 +476,139 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
 
   if (!shopLoaded || !productsLoaded) return null;
 
-  // FIX: Boutique en chantier uniquement pour les boutiques digitales
-  if (shopSettings.shopType === 'digital') {
-    return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-        <div className="w-16 h-16 bg-slate-900 text-white rounded-2xl flex items-center justify-center mb-6 shadow-md">
-          <StoreIcon size={32} />
-        </div>
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2 text-center">Boutique en construction 🚧</h1>
-        <p className="text-slate-500 text-center max-w-md">
-          La boutique digitale <strong>{shopSettings.name}</strong> est actuellement en cours de préparation. 
-          Revenez très bientôt pour découvrir nos produits !
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-dvh bg-white font-sans pb-24">
-      
-      {/* HEADER */}
-      <header className="border-b border-slate-100 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          {/* Logo */}
+    <div className="min-h-dvh bg-slate-50 dark:bg-[#06101e] font-sans pb-24">
+      {/* Header */}
+      <header className="bg-white dark:bg-[#0a192f] shadow-sm sticky top-0 z-40">
+        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {shopSettings.logoUrl ? (
-              <div className="w-10 h-10 rounded-xl overflow-hidden relative shadow-sm border border-slate-100">
-                <Image src={shopSettings.logoUrl || ""} alt={shopSettings.name} fill className="object-cover" />
-              </div>
+              <img src={shopSettings.logoUrl || ""} alt="Logo" width="40" height="40" className="h-10 w-10 object-contain rounded-xl shadow-md" />
             ) : (
-              <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center shadow-md">
-                <StoreIcon className="text-white h-5 w-5" />
+              <div className="h-10 w-10 bg-gradient-to-br from-[#0b213f] to-blue-800 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
+                {shopSettings.name.charAt(0).toUpperCase()}
               </div>
             )}
-            <span className="font-bold text-slate-900 text-xl tracking-tight">{shopSettings.name || "Boutique"}</span>
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white hidden sm:block">{shopSettings.name}</h1>
           </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#" className="text-sm font-bold text-slate-900">Produits</a>
-            <a href="#" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Affiliation</a>
-            <a href="#" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">À propos</a>
-            <a href="#" className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Contact</a>
-          </nav>
-
-          {/* Actions */}
-          <div className="flex items-center gap-6">
-            <button onClick={() => setIsCartOpen(true)} className="flex items-center gap-2 text-slate-700 hover:text-slate-900 transition-colors relative font-medium">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="text-sm font-bold hidden sm:inline">Mes achats</span>
+          
+          <div className="flex items-center gap-4">
+            <div className="relative hidden md:block">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Rechercher un produit..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9 pr-4 py-2 w-80 lg:w-96 bg-slate-100 dark:bg-[#112240] border-transparent focus:bg-white dark:bg-[#0a192f] focus:border-blue-500 rounded-full text-sm transition-all outline-none ring-0"
+              />
+            </div>
+            {/* Button removed to simplify flow as requested */}
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 text-slate-600 dark:text-slate-300 hover:text-[#0b213f] transition-colors"
+            >
+              <ShoppingCart className="h-6 w-6" />
               {cartItemsCount > 0 && (
-                <span className="absolute top-0 right-0 sm:-right-2 h-4 w-4 bg-slate-900 text-white text-[10px] font-bold rounded-full flex items-center justify-center -translate-y-2 translate-x-2 sm:translate-x-0">
+                <span className="absolute top-0 right-0 h-5 w-5 bg-orange-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white translate-x-1 -translate-y-1">
                   {cartItemsCount}
                 </span>
               )}
             </button>
-            
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 border border-slate-200 rounded-full cursor-pointer hover:bg-slate-50 transition-colors">
-              <div className="w-4 h-4 rounded-full overflow-hidden bg-gradient-to-br from-green-500 via-yellow-400 to-red-500 shrink-0"></div>
-              <span className="text-xs font-semibold text-slate-900">Benin(FCFA)</span>
-              <ChevronDown className="h-3 w-3 text-slate-400" />
-            </div>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+      {/* Mobile Search */}
+      <div className="md:hidden p-4 bg-white dark:bg-[#0a192f] border-b border-slate-100 dark:border-[#152a4d]">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <input 
+            type="text" 
+            placeholder="Rechercher un produit..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-9 pr-4 py-2.5 w-full bg-slate-100 dark:bg-[#112240] border-transparent focus:bg-white dark:bg-[#0a192f] focus:border-blue-500 rounded-xl text-sm transition-all outline-none ring-0"
+          />
+        </div>
+      </div>
+
+      {/* Hero Banner */}
+      <div className="relative overflow-hidden rounded-3xl mx-4 mt-4 md:mt-6 bg-[#0b213f] text-white py-16 md:py-28 px-6 text-center shadow-2xl shadow-[#0b213f]/40 isolate">
+        {/* Decorative background glows */}
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#0d8f76]/40 via-transparent to-transparent pointer-events-none"></div>
+        <div className="absolute -bottom-32 -left-32 w-[30rem] h-[30rem] bg-[#0d8f76]/30 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute -top-32 -right-32 w-[30rem] h-[30rem] bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none"></div>
         
-        {/* TITLE & FILTERS */}
-        <div className="mb-10">
-          <h1 className="text-3xl font-medium text-slate-900 mb-8 uppercase tracking-wide">
-            {shopSettings.name}
-          </h1>
-          
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            <div className="relative flex-1 w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <input 
-                type="text" 
-                placeholder="Rechercher"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-200 transition-all placeholder:text-slate-400"
-              />
-            </div>
-            <div className="flex w-full md:w-auto gap-4">
-              <div className="relative w-full md:w-48">
-                <select 
-                  className="w-full appearance-none bg-slate-50 border border-slate-100 text-slate-500 text-sm rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-slate-200 cursor-pointer"
-                  value={selectedCategory || ""}
-                  onChange={(e) => setSelectedCategory(e.target.value || null)}
-                >
-                  <option value="">Catégorie</option>
-                  {categories.map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-              </div>
-              <div className="relative w-full md:w-48">
-                <select className="w-full appearance-none bg-slate-50 border border-slate-100 text-slate-500 text-sm rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-slate-200 cursor-pointer">
-                  <option value="">Type de pro</option>
-                  <option value="fichiers">Fichiers</option>
-                  <option value="formations">Formations</option>
-                </select>
-                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
-              </div>
-            </div>
-          </div>
+        {/* Floating Emoji Cards */}
+        <div className="hidden md:flex absolute top-[15%] left-[8%] w-20 h-20 rounded-2xl bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-4xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_6s_ease-in-out_infinite] rotate-12">
+          🛍️
+        </div>
+        <div className="absolute top-[10%] right-[10%] md:right-[20%] w-10 h-10 md:w-16 md:h-16 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 flex items-center justify-center text-xl md:text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_5s_ease-in-out_infinite_reverse] -rotate-12">
+          🎁
+        </div>
+        <div className="hidden lg:flex absolute top-[40%] right-[5%] w-24 h-24 rounded-3xl bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-5xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_7s_ease-in-out_infinite] -rotate-6">
+          🛒
+        </div>
+        <div className="absolute bottom-[20%] left-[10%] md:left-[25%] w-10 h-10 md:w-16 md:h-16 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 flex items-center justify-center text-xl md:text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_4s_ease-in-out_infinite] rotate-45">
+          ✨
+        </div>
+        <div className="hidden md:flex absolute bottom-[10%] right-[15%] w-16 h-16 rounded-2xl bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_8s_ease-in-out_infinite] rotate-12">
+          💎
+        </div>
+        <div className="hidden lg:flex absolute top-[60%] left-[5%] w-14 h-14 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_5s_ease-in-out_infinite_reverse] -rotate-45">
+          👟
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mt-8">
+        <div className="relative max-w-4xl mx-auto space-y-6 z-10">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+             <span className="flex h-2.5 w-2.5 rounded-full bg-[#0d8f76] shadow-[0_0_12px_rgba(13,143,118,1)] animate-pulse"></span>
+             <span className="text-sm font-semibold tracking-wider uppercase text-white">Bienvenue sur notre boutique</span>
+          </div>
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight" style={{ textShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+            {shopSettings.name}
+          </h2>
+          <p className="text-lg md:text-xl lg:text-2xl text-slate-300 font-light max-w-2xl mx-auto leading-relaxed" style={{ textShadow: '0 4px 10px rgba(0,0,0,0.3)' }}>
+            {shopSettings.description}
+          </p>
+        </div>
+      </div>
+
+      {/* Products Grid */}
+      <main className="max-w-5xl mx-auto px-4 py-8">
+        
+        {/* Categories Filter */}
+        {categories.length > 0 && (
+          <div className="flex overflow-x-auto gap-2 pb-4 mb-6 scrollbar-hide">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className={cn(
+                "px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all",
+                selectedCategory === null 
+                  ? "bg-[#0b213f] text-white shadow-md" 
+                  : "bg-white dark:bg-[#0a192f] text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-[#1c3a66] hover:border-[#0b213f]/50 hover:bg-slate-50 dark:bg-[#06101e]"
+              )}
+            >
+              Tous les produits
+            </button>
+            {categories.map((category: any) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={cn(
+                  "px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all",
+                  selectedCategory === category
+                    ? "bg-[#0b213f] text-white shadow-md" 
+                    : "bg-white dark:bg-[#0a192f] text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-[#1c3a66] hover:border-[#0b213f]/50 hover:bg-slate-50 dark:bg-[#06101e]"
+                )}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {displayedProducts.map(product => (
             <ShopProductCard
               key={product.id}
