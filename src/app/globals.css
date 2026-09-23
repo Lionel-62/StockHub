@@ -138,4 +138,11 @@
     -moz-appearance: textfield;
     appearance: textfield;
   }
+
+  @media print {
+    tr, .print-break-avoid {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+  }
 }

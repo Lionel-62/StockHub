@@ -13,27 +13,30 @@ export async function POST(req: Request) {
     const signature = req.headers.get('x-webhook-signature');
     const timestamp = req.headers.get('x-webhook-timestamp');
 
-    if (secret) {
-      if (!signature || !timestamp) {
-        console.error("Tentative d'accès au Webhook sans signature !");
-        return NextResponse.json({ error: 'Signature requise' }, { status: 401 });
-      }
-      
-      const hmac = crypto.createHmac('sha256', secret);
-      hmac.update(`${timestamp}.${rawBody}`);
-      const expectedSignature = hmac.digest('hex');
-      
-      if (expectedSignature !== signature) {
-        console.error("Signature Webhook invalide !");
-        return NextResponse.json({ error: 'Signature invalide' }, { status: 401 });
-      }
-      
-      // Vérification de l'horodatage (5 minutes max) pour éviter le rejeu
-      const currentTime = Math.floor(Date.now() / 1000);
-      if (currentTime - parseInt(timestamp, 10) > 300) {
-        console.error("Webhook expiré !");
-        return NextResponse.json({ error: 'Webhook expiré' }, { status: 401 });
-      }
+    if (!secret) {
+      console.error("SASPAY_WEBHOOK_SECRET manquant dans l'environnement !");
+      return NextResponse.json({ error: 'Configuration serveur invalide' }, { status: 500 });
+    }
+
+    if (!signature || !timestamp) {
+      console.error("Tentative d'accès au Webhook sans signature !");
+      return NextResponse.json({ error: 'Signature requise' }, { status: 401 });
+    }
+    
+    const hmac = crypto.createHmac('sha256', secret);
+    hmac.update(`${timestamp}.${rawBody}`);
+    const expectedSignature = hmac.digest('hex');
+    
+    if (expectedSignature !== signature) {
+      console.error("Signature Webhook invalide !");
+      return NextResponse.json({ error: 'Signature invalide' }, { status: 401 });
+    }
+    
+    // Vérification de l'horodatage (5 minutes max) pour éviter le rejeu
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (currentTime - parseInt(timestamp, 10) > 300) {
+      console.error("Webhook expiré !");
+      return NextResponse.json({ error: 'Webhook expiré' }, { status: 401 });
     }
 
     const payload = JSON.parse(rawBody);
