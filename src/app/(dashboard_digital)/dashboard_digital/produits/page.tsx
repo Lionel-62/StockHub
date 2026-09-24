@@ -89,8 +89,9 @@ export default function ProductsPage() {
   };
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("Tous");
-  const { products, addProduct, updateProduct, deleteProduct, isLoaded } = useProducts();
-  const { currentUser } = useAuth();
+  const { products, addProduct, updateProduct, deleteProduct, isLoaded: isProductsLoaded } = useProducts();
+  const { currentUser, isLoaded: isAuthLoaded } = useAuth();
+  const isFullyLoaded = isProductsLoaded && isAuthLoaded;
   
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -668,7 +669,7 @@ export default function ProductsPage() {
     }
   };
 
-  if (isLoaded && products.length === 0 && currentUser?.shopType === "digital") {
+  if (isFullyLoaded && products.length === 0 && currentUser?.shopType === "digital") {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] text-center px-4 animate-in fade-in duration-500">
         <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
@@ -680,7 +681,7 @@ export default function ProductsPage() {
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-xs sm:max-w-md mx-auto justify-center">
           <Link href="/dashboard/produits/nouveau" className="flex-1 w-full">
-            <Button className="w-full bg-[#FACC15] hover:bg-[#EAB308] text-slate-900 font-semibold h-11 flex items-center justify-center gap-2">
+            <Button className="w-full bg-[#0b213f] hover:bg-[#18355c] text-white font-semibold h-11 flex items-center justify-center gap-2">
               <Package size={18} />
               Ajouter un produit
             </Button>
@@ -1618,3 +1619,4 @@ export default function ProductsPage() {
     </div>
   );
 }
+

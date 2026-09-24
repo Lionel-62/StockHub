@@ -4,58 +4,106 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/hooks/auth";
-import { deleteShopAction } from "@/app/actions/shop.actions";
+import { useProducts } from "@/hooks/products";
 import {
-  Home,
-  ShoppingBag,
+  LayoutDashboard,
   Package,
+  Boxes,
+  ShoppingCart,
   Users,
-  DollarSign,
-  BarChart2,
-  Megaphone,
-  Network,
-  MoreHorizontal,
-  Settings,
-  HelpCircle,
-  LogOut,
-  ChevronDown,
+  Truck,
   Store,
+  BarChart2,
+  Settings,
+  Receipt,
+  LifeBuoy,
+  MessageSquare,
+  LogOut,
+  UserPlus,
+  ChevronDown,
   Plus,
-  Trash2
+  Trash2,
+  CreditCard
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
+import { deleteShopAction } from "@/app/actions/shop.actions";
 
-const digitalMenu = [
-  { name: "Accueil", href: "/dashboard_digital", icon: Home },
-  { name: "Ventes", href: "/dashboard_digital/ventes", icon: ShoppingBag },
-  { name: "Produits", href: "/dashboard_digital/produits", icon: Package },
-  { name: "Clients", href: "/dashboard_digital/clients", icon: Users },
-  { name: "Revenus", href: "/dashboard_digital/revenus", icon: DollarSign },
-  { name: "Analytiques", href: "/dashboard_digital/analytiques", icon: BarChart2 },
-  { name: "Marketing", href: "/dashboard_digital/marketing", icon: Megaphone },
-  { name: "Affiliation", href: "/dashboard_digital/affiliation", icon: Network },
+const mainMenu = [
+  { name: "Tableau de bord", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Produits", href: "/dashboard/produits", icon: Package },
+  { name: "Stock", href: "/dashboard/stock", icon: Boxes },
+  { name: "Ventes & commandes", href: "/dashboard/ventes", icon: ShoppingCart },
+  { name: "Factures", href: "/dashboard/factures", icon: Receipt },
+  { name: "Clients", href: "/dashboard/clients", icon: Users },
+  { name: "Messages", href: "/dashboard/messages", icon: MessageSquare },
+  { name: "Fournisseurs", href: "/dashboard/fournisseurs", icon: Truck },
+  { name: "Boutique en ligne", href: "/dashboard/boutique", icon: Store },
 ];
 
-const bottomMenu = [
-  { name: "Plus", href: "/dashboard_digital/plus", icon: MoreHorizontal },
-  { name: "Paramètres", href: "/dashboard_digital/parametres", icon: Settings },
-  { name: "Centre d'aide", href: "/dashboard_digital/aide", icon: HelpCircle },
+const otherMenu = [
+  { name: "Rapports", href: "/dashboard/rapports", icon: BarChart2 },
+  { name: "Abonnement", href: "/dashboard/abonnement", icon: CreditCard },
+  { name: "Paramètres", href: "/dashboard/parametres", icon: Settings },
+  { name: "Équipe", href: "/dashboard/equipe", icon: UserPlus },
+  { name: "Aide et support", href: "/dashboard/aide", icon: LifeBuoy },
 ];
 
-export function DigitalSidebar({ forceShowMobile = false }: { forceShowMobile?: boolean }) {
+export function Sidebar() {
   const pathname = usePathname();
-  const { currentUser, logout, isLoaded } = useAuth();
   const router = useRouter();
+  const { currentUser, logout, isLoaded } = useAuth();
+  const { products } = useProducts();
   const [shopDropdownOpen, setShopDropdownOpen] = useState(false);
+  const [shopToDelete, setShopToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   
   if (!isLoaded || !currentUser) return null;
+
+  const alertsCount = products.filter(p => p.stock <= (p.alertThreshold ?? 5)).length;
+
+  const isEmployee = currentUser.role === "employee";
   
+  const filteredMainMenu = mainMenu.filter(item => {
+    // 1. Employee permissions
+    if (isEmployee) {
+      if (item.name === "Tableau de bord" && !currentUser.permissions.canViewDashboard) return false;
+      const allowedForEmployee = ["Ventes & commandes", "Factures", "Stock", "Clients", "Produits", "Tableau de bord"];
+      if (!allowedForEmployee.includes(item.name)) return false;
+    }
+
+    // 2. Shop Type filtering
+    if (currentUser.shopType === 'digital') {
+      const hiddenForDigital = ["Stock", "Fournisseurs"];
+      if (hiddenForDigital.includes(item.name)) return false;
+    }
+
+    return true;
+  }).map(item => {
+    // Rename "Produits" if it's a 100% digital shop (optional, for better UX)
+    if (item.name === "Produits" && currentUser.shopType === 'digital') {
+      return { ...item, name: "Produits Digitaux" };
+    }
+    return item;
+  });
+
+  const filteredOtherMenu = otherMenu.filter(item => {
+    if (isEmployee) {
+      return item.name === "Aide et support";
+    }
+    return true;
+  });
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
+
   const userShops = (currentUser.myShops && currentUser.myShops.length > 0)
-    ? currentUser.myShops.filter((s: any) => s.shop_type === 'digital')
+    ? currentUser.myShops.filter((s: any) => s.shop_type !== 'digital')
     : currentUser.shopId
-      ? [{ id: currentUser.shopId, name: currentUser.shopName || "Ma Boutique", slug: currentUser.shopSlug || "", shop_type: currentUser.shopType || "digital" }]
+      ? [{ id: currentUser.shopId, name: currentUser.shopName || "Ma Boutique", slug: currentUser.shopSlug || "" }]
       : [];
 
   const handleSwitchEnvironment = (env: 'physique' | 'digital') => {
@@ -114,27 +162,46 @@ export function DigitalSidebar({ forceShowMobile = false }: { forceShowMobile?: 
       window.location.href = '/dashboard';
     }
   };
-  
-  const handleLogout = () => {
-    logout();
-    router.push("/login");
-  };
 
-  const isItemActive = (href: string) => {
-    if (href === "/dashboard_digital") {
-      return pathname === "/dashboard_digital";
+  const handleDeleteShop = async () => {
+    if (!shopToDelete || !currentUser) return;
+    setIsDeleting(true);
+    const res = await deleteShopAction(shopToDelete.id);
+    setIsDeleting(false);
+
+    if (res.success) {
+      const newShops = currentUser.myShops?.filter(s => s.id !== shopToDelete.id) || [];
+      let nextActiveShopId = currentUser.shopId;
+      let nextActiveShopName = currentUser.shopName;
+      let nextActiveShopSlug = currentUser.shopSlug;
+
+      if (currentUser.shopId === shopToDelete.id && newShops.length > 0) {
+        nextActiveShopId = newShops[0].id;
+        nextActiveShopName = newShops[0].name;
+        nextActiveShopSlug = newShops[0].slug;
+      }
+
+      const newUser = {
+        ...currentUser,
+        myShops: newShops,
+        shopId: nextActiveShopId,
+        shopName: nextActiveShopName,
+        shopSlug: nextActiveShopSlug
+      };
+
+      localStorage.setItem("stockhub_session", JSON.stringify(newUser));
+      setShopToDelete(null);
+      window.location.reload();
+    } else {
+      alert(res.error || "Erreur lors de la suppression");
     }
-    return pathname === href || pathname.startsWith(href + '/');
   };
 
   return (
-    <div className={cn(
-      "h-full w-64 flex-col bg-[#0b213f] text-slate-300 transition-all duration-300 font-sans",
-      forceShowMobile ? "flex w-full" : "hidden md:flex"
-    )}>
+    <div className="flex h-full w-64 flex-col bg-[#0b213f] text-slate-300">
       {/* Logo */}
       <div className="flex h-20 items-center px-5 border-b border-white/10 shrink-0">
-        <Link href="/dashboard_digital" className="bg-white/5 hover:bg-white/10 rounded-lg p-2 w-full flex items-center justify-center transition-all">
+        <Link href="/dashboard" className="bg-white/5 hover:bg-white/10 rounded-lg p-2 w-full flex items-center justify-center transition-all">
           <Image 
             src="/logo.png" 
             alt="StockHub" 
@@ -200,7 +267,7 @@ export function DigitalSidebar({ forceShowMobile = false }: { forceShowMobile?: 
 
           {/* Dropdown / Accordion des boutiques */}
           {shopDropdownOpen && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-[#0d2647] border border-white/15 rounded-xl shadow-2xl overflow-hidden p-1.5 flex flex-col gap-1 z-50">
+            <div className="mt-2 bg-[#0d2647] border border-white/15 rounded-xl shadow-2xl overflow-hidden p-1.5 flex flex-col gap-1">
               <div className="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
                 <span>Vos boutiques</span>
                 <span className="text-[10px] bg-white dark:bg-[#0a192f]/10 px-1.5 py-0.2 rounded font-mono text-slate-300">
@@ -215,7 +282,7 @@ export function DigitalSidebar({ forceShowMobile = false }: { forceShowMobile?: 
                       key={shop.id} 
                       className={cn(
                         "flex items-center justify-between rounded-lg p-1.5 transition-colors group",
-                        isCurrent ? "bg-blue-600/30 border border-blue-500/30" : "hover:bg-white/5"
+                        isCurrent ? "bg-blue-600/30 border border-blue-500/30" : "hover:bg-white dark:bg-[#0a192f]/10"
                       )}
                     >
                       <button
@@ -229,28 +296,45 @@ export function DigitalSidebar({ forceShowMobile = false }: { forceShowMobile?: 
                             <span className={cn("text-xs truncate", isCurrent ? "text-white font-bold" : "text-slate-300")}>
                               {shop.name}
                             </span>
+                            {idx === 0 && (
+                              <span className="text-[9px] px-1 py-0.2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded font-semibold shrink-0">
+                                Principale
+                              </span>
+                            )}
                           </div>
                           <span className="text-[10px] text-slate-400 block truncate">
                             /{shop.slug}
                           </span>
                         </div>
                       </button>
+
+                      {idx > 0 && currentUser.role === 'owner' && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setShopToDelete({ id: shop.id, name: shop.name });
+                          }}
+                          className="p-1 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors opacity-70 group-hover:opacity-100 shrink-0 ml-1"
+                          title="Supprimer la boutique"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      )}
                     </div>
                   );
                 })}
               </div>
 
-              {currentUser?.role === 'owner' && (
-                <div className="p-1.5 pt-1 mt-1 border-t border-white/10">
-                  <Link
-                    href="/onboarding?action=new-shop&type=digital"
-                    onClick={() => setShopDropdownOpen(false)}
-                    className="flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 hover:text-white text-xs font-semibold transition-colors border border-blue-500/30"
-                  >
-                    <Plus size={13} />
-                    Nouvelle boutique
-                  </Link>
-                </div>
+              {currentUser.role === 'owner' && (
+                <Link
+                  href="/onboarding?action=new-shop&type=physique"
+                  onClick={() => setShopDropdownOpen(false)}
+                  className="mt-1 flex items-center justify-center gap-1.5 py-1.5 px-2 bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 hover:text-white border border-blue-500/30 rounded-lg text-xs font-semibold transition-all"
+                >
+                  <Plus size={13} />
+                  Nouvelle boutique
+                </Link>
               )}
             </div>
           )}
@@ -263,8 +347,8 @@ export function DigitalSidebar({ forceShowMobile = false }: { forceShowMobile?: 
           MENU PRINCIPAL
         </div>
         <nav className="flex flex-col gap-1 mb-6">
-          {digitalMenu.map((item) => {
-            const isActive = isItemActive(item.href);
+          {filteredMainMenu.map((item) => {
+            const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
@@ -278,6 +362,11 @@ export function DigitalSidebar({ forceShowMobile = false }: { forceShowMobile?: 
               >
                 <item.icon size={17} className={cn(isActive ? "text-white" : "text-slate-400")} />
                 {item.name}
+                {item.name === "Stock" && alertsCount > 0 && (
+                  <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                    {alertsCount}
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -287,8 +376,8 @@ export function DigitalSidebar({ forceShowMobile = false }: { forceShowMobile?: 
           AUTRES
         </div>
         <nav className="flex flex-col gap-1">
-          {bottomMenu.map((item) => {
-            const isActive = isItemActive(item.href);
+          {filteredOtherMenu.map((item) => {
+            const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
@@ -322,7 +411,7 @@ export function DigitalSidebar({ forceShowMobile = false }: { forceShowMobile?: 
           </div>
           <button 
             onClick={handleLogout}
-            className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors shrink-0"
+            className="p-1.5 hover:bg-white dark:bg-[#0a192f]/10 rounded-lg text-slate-400 hover:text-white transition-colors shrink-0"
             title="Se déconnecter"
           >
             <LogOut size={16} />
@@ -330,6 +419,14 @@ export function DigitalSidebar({ forceShowMobile = false }: { forceShowMobile?: 
         </div>
       </div>
 
+      <ConfirmModal
+        isOpen={!!shopToDelete}
+        onClose={() => setShopToDelete(null)}
+        onConfirm={handleDeleteShop}
+        title="Supprimer la boutique"
+        message={`Êtes-vous sûr de vouloir supprimer définitivement la boutique "${shopToDelete?.name}" ? Tous les produits, ventes et clients associés seront perdus.`}
+        confirmText={isDeleting ? "Suppression..." : "Oui, supprimer"}
+      />
     </div>
   );
 }

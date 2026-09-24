@@ -1,21 +1,42 @@
 "use client";
 
 import { useAuth } from "@/hooks/auth";
-import { Search, ArrowLeft, ExternalLink, Copy, Box, Bell, LayoutGrid, Plus, Store } from "lucide-react";
+import { Search, ExternalLink, Copy, Box, Bell, LayoutGrid, Plus, Store, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { DigitalSidebar } from "@/components/dashboard/digital-sidebar";
 
 export function DigitalTopbar() {
   const { currentUser } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  
   const shopUrl = `https://stockhub.com/b/${currentUser?.shopSlug || ''}`;
 
+  // Close menu when navigating
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
   return (
-    <div className="h-[72px] bg-white px-6 flex items-center justify-between sticky top-0 z-30 font-sans">
+    <>
+      <div className="h-[72px] bg-white px-6 flex items-center justify-between sticky top-0 z-30 font-sans">
       
       {/* Left part */}
       <div className="flex items-center gap-4 w-1/4">
-        <button className="flex items-center gap-2 text-[#555] hover:text-[#111] transition-colors font-medium text-[14px]">
-          <ArrowLeft size={16} strokeWidth={2} />
+        {/* Mobile menu button */}
+        <button 
+          type="button"
+          onClick={() => setMobileMenuOpen(true)}
+          className="md:hidden flex items-center gap-2 text-[#555] hover:text-[#111] transition-colors p-1"
+        >
+          <Menu size={20} strokeWidth={2} />
+        </button>
+        
+        {/* Desktop Aperçu button */}
+        <button className="hidden md:flex items-center gap-2 text-[#555] hover:text-[#111] transition-colors font-medium text-[14px]">
           Aperçu
         </button>
       </div>
@@ -57,6 +78,33 @@ export function DigitalTopbar() {
       </div>
 
     </div>
+      
+      {/* Menu Overlay (Mobile) */}
+      <div className={`fixed inset-0 z-50 flex transition-all duration-200 md:hidden ${mobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}`}>
+        {/* Backdrop */}
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity" 
+          onClick={() => setMobileMenuOpen(false)}
+        />
+        
+        {/* Sidebar Drawer */}
+        <div className={`relative w-64 max-w-[80vw] h-full bg-white shadow-2xl transition-transform duration-300 ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>
+          {/* We must wrap DigitalSidebar in a div that overrides the md:hidden on DigitalSidebar itself if necessary, but DigitalSidebar has 'hidden md:flex'. We'll need to make DigitalSidebar flex here. */}
+          <div className="flex flex-col h-full overflow-hidden [&>div]:!flex [&>div]:!w-full">
+            <DigitalSidebar forceShowMobile={true} />
+          </div>
+          
+          <button 
+            type="button"
+            className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full p-1.5 transition-colors"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-label="Fermer le menu"
+          >
+            <X size={18} />
+          </button>
+        </div>
+      </div>
+    </>
   );
 }
 

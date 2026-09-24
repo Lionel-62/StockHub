@@ -13,7 +13,7 @@ export default function AnalytiquesPage() {
   const { currentUser } = useAuth();
   const { orders } = useOrders();
   const { clients } = useClients();
-  const themeColor = currentUser?.themeColor || '#FACC15';
+  const themeColor = currentUser?.themeColor || '#0b213f';
 
   const [activeTab, setActiveTab] = useState<Tab>("Résumé");
 

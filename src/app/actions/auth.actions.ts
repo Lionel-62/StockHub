@@ -138,7 +138,25 @@ export async function registerOwnerAction(payload: {
       retries++;
     }
 
-    return { success: false, error: "Erreur lors de la création du profil par le système." };
+    // Si le trigger a échoué ou n'existe pas, on le crée manuellement en fallback
+    const { error: insertError } = await supabase.from('profiles').insert([
+      {
+        id: payload.userId,
+        name: payload.name,
+        identifier: payload.email,
+        role: 'owner',
+        onboarding_completed: false,
+        subscription_status: 'trial'
+      }
+    ]);
+
+    if (insertError) {
+      console.error("Manual insert error:", insertError);
+      return { success: false, error: "Erreur lors de la création du profil." };
+    }
+
+    await sendAdminTelegram(`📝 Inscription (Fallback manuel) : ${payload.name} (${payload.email}) vient de créer un compte.`);
+    return { success: true };
   } catch (err: any) {
     console.error("Register Error:", err);
     return { success: false, error: err.message || "Erreur interne lors de l'inscription." };
@@ -181,7 +199,25 @@ export async function completeGoogleSignupAction(userId: string, email: string, 
       retries++;
     }
 
-    return { success: false, error: "Erreur lors de la création du profil par le système." };
+    // Fallback manuel si le profil n'a pas été créé
+    const { error: insertError } = await supabase.from('profiles').insert([
+      {
+        id: userId,
+        name: name,
+        identifier: email,
+        role: 'owner',
+        onboarding_completed: false,
+        subscription_status: 'trial'
+      }
+    ]);
+
+    if (insertError) {
+      console.error("Google Signup Manual Insert Error:", insertError);
+      return { success: false, error: "Erreur lors de la création du profil." };
+    }
+
+    await sendAdminTelegram(`📝 Inscription Google (Fallback manuel) : ${name} (${email}) vient de se connecter.`);
+    return { success: true };
   } catch (err: any) {
     console.error("Google Signup Complete Error:", err);
     return { success: false, error: err.message || "Erreur lors de la création du compte Google." };

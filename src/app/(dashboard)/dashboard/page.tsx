@@ -68,7 +68,7 @@ export default function DashboardPage() {
   };
   
   const { currentUser } = useAuth();
-  const themeColor = currentUser?.themeColor || '#FACC15';
+  const themeColor = currentUser?.themeColor || '#0b213f';
 
   // L'empty state a été déplacé dans le dashboard digital.
   // Pour le physique, on affiche directement les compteurs à 0.

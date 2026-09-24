@@ -14,13 +14,13 @@ export default function SelectProductTypePage() {
   const { currentUser } = useAuth();
   const router = useRouter();
   
-  // You can still use the themeColor, or force yellow as per the screenshot
-  const themeColor = currentUser?.themeColor || '#FACC15'; 
+  // You can still use the themeColor
+  const themeColor = currentUser?.themeColor || '#0b213f'; 
   
   const [selectedType, setSelectedType] = useState<string>("Fichiers");
 
   const productTypes = [
-    { id: "Fichiers", label: "Fichiers", icon: FileText, color: "#FACC15", isNew: false, active: true },
+    { id: "Fichiers", label: "Fichiers", icon: FileText, color: "#0d8f76", isNew: false, active: true },
     { id: "Formations", label: "Formations", icon: GraduationCap, color: "#3B82F6", isNew: false, active: false },
     { id: "Licences", label: "Licences", icon: Key, color: "#8B5CF6", isNew: true, active: false },
     { id: "Bundles", label: "Bundles", icon: Layers, color: "#10B981", isNew: true, active: false },
@@ -130,7 +130,7 @@ export default function SelectProductTypePage() {
           <Button 
             onClick={() => router.push('/dashboard/produits?type=' + selectedType)}
             disabled={selectedType !== "Fichiers"}
-            className="w-full h-12 bg-[#FACC15] hover:bg-[#EAB308] text-slate-900 font-bold text-base rounded-xl transition-all shadow-sm"
+            className="w-full h-12 bg-[#0b213f] hover:bg-[#18355c] text-white font-bold text-base rounded-xl transition-all shadow-sm"
           >
             Continuer
           </Button>

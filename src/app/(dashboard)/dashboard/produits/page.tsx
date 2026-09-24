@@ -680,7 +680,7 @@ export default function ProductsPage() {
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-xs sm:max-w-md mx-auto justify-center">
           <Link href="/dashboard/produits/nouveau" className="flex-1 w-full">
-            <Button className="w-full bg-[#FACC15] hover:bg-[#EAB308] text-slate-900 font-semibold h-11 flex items-center justify-center gap-2">
+            <Button className="w-full bg-[#0b213f] hover:bg-[#18355c] text-white font-semibold h-11 flex items-center justify-center gap-2">
               <Package size={18} />
               Ajouter un produit
             </Button>

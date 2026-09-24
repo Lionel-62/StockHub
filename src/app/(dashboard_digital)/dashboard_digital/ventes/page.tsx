@@ -41,10 +41,11 @@ export default function SalesPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
-  const { orders, updateOrder, deleteOrder, isLoaded } = useOrders();
+  const { orders, updateOrder, deleteOrder, isLoaded: isOrdersLoaded } = useOrders();
   const { clients } = useClients();
-  const { currentUser } = useAuth();
+  const { currentUser, isLoaded: isAuthLoaded } = useAuth();
   const itemsPerPage = 20;
+  const isFullyLoaded = isOrdersLoaded && isAuthLoaded;
 
   // Fermer les dropdowns quand on clique ailleurs
   useEffect(() => {
@@ -180,7 +181,7 @@ export default function SalesPage() {
     }
   };
 
-  if (isLoaded && orders.length === 0 && currentUser?.shopType === "digital") {
+  if (isFullyLoaded && orders.length === 0 && currentUser?.shopType === "digital") {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] text-center px-4 animate-in fade-in duration-500">
         <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
@@ -192,7 +193,7 @@ export default function SalesPage() {
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-xs sm:max-w-md mx-auto justify-center">
           <Link href="/dashboard/produits/nouveau" className="flex-1 w-full">
-            <Button className="w-full bg-[#FACC15] hover:bg-[#EAB308] text-slate-900 font-semibold h-11 flex items-center justify-center gap-2">
+            <Button className="w-full bg-[#0b213f] hover:bg-[#18355c] text-white font-semibold h-11 flex items-center justify-center gap-2">
               <PackagePlus size={18} />
               Ajouter un produit
             </Button>
@@ -312,7 +313,7 @@ export default function SalesPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {!isLoaded ? (
+                {!isFullyLoaded ? (
                   Array.from({ length: 8 }).map((_, i) => (
                     <TableRow key={i} className="hover:bg-slate-50 dark:bg-[#06101e] transition-colors">
                       <TableCell>
@@ -456,7 +457,7 @@ export default function SalesPage() {
                   })
                 )}
                 
-                {isLoaded && paginatedOrders.length === 0 && (
+                {isFullyLoaded && paginatedOrders.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={7} className="h-32 text-center text-slate-500 dark:text-slate-400">
                       Aucune commande trouvée.
