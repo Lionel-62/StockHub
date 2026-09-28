@@ -3,6 +3,8 @@ import { Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from "@/components/theme-provider";
+import { PWARegister } from "@/components/pwa-register";
+import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -18,6 +20,12 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "StockHub",
   description: "StockHub - La solution tout-en-un de gestion de stock, caisse et vitrine WhatsApp pour les commerçants d'Afrique.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "StockHub",
+  },
 };
 
 export const viewport: Viewport = {
@@ -42,6 +50,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           {children}
           <Toaster position="top-right" />
+          <PWARegister />
+          <PWAInstallPrompt />
         </ThemeProvider>
       </body>
     </html>

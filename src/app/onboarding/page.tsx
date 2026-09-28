@@ -333,21 +333,21 @@ export default function OnboardingPage() {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12">
                   <button
-                    onClick={() => setShopType("digital")}
-                    className={`group relative flex flex-col p-6 rounded-3xl border-2 transition-all text-left overflow-hidden ${
-                      shopType === "digital" ? "border-[#0d8f76] bg-emerald-50/30 shadow-[0_8px_30px_rgb(13,143,118,0.1)]" : "border-gray-100 hover:border-gray-200 bg-white hover:shadow-sm"
-                    }`}
+                    disabled
+                    className="group relative flex flex-col p-6 rounded-3xl border-2 transition-all text-left overflow-hidden border-gray-100 bg-gray-50/70 opacity-75 cursor-not-allowed"
                   >
-                    <div className="flex justify-between items-start mb-6 w-full">
-                      <div className={`p-2.5 rounded-xl transition-colors ${shopType === "digital" ? "bg-[#0d8f76] text-white" : "bg-gray-100 text-gray-600 group-hover:bg-gray-200"}`}>
+                    <div className="absolute top-4 right-4 bg-amber-100 text-amber-700 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm border border-amber-200">
+                      🚧 Bientôt
+                    </div>
+                    <div className="flex justify-between items-start mb-6 w-full opacity-60">
+                      <div className="p-2.5 rounded-xl bg-gray-200 text-gray-400">
                         <FolderOpen className="w-6 h-6" />
                       </div>
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${shopType === "digital" ? 'border-[#0d8f76]' : 'border-gray-300'}`}>
-                        {shopType === "digital" && <div className="w-2.5 h-2.5 rounded-full bg-[#0d8f76]"></div>}
+                      <div className="w-6 h-6 rounded-full border-2 flex items-center justify-center border-gray-300">
                       </div>
                     </div>
-                    <span className="block font-bold text-gray-900 text-lg mb-2">Produits digitaux</span>
-                    <span className="text-xs text-gray-500 font-medium leading-relaxed">Vendez e-books, cours, logiciels et fichiers téléchargeables.</span>
+                    <span className="block font-bold text-gray-400 text-lg mb-2">Produits digitaux</span>
+                    <span className="text-xs text-gray-400 font-medium leading-relaxed">Vendez e-books, cours, logiciels et fichiers téléchargeables.</span>
                   </button>
 
                   <button
@@ -369,21 +369,21 @@ export default function OnboardingPage() {
                   </button>
 
                   <button
-                    onClick={() => setShopType("libre")}
-                    className={`group relative flex flex-col p-6 rounded-3xl border-2 transition-all text-left overflow-hidden ${
-                      shopType === "libre" ? "border-[#0d8f76] bg-emerald-50/30 shadow-[0_8px_30px_rgb(13,143,118,0.1)]" : "border-gray-100 hover:border-gray-200 bg-white hover:shadow-sm"
-                    }`}
+                    disabled
+                    className="group relative flex flex-col p-6 rounded-3xl border-2 transition-all text-left overflow-hidden border-gray-100 bg-gray-50/70 opacity-75 cursor-not-allowed"
                   >
-                    <div className="flex justify-between items-start mb-6 w-full">
-                      <div className={`p-2.5 rounded-xl transition-colors ${shopType === "libre" ? "bg-[#0d8f76] text-white" : "bg-gray-100 text-gray-600 group-hover:bg-gray-200"}`}>
+                    <div className="absolute top-4 right-4 bg-amber-100 text-amber-700 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm border border-amber-200">
+                      🚧 Bientôt
+                    </div>
+                    <div className="flex justify-between items-start mb-6 w-full opacity-60">
+                      <div className="p-2.5 rounded-xl bg-gray-200 text-gray-400">
                         <Hourglass className="w-6 h-6" />
                       </div>
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${shopType === "libre" ? 'border-[#0d8f76]' : 'border-gray-300'}`}>
-                        {shopType === "libre" && <div className="w-2.5 h-2.5 rounded-full bg-[#0d8f76]"></div>}
+                      <div className="w-6 h-6 rounded-full border-2 flex items-center justify-center border-gray-300">
                       </div>
                     </div>
-                    <span className="block font-bold text-gray-900 text-lg mb-2">Mixte & Libre</span>
-                    <span className="text-xs text-gray-500 font-medium leading-relaxed">Décidez plus tard et ajoutez différents types de produits.</span>
+                    <span className="block font-bold text-gray-400 text-lg mb-2">Mixte & Libre</span>
+                    <span className="text-xs text-gray-400 font-medium leading-relaxed">Décidez plus tard et ajoutez différents types de produits.</span>
                   </button>
                 </div>
 
