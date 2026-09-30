@@ -36,25 +36,25 @@ export async function addProductAction(productData: any) {
       .select('*', { count: 'exact', head: true })
       .eq('shop_id', session.shopId);
       
-    if (count !== null && count >= 20) {
+    if (count !== null && count >= 10) {
       return { 
         success: false, 
-        error: "Limite atteinte : Le Plan Gratuit vous permet d'ajouter jusqu'à 20 produits maximum. Veuillez activer votre abonnement pour ajouter plus de produits." 
+        error: "Limite atteinte : Le Plan Gratuit vous permet d'ajouter jusqu'à 10 produits maximum. Veuillez activer votre abonnement pour ajouter plus de produits." 
       };
     }
   }
 
-  // Check Pro plan limit (up to 100 products)
+  // Check Pro plan limit (up to 50 products)
   if (profile?.subscription_plan === 'pro') {
     const { count } = await adminSupabase
       .from('products')
       .select('*', { count: 'exact', head: true })
       .eq('shop_id', session.shopId);
       
-    if (count !== null && count >= 100) {
+    if (count !== null && count >= 50) {
       return { 
         success: false, 
-        error: "Limite atteinte : Le Plan Pro vous permet d'ajouter jusqu'à 100 produits. Veuillez passer au Plan Business pour des produits illimités." 
+        error: "Limite atteinte : Le Plan Pro vous permet d'ajouter jusqu'à 50 produits. Veuillez passer au Plan Business pour des produits illimités." 
       };
     }
   }

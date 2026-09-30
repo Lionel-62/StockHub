@@ -46,7 +46,7 @@ export function Pricing() {
                   <Check className="w-4 h-4 text-[#0f9d58]" /> 1 boutique connectée
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Jusqu'à 20 produits
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Jusqu'à 10 produits
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> 1 compte utilisateur
@@ -88,7 +88,7 @@ export function Pricing() {
               </div>
               <ul className="space-y-3.5 text-xs sm:text-sm text-slate-700  mb-8 font-medium">
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> <strong>Jusqu'à 100 produits & Ventes illimitées</strong>
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> <strong>Jusqu'à 50 produits & Ventes illimitées</strong>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Jusqu'à 2 comptes vendeurs
