@@ -96,7 +96,7 @@ export function Features() {
               Analytique Premium & Mini-CRM
             </h3>
             <p className="text-slate-600  text-sm leading-relaxed">
-              Prenez des décisions éclairées avec un tableau de bord analytique digne des grandes entreprises : séparation du CA En Ligne / Sur Place, Panier Moyen, évolution graphique et palmarès des meilleures ventes. Inclus également un carnet clients/fournisseurs.
+              Prenez des décisions éclairées avec un tableau de bord analytique digne des grandes entreprises : calcul de votre vraie marge (Bénéfice Net), séparation du CA En Ligne / Sur Place, Panier Moyen et palmarès des meilleures ventes.
             </p>
           </motion.div>
 
@@ -131,10 +131,10 @@ export function Features() {
               <CloudOff className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-slate-900  mb-3">
-              Mode Hors-ligne & Synchro
+              Application Native & Mode Hors-ligne
             </h3>
             <p className="text-slate-600  text-sm leading-relaxed">
-              Continuez à travailler même sans connexion internet (Offline-First). L'application enregistre vos actions localement et les synchronise automatiquement en arrière-plan dès le retour du réseau.
+              Installez StockHub sur votre téléphone ou PC comme une vraie application (PWA). Continuez à travailler même sans connexion internet (Offline-First) : le système synchronise tout en arrière-plan dès le retour du réseau.
             </p>
           </motion.div>
         </div>
