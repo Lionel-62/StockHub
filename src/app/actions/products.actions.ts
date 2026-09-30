@@ -22,6 +22,28 @@ export async function addProductAction(productData: any) {
   const session = await getSession();
   if (!session?.shopId) return { success: false, error: 'Non autorisé' };
 
+  // Fetch subscription status & current product count to enforce Free Plan limits
+  const adminSupabase = createAdminClient();
+  const { data: profile } = await adminSupabase
+    .from('profiles')
+    .select('subscription_status')
+    .eq('id', session.id)
+    .single();
+
+  if (profile?.subscription_status === 'trial') {
+    const { count } = await adminSupabase
+      .from('products')
+      .select('*', { count: 'exact', head: true })
+      .eq('shop_id', session.shopId);
+      
+    if (count !== null && count >= 20) {
+      return { 
+        success: false, 
+        error: "Limite atteinte : Le Plan Gratuit vous permet d'ajouter jusqu'à 20 produits maximum. Veuillez activer votre abonnement pour ajouter plus de produits." 
+      };
+    }
+  }
+
   const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('products')

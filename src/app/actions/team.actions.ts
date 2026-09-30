@@ -35,6 +35,20 @@ export async function addTeamMemberAction(userData: any) {
 
     const supabase = createAdminClient();
     
+    // Check subscription status to enforce Free Plan limits (only 1 user allowed, so no extra employees)
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription_status')
+      .eq('id', session.id)
+      .single();
+
+    if (profile?.subscription_status === 'trial') {
+       return { 
+         success: false, 
+         error: "Limite atteinte : Le Plan Gratuit n'autorise qu'un seul compte utilisateur (le vôtre). Veuillez activer votre abonnement pour ajouter des employés." 
+       };
+    }
+
     if (userData.role === 'employee') {
       userData.id = globalThis.crypto.randomUUID();
     } else {
