@@ -100,9 +100,10 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="flex overflow-x-auto pb-4 -mx-6 px-6 md:pb-0 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 snap-x snap-mandatory sm:snap-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex overflow-x-auto pb-4 -mx-6 px-6 md:pb-0 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-5 gap-4 snap-x snap-mandatory sm:snap-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {(!ordersLoaded || !productsLoaded) ? (
           <>
+            <div className="min-w-[85vw] sm:min-w-[280px] md:min-w-0 shrink-0 snap-center"><StatCardSkeleton /></div>
             <div className="min-w-[85vw] sm:min-w-[280px] md:min-w-0 shrink-0 snap-center"><StatCardSkeleton /></div>
             <div className="min-w-[85vw] sm:min-w-[280px] md:min-w-0 shrink-0 snap-center"><StatCardSkeleton /></div>
             <div className="min-w-[85vw] sm:min-w-[280px] md:min-w-0 shrink-0 snap-center"><StatCardSkeleton /></div>
