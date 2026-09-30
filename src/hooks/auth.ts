@@ -274,6 +274,7 @@ export function useAuth() {
     const isEmployee = currentUser?.role === "employee";
     setCurrentUser(null);
     localStorage.removeItem("stockhub_session");
+    localStorage.removeItem("stockhub_pwa_dismissed");
     await logoutAction();
     
     if (!isEmployee) {
