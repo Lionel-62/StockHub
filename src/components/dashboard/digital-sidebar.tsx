@@ -162,13 +162,14 @@ export function DigitalSidebar({ forceShowMobile = false }: { forceShowMobile?: 
               Physique
             </button>
             <button 
-              onClick={() => handleSwitchEnvironment('digital')}
+              disabled
+              title="Bientôt disponible"
               className={cn(
-                "flex-1 text-center text-[11px] font-bold py-1.5 rounded-md transition-colors",
-                pathname.includes("dashboard_digital") ? "bg-[#0d8f76] text-white shadow-sm" : "text-slate-400 hover:text-white hover:bg-white/5"
+                "flex-1 flex items-center justify-center gap-1 text-center text-[11px] font-bold py-1.5 rounded-md transition-colors opacity-50 cursor-not-allowed",
+                pathname.includes("dashboard_digital") ? "bg-[#0d8f76] text-white shadow-sm" : "text-slate-400 bg-black/10"
               )}
             >
-              Digital
+              Digital <span>🚧</span>
             </button>
           </div>
         )}
