@@ -26,11 +26,11 @@ export async function addProductAction(productData: any) {
   const adminSupabase = createAdminClient();
   const { data: profile } = await adminSupabase
     .from('profiles')
-    .select('subscription_status')
+    .select('subscription_status, subscription_plan')
     .eq('id', session.id)
     .single();
 
-  if (profile?.subscription_status === 'trial') {
+  if (profile?.subscription_status === 'trial' || profile?.subscription_plan === 'free') {
     const { count } = await adminSupabase
       .from('products')
       .select('*', { count: 'exact', head: true })

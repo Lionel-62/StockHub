@@ -67,9 +67,16 @@ export async function POST(req: Request) {
           const newEndDate = new Date();
           newEndDate.setDate(newEndDate.getDate() + 30);
           
+          // Déterminer le plan en fonction du montant
+          let planName = 'pro';
+          if (amount >= 8000) {
+             planName = 'business';
+          }
+          
           // Mettre à jour le statut du plan
           await supabase.from('profiles').update({ 
             subscription_status: 'active',
+            subscription_plan: planName,
             subscription_end_date: newEndDate.toISOString()
           }).eq('id', profile.id);
 
