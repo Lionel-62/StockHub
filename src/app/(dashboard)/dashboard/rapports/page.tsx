@@ -88,6 +88,8 @@ export default function RapportsPage() {
     let itemsCount = 0;
     let salesCount = filteredOrders.length;
 
+    let profit = 0;
+
     filteredOrders.forEach(order => {
       if (order.status === "Payée" || order.status === "Livrée") {
         ca += order.totalAmount;
@@ -96,6 +98,16 @@ export default function RapportsPage() {
         } else {
           caInStore += order.totalAmount;
         }
+        
+        let orderCost = 0;
+        if (order.items && Array.isArray(order.items)) {
+          order.items.forEach(item => {
+            const product = products.find(p => p.id === item.productId);
+            const purchasePrice = product?.purchasePrice || 0;
+            orderCost += purchasePrice * (item.quantity || 1);
+          });
+        }
+        profit += (order.totalAmount - orderCost);
       }
       itemsCount += order.itemsCount;
     });
@@ -108,7 +120,8 @@ export default function RapportsPage() {
       caInStore,
       itemsCount,
       salesCount,
-      averageBasket
+      averageBasket,
+      profit
     };
   }, [filteredOrders]);
 
@@ -223,6 +236,7 @@ export default function RapportsPage() {
       ["Chiffre d'affaires total (XOF)", stats.ca],
       ["CA Ventes en ligne (XOF)", stats.caOnline],
       ["CA Ventes sur place (XOF)", stats.caInStore],
+      ["Bénéfice net (XOF)", stats.profit],
       ["Nombre total de ventes", stats.salesCount],
       ["Total articles vendus", stats.itemsCount],
       ["Panier moyen (XOF)", Math.round(stats.averageBasket)],
@@ -386,7 +400,7 @@ export default function RapportsPage() {
           </Card>
 
           {/* KPI CARDS (Glassmorphism/Premium White) */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
             <Card className="border-0 shadow-sm rounded-xl bg-white dark:bg-[#0a192f] hover:shadow-md transition-shadow relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1 h-full bg-blue-600"></div>
               <CardContent className="p-4 flex flex-col justify-between h-full">
@@ -415,6 +429,22 @@ export default function RapportsPage() {
                 <div>
                   <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1"><span className="font-mono">{formatCurrency(stats.caOnline)}</span></h3>
                   <p className="text-[10px] font-medium text-slate-400">Commandes Web</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-sm rounded-xl bg-white dark:bg-[#0a192f] hover:shadow-md transition-shadow relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-1 h-full bg-[#0d8f76]"></div>
+              <CardContent className="p-4 flex flex-col justify-between h-full">
+                <div className="flex justify-between items-start mb-3">
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">Bénéfice Net</p>
+                  <div className="h-6 w-6 rounded-md bg-[#0d8f76]/10 text-[#0d8f76] flex items-center justify-center">
+                    <TrendingUp size={14} />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1"><span className="font-mono">{formatCurrency(stats.profit)}</span></h3>
+                  <p className="text-[10px] font-medium text-slate-400">Marge globale</p>
                 </div>
               </CardContent>
             </Card>
