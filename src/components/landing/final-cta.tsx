@@ -48,9 +48,7 @@ export function FinalCta() {
           </Link>
           
           <a 
-            href="https://wa.me/2290162579394?text=Bonjour%20StockHub%2C%20j%27aimerais%20poser%20une%20question%20sur%20la%20plateforme." 
-            target="_blank" 
-            rel="noopener noreferrer" 
+            href="mailto:lgodjo62@gmail.com?subject=Question sur StockHub" 
             className="w-full sm:w-auto"
           >
             <motion.button 
