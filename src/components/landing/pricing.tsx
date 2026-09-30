@@ -88,10 +88,10 @@ export function Pricing() {
               </div>
               <ul className="space-y-3.5 text-xs sm:text-sm text-slate-700  mb-8 font-medium">
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> <strong>Produits & ventes illimités</strong>
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> <strong>Jusqu'à 100 produits & Ventes illimitées</strong>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-[#0f9d58]" /> Jusqu'à 3 comptes vendeurs
+                  <Check className="w-4 h-4 text-[#0f9d58]" /> Jusqu'à 2 comptes vendeurs
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-[#0f9d58]" /> Packs Produits & Promotions

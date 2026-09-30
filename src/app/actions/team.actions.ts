@@ -47,7 +47,7 @@ export async function addTeamMemberAction(userData: any) {
        };
     }
     
-    // Check Pro plan limit (up to 3 employees)
+    // Check Pro plan limit (up to 2 employees)
     if (profile?.subscription_plan === 'pro') {
       const { count } = await supabase
         .from('profiles')
@@ -55,10 +55,10 @@ export async function addTeamMemberAction(userData: any) {
         .eq('shop_id', session.shopId)
         .eq('role', 'employee');
         
-      if (count !== null && count >= 3) {
+      if (count !== null && count >= 2) {
          return { 
            success: false, 
-           error: "Limite atteinte : Le Plan Pro vous autorise jusqu'à 3 comptes vendeurs. Veuillez passer au Plan Business pour avoir des collaborateurs illimités." 
+           error: "Limite atteinte : Le Plan Pro vous autorise jusqu'à 2 comptes vendeurs additionnels. Veuillez passer au Plan Business pour avoir des collaborateurs illimités." 
          };
       }
     }

@@ -44,6 +44,21 @@ export async function addProductAction(productData: any) {
     }
   }
 
+  // Check Pro plan limit (up to 100 products)
+  if (profile?.subscription_plan === 'pro') {
+    const { count } = await adminSupabase
+      .from('products')
+      .select('*', { count: 'exact', head: true })
+      .eq('shop_id', session.shopId);
+      
+    if (count !== null && count >= 100) {
+      return { 
+        success: false, 
+        error: "Limite atteinte : Le Plan Pro vous permet d'ajouter jusqu'à 100 produits. Veuillez passer au Plan Business pour des produits illimités." 
+      };
+    }
+  }
+
   const supabase = await createAuthenticatedClient(session);
   const { data, error } = await supabase
     .from('products')
