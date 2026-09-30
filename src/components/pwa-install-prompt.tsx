@@ -11,6 +11,10 @@ export function PWAInstallPrompt() {
     const handleBeforeInstallPrompt = (e: Event) => {
       // Empêche le mini-infobar par défaut d'apparaître sur mobile
       e.preventDefault();
+      
+      const isDismissed = localStorage.getItem('stockhub_pwa_dismissed') === 'true';
+      if (isDismissed) return;
+      
       // Sauvegarde l'événement pour pouvoir le déclencher plus tard
       setDeferredPrompt(e);
       // Affiche notre bannière personnalisée
@@ -37,11 +41,13 @@ export function PWAInstallPrompt() {
     const { outcome } = await deferredPrompt.userChoice;
     console.log(`L'utilisateur a ${outcome === "accepted" ? "accepté" : "refusé"} l'installation`);
     
+    localStorage.setItem('stockhub_pwa_dismissed', 'true');
     // On ne peut utiliser le prompt qu'une seule fois
     setDeferredPrompt(null);
   };
 
   const handleClose = () => {
+    localStorage.setItem('stockhub_pwa_dismissed', 'true');
     setIsVisible(false);
   };
 
