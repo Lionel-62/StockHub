@@ -8,7 +8,7 @@ import { RecentOrders } from "@/components/dashboard/recent-orders";
 import { useOrders } from "@/hooks/orders";
 import { useProducts } from "@/hooks/products";
 import { useAuth } from "@/hooks/auth";
-import { PackageOpen, Sparkles, Rocket, ArrowRight } from "lucide-react";
+import { PackageOpen, Sparkles, Rocket, ArrowRight, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
@@ -21,6 +21,19 @@ export default function DashboardPage() {
   // Calculate real stats
   const totalRevenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
   const totalSales = orders.length;
+  
+  // Calculate profit
+  const totalProfit = orders.reduce((sum, order) => {
+    let orderCost = 0;
+    if (order.items && Array.isArray(order.items)) {
+      order.items.forEach(item => {
+        const product = products.find(p => p.id === item.productId);
+        const purchasePrice = product?.purchasePrice || 0;
+        orderCost += purchasePrice * (item.quantity || 1);
+      });
+    }
+    return sum + ((order.totalAmount || 0) - orderCost);
+  }, 0);
   
   // Calculate trend
   const now = new Date();
@@ -121,6 +134,19 @@ export default function DashboardPage() {
               iconColorClass="text-[#0b213f] dark:text-blue-400" 
               iconBgClass="bg-blue-50 dark:bg-[#18355c]" 
             />
+            </div>
+            <div className="min-w-[85vw] sm:min-w-[280px] md:min-w-0 shrink-0 snap-center">
+              <StatCard 
+                title="Bénéfice Net" 
+                value={formatCurrency(totalProfit)} 
+                subValue="FCFA"
+                trend="Marge globale estimée"
+                trendText=""
+                trendType="up"
+                icon={TrendingUp} 
+                iconColorClass="text-[#0d8f76] dark:text-emerald-400" 
+                iconBgClass="bg-[#0d8f76]/10 dark:bg-[#0d8f76]/20" 
+              />
             </div>
             {currentUser?.shopType !== 'digital' && (
               <>
