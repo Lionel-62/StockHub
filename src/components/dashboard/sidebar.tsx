@@ -229,14 +229,13 @@ export function Sidebar() {
               Physique
             </button>
             <button 
-              disabled
-              title="Bientôt disponible"
+              onClick={() => handleSwitchEnvironment('digital')}
               className={cn(
-                "flex-1 flex items-center justify-center gap-1 text-center text-[11px] font-bold py-1.5 rounded-md transition-colors opacity-50 cursor-not-allowed",
-                pathname.includes("dashboard_digital") ? "bg-[#0d8f76] text-white shadow-sm" : "text-slate-400 bg-black/10"
+                "flex-1 text-center text-[11px] font-bold py-1.5 rounded-md transition-colors",
+                pathname.includes("dashboard_digital") ? "bg-[#0d8f76] text-white shadow-sm" : "text-slate-400 hover:text-white hover:bg-white/5"
               )}
             >
-              Digital <span>🚧</span>
+              Digital
             </button>
           </div>
         )}
