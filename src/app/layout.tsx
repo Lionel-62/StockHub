@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from 'react-hot-toast';
+import { Toaster as ReactHotToaster } from 'react-hot-toast';
+import { Toaster as SonnerToaster } from 'sonner';
 import { ThemeProvider } from "@/components/theme-provider";
 import { PWARegister } from "@/components/pwa-register";
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
@@ -51,7 +52,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           disableTransitionOnChange
         >
           {children}
-          <Toaster position="top-right" />
+          <ReactHotToaster position="top-right" />
+          <SonnerToaster position="bottom-right" richColors />
           <PWARegister />
           <PWAInstallPrompt />
         </ThemeProvider>
