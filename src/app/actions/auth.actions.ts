@@ -228,6 +228,34 @@ export async function createShopAction(userId: string, shopName: string, categor
   try {
     const supabase = createAdminClient();
     
+    // Check shop limits based on subscription plan
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription_plan, subscription_status')
+      .eq('id', userId)
+      .single();
+
+    const { count } = await supabase
+      .from('shops')
+      .select('*', { count: 'exact', head: true })
+      .eq('owner_id', userId);
+
+    if (count !== null) {
+      if ((profile?.subscription_status === 'trial' || profile?.subscription_plan === 'free' || profile?.subscription_plan === 'pro') && count >= 1) {
+        return { 
+          success: false, 
+          error: "Limite atteinte : Votre plan actuel vous limite à 1 seule boutique. Veuillez passer au Plan Business pour gérer plusieurs points de vente." 
+        };
+      }
+      
+      if (profile?.subscription_plan === 'business' && count >= 5) {
+        return { 
+          success: false, 
+          error: "Limite atteinte : Le Plan Business permet de gérer jusqu'à 5 boutiques (multi-points de vente)." 
+        };
+      }
+    }
+    
     // Créer un slug basé sur le nom de la boutique (ex: "Mega Store" -> "mega-store-a1b2")
     const baseSlug = shopName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     const shopSlug = `${baseSlug || 'boutique'}-${Math.random().toString(36).substring(2, 5)}`;

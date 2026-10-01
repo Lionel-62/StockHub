@@ -34,7 +34,8 @@ export async function addTeamMemberAction(userData: any) {
     }
 
     // Check subscription status to enforce Free Plan limits (only 1 user allowed, so no extra employees)
-    const { data: profile } = await supabase
+    const adminSupabase = createAdminClient();
+    const { data: profile } = await adminSupabase
       .from('profiles')
       .select('subscription_status, subscription_plan')
       .eq('id', session.id)
@@ -49,7 +50,7 @@ export async function addTeamMemberAction(userData: any) {
     
     // Check Pro plan limit (up to 2 employees)
     if (profile?.subscription_plan === 'pro') {
-      const { count } = await supabase
+      const { count } = await adminSupabase
         .from('profiles')
         .select('*', { count: 'exact', head: true })
         .eq('shop_id', session.shopId)
@@ -69,6 +70,7 @@ export async function addTeamMemberAction(userData: any) {
        return { success: false, error: 'Création de propriétaire non autorisée ici.' };
     }
 
+    const supabase = createAdminClient(); // using admin client to bypass RLS if necessary
     const { data, error } = await supabase
       .from('profiles')
       .insert({ 

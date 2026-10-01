@@ -216,8 +216,8 @@ export function Sidebar() {
       {/* Sélecteur de Boutique (Visible sur desktop et mobile) */}
       <div className="px-4 py-3 border-b border-white/10 bg-[#07172c] shrink-0">
         
-        {/* Switcher d'Espace (pour Mixte/Libre ou si l'utilisateur a les deux types de boutiques) */}
-        {(currentUser.shopType === 'libre' || (currentUser.myShops && currentUser.myShops.some(s => s.shop_type === 'digital') && currentUser.myShops.some(s => s.shop_type === 'physique'))) && (
+        {/* Switcher d'Espace (Visible uniquement pour l'admin) */}
+        {currentUser?.identifier === 'lionnelgodjo@gmail.com' && (currentUser.shopType === 'libre' || (currentUser.myShops && currentUser.myShops.some(s => s.shop_type === 'digital') && currentUser.myShops.some(s => s.shop_type === 'physique'))) && (
           <div className="flex bg-black/20 p-1 rounded-lg mb-3">
             <button 
               onClick={() => handleSwitchEnvironment('physique')}
@@ -229,14 +229,13 @@ export function Sidebar() {
               Physique
             </button>
             <button 
-              disabled
-              title="Bientôt disponible"
+              onClick={() => handleSwitchEnvironment('digital')}
               className={cn(
-                "flex-1 flex items-center justify-center gap-1 text-center text-[11px] font-bold py-1.5 rounded-md transition-colors opacity-50 cursor-not-allowed",
-                pathname.includes("dashboard_digital") ? "bg-[#0d8f76] text-white shadow-sm" : "text-slate-400 bg-black/10"
+                "flex-1 flex items-center justify-center gap-1 text-center text-[11px] font-bold py-1.5 rounded-md transition-colors",
+                pathname.includes("dashboard_digital") ? "bg-[#0d8f76] text-white shadow-sm" : "text-slate-400 hover:text-white hover:bg-white/5"
               )}
             >
-              Digital <span>🚧</span>
+              Digital
             </button>
           </div>
         )}

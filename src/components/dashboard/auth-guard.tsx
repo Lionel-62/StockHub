@@ -61,6 +61,11 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
         router.push("/dashboard/ventes");
       }
     }
+    // Block digital dashboard for non-admins
+    if (pathname.startsWith("/dashboard_digital") && currentUser.identifier !== "lionnelgodjo@gmail.com") {
+      router.push("/dashboard");
+      return;
+    }
   }, [isLoaded, currentUser, router, pathname]);
 
   if (!isLoaded || !currentUser) {
@@ -93,6 +98,11 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     if (pathname === "/dashboard" && !currentUser.permissions.canViewDashboard) return null;
     const prohibitedForEmployee = ["/dashboard/rapports", "/dashboard/parametres", "/dashboard/fournisseurs", "/dashboard/boutique", "/dashboard/equipe"];
     if (prohibitedForEmployee.some(p => pathname.startsWith(p))) return null;
+  }
+
+  // Block digital dashboard for non-admins
+  if (pathname.startsWith("/dashboard_digital") && currentUser.identifier !== "lionnelgodjo@gmail.com") {
+    return null;
   }
 
   return <>{children}</>;

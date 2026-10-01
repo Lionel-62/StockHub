@@ -360,7 +360,8 @@ export default function OnboardingPage() {
                   <p className="text-gray-500 text-lg">Choisissez la catégorie principale de vos produits pour optimiser votre catalogue.</p>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12">
+                <div className={`grid grid-cols-1 gap-5 mb-12 ${currentUser?.identifier === 'lionnelgodjo@gmail.com' ? 'sm:grid-cols-3' : 'sm:grid-cols-1 max-w-md mx-auto'}`}>
+                  {currentUser?.identifier === 'lionnelgodjo@gmail.com' && (
                   <button
                     disabled
                     className="group relative flex flex-col p-6 rounded-3xl border-2 transition-all text-left overflow-hidden border-gray-100 bg-gray-50/70 opacity-75 cursor-not-allowed"
@@ -378,6 +379,7 @@ export default function OnboardingPage() {
                     <span className="block font-bold text-gray-400 text-lg mb-2">Produits digitaux</span>
                     <span className="text-xs text-gray-400 font-medium leading-relaxed">Vendez e-books, cours, logiciels et fichiers téléchargeables.</span>
                   </button>
+                  )}
 
                   <button
                     onClick={() => setShopType("physique")}
@@ -397,6 +399,7 @@ export default function OnboardingPage() {
                     <span className="text-xs text-gray-500 font-medium leading-relaxed">Vendez des articles matériels, mode, électronique, food...</span>
                   </button>
 
+                  {currentUser?.identifier === 'lionnelgodjo@gmail.com' && (
                   <button
                     disabled
                     className="group relative flex flex-col p-6 rounded-3xl border-2 transition-all text-left overflow-hidden border-gray-100 bg-gray-50/70 opacity-75 cursor-not-allowed"
@@ -414,6 +417,7 @@ export default function OnboardingPage() {
                     <span className="block font-bold text-gray-400 text-lg mb-2">Mixte & Libre</span>
                     <span className="text-xs text-gray-400 font-medium leading-relaxed">Décidez plus tard et ajoutez différents types de produits.</span>
                   </button>
+                  )}
                 </div>
 
                 <div className="flex justify-between mt-auto pt-8 border-t border-gray-100">
