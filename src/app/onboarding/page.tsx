@@ -42,6 +42,9 @@ export default function OnboardingPage() {
   const [success, setSuccess] = useState(false);
   
   const [urlType, setUrlType] = useState<string | null>(null);
+  
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [welcomeInitialized, setWelcomeInitialized] = useState(false);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -57,8 +60,18 @@ export default function OnboardingPage() {
       router.push("/dashboard");
     } else if (isLoaded && !currentUser) {
       router.push("/login");
+    } else if (isLoaded && currentUser && !welcomeInitialized) {
+      // Check if we should show welcome message
+      if (!sessionStorage.getItem('welcomeShown')) {
+        setShowWelcome(true);
+        sessionStorage.setItem('welcomeShown', 'true');
+        setTimeout(() => {
+          setShowWelcome(false);
+        }, 5000);
+      }
+      setWelcomeInitialized(true);
     }
-  }, [isLoaded, currentUser, router]);
+  }, [isLoaded, currentUser, router, welcomeInitialized]);
 
   if (!isLoaded || !currentUser || (currentUser.onboardingCompleted && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get("action") !== "new-shop")) {
     return null;
@@ -173,6 +186,35 @@ export default function OnboardingPage() {
       setIsLoading(false);
     }
   };
+
+  if (showWelcome) {
+    return (
+      <div className="min-h-dvh flex items-center justify-center bg-slate-50 relative overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute top-1/4 left-1/4 w-[50%] h-[50%] rounded-full bg-blue-500/20 blur-[100px] animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[50%] h-[50%] rounded-full bg-teal-400/20 blur-[100px] animate-pulse" style={{ animationDelay: '1s' }}></div>
+        
+        <div className="z-10 text-center animate-in zoom-in-95 fade-in duration-700">
+          <div className="w-20 h-20 bg-white rounded-2xl shadow-xl flex items-center justify-center mx-auto mb-6 transform -rotate-3 border border-slate-100">
+            <span className="text-4xl">🎉</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-[#0b213f] mb-4">
+            Bienvenue, {currentUser?.name?.split(' ')[0] || 'sur StockHub'} !
+          </h1>
+          <p className="text-lg text-slate-600 max-w-md mx-auto">
+            Nous préparons votre espace de travail. Préparez-vous à gérer votre boutique comme un pro.
+          </p>
+          <div className="mt-8 flex justify-center">
+            <div className="flex gap-2">
+              <div className="w-3 h-3 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-3 h-3 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-3 h-3 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-dvh flex flex-col lg:flex-row bg-slate-50 font-sans">
