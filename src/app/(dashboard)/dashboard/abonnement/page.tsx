@@ -39,10 +39,31 @@ export default function SubscriptionPage() {
 
   const handleSubscribe = async (amount: number, planName: string) => {
     setLoading(true);
-    setTimeout(() => {
-      alert(`Redirection vers SASPay en cours pour payer ${amount} FCFA (${planName})...`);
+    try {
+      const response = await fetch("/api/billing/saspay/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount, planName }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Erreur de connexion à la plateforme de paiement.");
+      }
+
+      if (data.checkoutUrl) {
+        // Redirect to SASPay payment page
+        window.location.href = data.checkoutUrl;
+      } else {
+        throw new Error("Erreur: URL de paiement introuvable.");
+      }
+    } catch (error: any) {
+      alert(error.message);
       setLoading(false);
-    }, 1500);
+    }
   };
 
   if (currentUser?.role === "employee") {
