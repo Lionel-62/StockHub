@@ -95,11 +95,11 @@ export default function SubscriptionPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-        {/* Carte Mensuelle Standard - 5000 */}
+        {/* Carte Mensuelle Pro - 5000 */}
         <div className="bg-white dark:bg-[#0a192f] rounded-2xl shadow-lg border border-slate-200 dark:border-[#1c3a66] overflow-hidden relative flex flex-col">
           <div className="p-8 flex-1">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Forfait Standard</h3>
-            <p className="text-slate-500 dark:text-slate-400 mb-6">L'essentiel pour bien démarrer votre activité.</p>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Forfait Pro</h3>
+            <p className="text-slate-500 dark:text-slate-400 mb-6">L'idéal pour commencer à gérer votre boutique sérieusement.</p>
             <div className="flex items-baseline gap-2 mb-6">
               <span className="text-4xl font-extrabold text-slate-900 dark:text-white">5 000</span>
               <span className="text-lg font-medium text-slate-500 dark:text-slate-400">FCFA / mois</span>
@@ -108,52 +108,56 @@ export default function SubscriptionPage() {
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700 dark:text-slate-200">Produits et ventes illimités</span>
+                <span className="text-slate-700 dark:text-slate-200">1 Boutique (Point de vente)</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700 dark:text-slate-200">Gestion de stock basique</span>
+                <span className="text-slate-700 dark:text-slate-200">Jusqu'à 50 produits</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <span className="text-slate-700 dark:text-slate-200">Jusqu'à 2 employés / vendeurs</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
                 <span className="text-slate-700 dark:text-slate-200">Vitrine en ligne simple</span>
               </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700 dark:text-slate-200">Support par email</span>
-              </li>
             </ul>
           </div>
           <div className="p-8 pt-0 mt-auto">
             <button
-              onClick={() => handleSubscribe(5000, "Standard")}
+              onClick={() => handleSubscribe(5000, "Pro")}
               disabled={loading}
               className="w-full py-4 px-6 rounded-xl text-slate-700 dark:text-slate-200 font-medium bg-slate-100 dark:bg-[#112240] hover:bg-slate-200 border border-slate-300 dark:border-[#244b82] transition-all flex items-center justify-center gap-2 disabled:opacity-70"
             >
               <CreditCard className="w-5 h-5" />
-              Choisir Standard
+              Choisir Forfait Pro
             </button>
           </div>
         </div>
 
-        {/* Carte Mensuelle Pro - 8000 */}
+        {/* Carte Mensuelle Business - 15000 */}
         <div className="bg-white dark:bg-[#0a192f] rounded-2xl shadow-xl border-2 border-blue-500 overflow-hidden relative flex flex-col transform md:-translate-y-4">
           <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
           <div className="bg-blue-600 text-white text-center py-1.5 text-xs font-bold tracking-widest uppercase">
-            Le plus populaire
+            Le plus puissant
           </div>
           <div className="p-8 flex-1">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Forfait Pro</h3>
-            <p className="text-slate-500 dark:text-slate-400 mb-6">Pour les commerçants qui veulent passer à la vitesse supérieure.</p>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Forfait Business</h3>
+            <p className="text-slate-500 dark:text-slate-400 mb-6">Pour les commerçants qui veulent passer à la vitesse supérieure (multi-boutiques).</p>
             <div className="flex items-baseline gap-2 mb-6">
-              <span className="text-4xl font-extrabold text-slate-900 dark:text-white">8 000</span>
+              <span className="text-4xl font-extrabold text-slate-900 dark:text-white">15 000</span>
               <span className="text-lg font-medium text-slate-500 dark:text-slate-400">FCFA / mois</span>
             </div>
             
             <ul className="space-y-4 mb-8">
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700 dark:text-slate-200 font-medium">Tout ce qui est dans le Standard, plus :</span>
+                <span className="text-slate-700 dark:text-slate-200 font-medium">Jusqu'à 5 Boutiques</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                <span className="text-slate-700 dark:text-slate-200 font-medium">Produits et ventes illimités</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
@@ -165,22 +169,18 @@ export default function SubscriptionPage() {
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <span className="text-slate-700 dark:text-slate-200">Vitrine en ligne personnalisable</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                 <span className="text-slate-700 dark:text-slate-200">Assistance prioritaire sur WhatsApp</span>
               </li>
             </ul>
           </div>
           <div className="p-8 pt-0 mt-auto">
             <button
-              onClick={() => handleSubscribe(8000, "Pro")}
+              onClick={() => handleSubscribe(15000, "Business")}
               disabled={loading}
               className="w-full py-4 px-6 rounded-xl text-white font-medium bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70"
             >
               <CreditCard className="w-5 h-5" />
-              {loading ? "Génération..." : "Payer 8 000 FCFA"}
+              {loading ? "Génération..." : "Payer 15 000 FCFA"}
             </button>
             <p className="text-xs text-center text-slate-400 mt-4">
               Paiement 100% sécurisé via Mobile Money
