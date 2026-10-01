@@ -136,7 +136,7 @@ export default function SubscriptionPage() {
           </div>
         </div>
 
-        {/* Carte Mensuelle Business - 15000 */}
+        {/* Carte Mensuelle Business - 8000 */}
         <div className="bg-white dark:bg-[#0a192f] rounded-2xl shadow-xl border-2 border-blue-500 overflow-hidden relative flex flex-col transform md:-translate-y-4">
           <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
           <div className="bg-blue-600 text-white text-center py-1.5 text-xs font-bold tracking-widest uppercase">
@@ -146,7 +146,7 @@ export default function SubscriptionPage() {
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Forfait Business</h3>
             <p className="text-slate-500 dark:text-slate-400 mb-6">Pour les commerçants qui veulent passer à la vitesse supérieure (multi-boutiques).</p>
             <div className="flex items-baseline gap-2 mb-6">
-              <span className="text-4xl font-extrabold text-slate-900 dark:text-white">15 000</span>
+              <span className="text-4xl font-extrabold text-slate-900 dark:text-white">8 000</span>
               <span className="text-lg font-medium text-slate-500 dark:text-slate-400">FCFA / mois</span>
             </div>
             
@@ -175,12 +175,12 @@ export default function SubscriptionPage() {
           </div>
           <div className="p-8 pt-0 mt-auto">
             <button
-              onClick={() => handleSubscribe(15000, "Business")}
+              onClick={() => handleSubscribe(8000, "Business")}
               disabled={loading}
               className="w-full py-4 px-6 rounded-xl text-white font-medium bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70"
             >
               <CreditCard className="w-5 h-5" />
-              {loading ? "Génération..." : "Payer 15 000 FCFA"}
+              {loading ? "Génération..." : "Payer 8 000 FCFA"}
             </button>
             <p className="text-xs text-center text-slate-400 mt-4">
               Paiement 100% sécurisé via Mobile Money
