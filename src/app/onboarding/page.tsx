@@ -42,9 +42,6 @@ export default function OnboardingPage() {
   const [success, setSuccess] = useState(false);
   
   const [urlType, setUrlType] = useState<string | null>(null);
-  
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [welcomeInitialized, setWelcomeInitialized] = useState(false);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -60,18 +57,8 @@ export default function OnboardingPage() {
       router.push("/dashboard");
     } else if (isLoaded && !currentUser) {
       router.push("/login");
-    } else if (isLoaded && currentUser && !welcomeInitialized) {
-      // Check if we should show welcome message
-      if (!sessionStorage.getItem('welcomeShown')) {
-        setShowWelcome(true);
-        sessionStorage.setItem('welcomeShown', 'true');
-        setTimeout(() => {
-          setShowWelcome(false);
-        }, 5000);
-      }
-      setWelcomeInitialized(true);
     }
-  }, [isLoaded, currentUser, router, welcomeInitialized]);
+  }, [isLoaded, currentUser, router]);
 
   if (!isLoaded || !currentUser || (currentUser.onboardingCompleted && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get("action") !== "new-shop")) {
     return null;
@@ -149,7 +136,7 @@ export default function OnboardingPage() {
           setSuccess(true);
           setTimeout(() => {
             window.location.href = "/dashboard";
-          }, 1500);
+          }, 5000);
         } else {
           throw new Error("Erreur lors de la création d'une des boutiques.");
         }
@@ -167,7 +154,7 @@ export default function OnboardingPage() {
             } else {
               window.location.href = "/dashboard";
             }
-          }, 1500);
+          }, 5000);
         } else if (result.success) {
           setSuccess(true);
           setTimeout(() => {
@@ -176,7 +163,7 @@ export default function OnboardingPage() {
             } else {
               window.location.href = "/dashboard";
             }
-          }, 1500);
+          }, 5000);
         } else {
           throw new Error(result.error);
         }
@@ -187,7 +174,7 @@ export default function OnboardingPage() {
     }
   };
 
-  if (showWelcome) {
+  if (success) {
     return (
       <div className="min-h-dvh flex items-center justify-center bg-slate-50 relative overflow-hidden">
         {/* Animated Background */}
@@ -199,10 +186,10 @@ export default function OnboardingPage() {
             <span className="text-4xl">🎉</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-[#0b213f] mb-4">
-            Bienvenue, {currentUser?.name?.split(' ')[0] || 'sur StockHub'} !
+            Félicitations, {currentUser?.name?.split(' ')[0] || 'sur StockHub'} !
           </h1>
           <p className="text-lg text-slate-600 max-w-md mx-auto">
-            Nous préparons votre espace de travail. Préparez-vous à gérer votre boutique comme un pro.
+            Votre boutique a été configurée avec succès. Nous préparons votre espace de travail...
           </p>
           <div className="mt-8 flex justify-center">
             <div className="flex gap-2">
