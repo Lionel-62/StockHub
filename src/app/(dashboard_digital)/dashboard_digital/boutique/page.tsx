@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState, useEffect, useRef } from "react";
 import { Store, Save, Eye, Info, HelpCircle, Plus, Trash2, Copy } from "lucide-react";
@@ -220,7 +221,7 @@ export default function BoutiquePage() {
                     if (formData.slug) {
                       const baseUrl = window.location.origin;
                       navigator.clipboard.writeText(`${baseUrl}/b/${formData.slug}`);
-                      alert("Lien copié dans le presse-papier !");
+                      toast.success("Lien copié dans le presse-papier !");
                     }
                   }}
                   className="bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] border-l-0 text-slate-500 dark:text-slate-400 hover:text-blue-600 hover:bg-blue-50 px-3 py-2.5 rounded-r-lg transition-colors flex items-center"

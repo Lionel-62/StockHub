@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState } from "react";
 import { useAuth } from "@/hooks/auth";
@@ -61,7 +62,7 @@ export default function SubscriptionPage() {
         throw new Error("Erreur: URL de paiement introuvable.");
       }
     } catch (error: any) {
-      alert(error.message);
+      toast.error(error.message);
       setLoadingPlan(null);
     }
   };

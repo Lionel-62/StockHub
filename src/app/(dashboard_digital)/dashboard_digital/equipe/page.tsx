@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState, useEffect } from "react";
 import { User, useAuth } from "@/hooks/auth";
@@ -49,7 +50,7 @@ export default function EquipePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formName.trim()) {
-      alert("Veuillez renseigner le nom.");
+      toast.error("Veuillez renseigner le nom.");
       return;
     }
 
@@ -75,7 +76,7 @@ export default function EquipePage() {
       setGeneratedAccess({ name: newUser.name, identifier, pin });
       setFormName("");
     } catch (error: any) {
-      alert(error.message || "Une erreur est survenue");
+      toast.error(error.message || "Une erreur est survenue");
     } finally {
       setIsSubmitting(false);
     }
@@ -111,9 +112,9 @@ export default function EquipePage() {
     }
     
     navigator.clipboard.writeText(message).then(() => {
-      alert("Les accès ont été copiés dans le presse-papier ! Vous pouvez les coller dans un message.");
+      toast.success("Les accès ont été copiés dans le presse-papier ! Vous pouvez les coller dans un message.");
     }).catch(err => {
-      alert("Erreur lors de la copie. Voici les informations :\n" + message);
+      toast.error("Erreur lors de la copie. Voici les informations :\n" + message);
     });
   };
 
@@ -190,7 +191,7 @@ export default function EquipePage() {
                 onClick={() => {
                   const loginUrl = `${window.location.origin}/employe/${currentUser?.shopSlug}/login`;
                   navigator.clipboard.writeText(loginUrl);
-                  alert("Lien de connexion copié dans le presse-papier !");
+                  toast.success("Lien de connexion copié dans le presse-papier !");
                 }} 
                 className="bg-white dark:bg-[#0a192f] hover:bg-slate-50 dark:bg-[#06101e] text-emerald-700 border-emerald-200 shrink-0 rounded-lg text-sm px-4 shadow-sm"
               >
@@ -278,7 +279,7 @@ export default function EquipePage() {
                             onClick={() => {
                               const loginUrl = `${window.location.origin}/employe/${currentUser?.shopSlug}/login`;
                               navigator.clipboard.writeText(loginUrl);
-                              alert("Lien de connexion copié !");
+                              toast.success("Lien de connexion copié !");
                             }}
                             className="text-slate-400 hover:text-[#0b213f] hover:bg-[#0b213f]/10 h-8 w-8 rounded-full" 
                             title="Copier les accès"

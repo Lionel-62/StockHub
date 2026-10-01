@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState, useEffect, use } from "react";
 import { ShoppingCart, Search, Plus, Minus, X, ArrowRight, Store as StoreIcon, ChevronLeft, ChevronRight, ChevronDown, UserCircle } from "lucide-react";
@@ -292,7 +293,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
 
   const handleWhatsAppCheckout = () => {
     if (!customerName) {
-      alert("Veuillez entrer votre nom.");
+      toast.error("Veuillez entrer votre nom.");
       return;
     }
     
@@ -430,7 +431,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
   const handleAuthSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!authForm.phone || !authForm.password || (authMode === "register" && !authForm.name)) {
-      alert("Veuillez remplir les champs obligatoires.");
+      toast.error("Veuillez remplir les champs obligatoires.");
       return;
     }
 

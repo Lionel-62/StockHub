@@ -1,4 +1,5 @@
 ﻿"use client";
+import { toast } from "sonner";
 
 import { useState, useEffect, useMemo } from "react";
 import { Search, Plus, Filter, MoreHorizontal, Edit, Trash2, X, Save, Camera, Upload, ChevronLeft, ChevronRight, Store as StoreIcon, Package, CheckSquare, Sparkles, Loader2, Download, FileSpreadsheet, FileUp, AlertCircle, CheckCircle2 } from "lucide-react";
@@ -442,7 +443,7 @@ export default function ProductsPage() {
   // Exporter le catalogue en CSV
   const exportProductsToCSV = () => {
     if (products.length === 0) {
-      alert("Aucun produit à exporter.");
+      toast.error("Aucun produit à exporter.");
       return;
     }
     const headers = [

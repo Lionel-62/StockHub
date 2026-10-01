@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState, useEffect, useRef } from "react";
 import { 
@@ -140,7 +141,7 @@ function SettingsContent() {
       localStorage.clear();
       window.location.href = '/login';
     } else {
-      alert("Erreur: " + res.error);
+      toast.error("Erreur: " + res.error);
       setIsDeleting(false);
     }
   };

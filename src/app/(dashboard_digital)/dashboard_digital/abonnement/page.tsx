@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState } from "react";
 import { useAuth } from "@/hooks/auth";
@@ -40,7 +41,7 @@ export default function SubscriptionPage() {
   const handleSubscribe = async (amount: number, planName: string) => {
     setLoading(true);
     setTimeout(() => {
-      alert(`Redirection vers SASPay en cours pour payer ${amount} FCFA (${planName})...`);
+      toast.info(`Redirection vers SASPay en cours pour payer ${amount} FCFA (${planName})...`);
       setLoading(false);
     }, 1500);
   };

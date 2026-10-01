@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -55,10 +56,10 @@ export default function InvoiceDetailPage() {
         invoiceNumber: newInvoiceNumber,
         status: invoice.status === "Brouillon" ? "Envoyée" : invoice.status
       });
-      alert(`Ce devis a été converti avec succès en Facture officielle : ${newInvoiceNumber} !`);
+      toast.success(`Ce devis a été converti avec succès en Facture officielle : ${newInvoiceNumber} !`);
     } catch (e) {
       console.error(e);
-      alert("Erreur lors de la conversion.");
+      toast.error("Erreur lors de la conversion.");
     } finally {
       setIsConverting(false);
     }

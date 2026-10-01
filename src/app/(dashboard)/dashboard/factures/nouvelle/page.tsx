@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "sonner";
 
 import { useState, useEffect } from "react";
 import { ChevronLeft, Save, Send, Plus, Trash2, Calendar as CalendarIcon, PackageOpen, ChevronDown, Search, Download, CheckCircle2, List } from "lucide-react";
@@ -173,7 +174,7 @@ export default function CreateInvoicePage() {
 
   const handleSave = async (status: "Brouillon" | "Envoyée" | "Payée" | "En retard" | "En attente" | "Non payée") => {
     if (!clientId) {
-      alert("Veuillez sélectionner un client.");
+      toast.error("Veuillez sélectionner un client.");
       return;
     }
 
