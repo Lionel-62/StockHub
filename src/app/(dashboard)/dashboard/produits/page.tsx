@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import { Search, Plus, Filter, MoreHorizontal, Edit, Trash2, X, Save, Camera, Upload, ChevronLeft, ChevronRight, Store as StoreIcon, Package, CheckSquare, Sparkles, Loader2, Download, FileSpreadsheet, FileUp, AlertCircle, CheckCircle2 } from "lucide-react";
@@ -43,7 +43,7 @@ export default function ProductsPage() {
 
   const handleImageUpload = (file: File) => {
     setIsUploadingImage(true);
-    // Affichage instantané en local pour éviter l'effet "ça prend du temps"
+    // Affichage instantanÃ© en local pour Ã©viter l'effet "Ã§a prend du temps"
     const localUrl = URL.createObjectURL(file);
     setLocalImagePreview(localUrl);
 
@@ -78,7 +78,7 @@ export default function ProductsPage() {
             }
           }
           setIsUploadingImage(false);
-          // On peut libérer l'URL locale une fois l'upload terminé
+          // On peut libÃ©rer l'URL locale une fois l'upload terminÃ©
           URL.revokeObjectURL(localUrl);
           setLocalImagePreview(null);
         }, "image/jpeg", 0.9);
@@ -201,7 +201,7 @@ export default function ProductsPage() {
     
     let improved = "";
     if (!currentProduct.description || currentProduct.description.trim() === "") {
-      improved = `✨ Découvrez ${prodName}, l'incontournable de la catégorie ${prodCat} sur ${shopName} ! \n\nConçu pour répondre à toutes vos attentes, cet article allie qualité supérieure et fiabilité. Ne manquez pas cette opportunité de vous faire plaisir avec une satisfaction garantie.`;
+      improved = `âœ¨ DÃ©couvrez ${prodName}, l'incontournable de la catÃ©gorie ${prodCat} sur ${shopName} ! \n\nConÃ§u pour rÃ©pondre Ã  toutes vos attentes, cet article allie qualitÃ© supÃ©rieure et fiabilitÃ©. Ne manquez pas cette opportunitÃ© de vous faire plaisir avec une satisfaction garantie.`;
     } else {
       improved = currentProduct.description.trim()
         .replace(/([.,!?])([^\s])/g, '$1 $2')
@@ -211,9 +211,9 @@ export default function ProductsPage() {
       if (!improved.endsWith(".")) improved += ".";
       
       if (improved.length < 50) {
-        improved = `✨ Découvrez ${prodName} : ${improved} Idéal pour répondre à vos besoins avec une qualité garantie par ${shopName}.`;
+        improved = `âœ¨ DÃ©couvrez ${prodName} : ${improved} IdÃ©al pour rÃ©pondre Ã  vos besoins avec une qualitÃ© garantie par ${shopName}.`;
       } else {
-        improved = `✨ ${improved} \n\nUne excellente opportunité à saisir sur ${shopName}, offrant la meilleure qualité possible.`;
+        improved = `âœ¨ ${improved} \n\nUne excellente opportunitÃ© Ã  saisir sur ${shopName}, offrant la meilleure qualitÃ© possible.`;
       }
     }
     
@@ -232,10 +232,10 @@ export default function ProductsPage() {
 
   const categoryOptions = useMemo(() => {
     const baseCategories = [
-      "Alimentation", "Électronique", "Mode & Vêtements", "Maison & Décoration",
-      "Sport & Loisirs", "Streaming & Contenu Digital", "Téléphonie", 
-      "Télétravail & Bureau à distance", "Véhicules Électriques", "Voyage & Bagages",
-      "Beauté & Santé", "Jouets & Enfants", "Livres & Culture", "Services", "Autre"
+      "Alimentation", "Ã‰lectronique", "Mode & VÃªtements", "Maison & DÃ©coration",
+      "Sport & Loisirs", "Streaming & Contenu Digital", "TÃ©lÃ©phonie", 
+      "TÃ©lÃ©travail & Bureau Ã  distance", "VÃ©hicules Ã‰lectriques", "Voyage & Bagages",
+      "BeautÃ© & SantÃ©", "Jouets & Enfants", "Livres & Culture", "Services", "Autre"
     ];
     
     // Extract unique categories from existing products
@@ -442,19 +442,19 @@ export default function ProductsPage() {
   // Exporter le catalogue en CSV
   const exportProductsToCSV = () => {
     if (products.length === 0) {
-      alert("Aucun produit à exporter.");
+      alert("Aucun produit Ã  exporter.");
       return;
     }
     const headers = [
       "Code-barres / SKU",
       "Nom du produit",
-      "Catégorie",
+      "CatÃ©gorie",
       "Prix d'achat",
       "Prix de vente",
       "Prix promo",
       "Stock",
       "Statut",
-      "Publié en ligne",
+      "PubliÃ© en ligne",
       "Description"
     ];
 
@@ -489,11 +489,11 @@ export default function ProductsPage() {
     URL.revokeObjectURL(url);
   };
 
-  // Télécharger le modèle CSV exemple
+  // TÃ©lÃ©charger le modÃ¨le CSV exemple
   const downloadCSVTemplate = () => {
     const headers = [
       "Nom du produit",
-      "Catégorie",
+      "CatÃ©gorie",
       "Prix d'achat",
       "Prix de vente",
       "Stock",
@@ -502,9 +502,9 @@ export default function ProductsPage() {
       "Description"
     ];
     const sampleRows = [
-      ["T-shirt Coton Bio Noir", "Vêtements", "3000", "6500", "25", "TSHIRT-BLK-01", "5500", "T-shirt 100% coton bio de qualité supérieure"],
-      ["Montre Connectée Pro", "Électronique", "15000", "28000", "10", "WATCH-PRO-02", "", "Montre étanche avec suivi cardiaque et podomètre"],
-      ["Sac à dos Voyageur", "Accessoires", "8000", "16000", "15", "SAC-VOY-03", "", "Sac imperméable avec compartiment pour ordinateur"]
+      ["T-shirt Coton Bio Noir", "VÃªtements", "3000", "6500", "25", "TSHIRT-BLK-01", "5500", "T-shirt 100% coton bio de qualitÃ© supÃ©rieure"],
+      ["Montre ConnectÃ©e Pro", "Ã‰lectronique", "15000", "28000", "10", "WATCH-PRO-02", "", "Montre Ã©tanche avec suivi cardiaque et podomÃ¨tre"],
+      ["Sac Ã  dos Voyageur", "Accessoires", "8000", "16000", "15", "SAC-VOY-03", "", "Sac impermÃ©able avec compartiment pour ordinateur"]
     ];
     const csvContent = "\uFEFF" + [headers.join(";"), ...sampleRows.map(r => r.map(v => `"${v}"`).join(";"))].join("\r\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -518,7 +518,7 @@ export default function ProductsPage() {
     URL.revokeObjectURL(url);
   };
 
-  // Traitement du fichier CSV uploadé
+  // Traitement du fichier CSV uploadÃ©
   const handleCSVFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -535,18 +535,18 @@ export default function ProductsPage() {
           return;
         }
 
-        // Découper les lignes
+        // DÃ©couper les lignes
         const lines = text.split(/\r\n|\n/).filter(line => line.trim().length > 0);
         if (lines.length < 2) {
-          setImportError("Le fichier doit contenir au moins une ligne d'en-tête et un produit.");
+          setImportError("Le fichier doit contenir au moins une ligne d'en-tÃªte et un produit.");
           return;
         }
 
-        // Détecter le séparateur (, ou ;)
+        // DÃ©tecter le sÃ©parateur (, ou ;)
         const headerLine = lines[0];
         const separator = headerLine.includes(";") ? ";" : ",";
 
-        // Découper les colonnes en tenant compte des guillemets
+        // DÃ©couper les colonnes en tenant compte des guillemets
         const parseRow = (rowStr: string) => {
           const result: string[] = [];
           let current = "";
@@ -584,7 +584,7 @@ export default function ProductsPage() {
         const descIdx = headers.findIndex(h => h.includes("desc"));
 
         if (nameIdx === -1) {
-          setImportError("Colonne du nom de produit non reconnue. Veuillez utiliser le modèle fourni.");
+          setImportError("Colonne du nom de produit non reconnue. Veuillez utiliser le modÃ¨le fourni.");
           return;
         }
 
@@ -630,20 +630,20 @@ export default function ProductsPage() {
         }
 
         if (validProducts.length === 0) {
-          setImportError("Aucun produit valide trouvé dans ce fichier.");
+          setImportError("Aucun produit valide trouvÃ© dans ce fichier.");
           return;
         }
 
         setParsedProducts(validProducts);
       } catch (err: any) {
         console.error("Erreur parsing CSV:", err);
-        setImportError("Impossible de lire ce fichier CSV. Assurez-vous qu'il est bien encodé en UTF-8.");
+        setImportError("Impossible de lire ce fichier CSV. Assurez-vous qu'il est bien encodÃ© en UTF-8.");
       }
     };
     reader.readAsText(file, "UTF-8");
   };
 
-  // Enregistrer les produits importés
+  // Enregistrer les produits importÃ©s
   const executeImport = async () => {
     if (parsedProducts.length === 0) return;
     setIsImporting(true);
@@ -674,9 +674,9 @@ export default function ProductsPage() {
         <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
           <Package className="text-slate-400" size={32} />
         </div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Créez votre premier produit</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">CrÃ©ez votre premier produit</h1>
         <p className="text-slate-500 max-w-lg mb-8 text-sm leading-relaxed">
-          Prêt à partager votre expertise ? Créez et vendez des produits numériques comme des ebooks, des cours, des modèles et plus encore. Rejoignez des milliers de créateurs qui gagnent avec {currentUser?.shopName || "StockHub"} - il ne faut que quelques minutes pour commencer.
+          PrÃªt Ã  partager votre expertise ? CrÃ©ez et vendez des produits numÃ©riques comme des ebooks, des cours, des modÃ¨les et plus encore. Rejoignez des milliers de crÃ©ateurs qui gagnent avec {currentUser?.shopName || "StockHub"} - il ne faut que quelques minutes pour commencer.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-xs sm:max-w-md mx-auto justify-center">
           <Link href="/dashboard/produits/nouveau" className="flex-1 w-full">
@@ -696,18 +696,18 @@ export default function ProductsPage() {
   return (
     <div className="p-3 md:p-0 max-w-7xl mx-auto space-y-6 relative">
       
-      {/* En-tête de la page */}
+      {/* En-tÃªte de la page */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Produits</h1>
-          <p className="text-slate-500 dark:text-slate-400 mt-1">Gérez votre catalogue d'articles et vos prix.</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">GÃ©rez votre catalogue d'articles et vos prix.</p>
         </div>
         
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 w-full md:w-auto">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-              <input 
+              <input autoComplete="off" 
                 type="text" 
                 placeholder="Rechercher par nom, SKU..." 
                 value={searchTerm}
@@ -772,7 +772,7 @@ export default function ProductsPage() {
                 <TableRow>
                   <TableHead className="w-[80px]">Image</TableHead>
                   <TableHead>Produit</TableHead>
-                  <TableHead>Catégorie</TableHead>
+                  <TableHead>CatÃ©gorie</TableHead>
                   <TableHead className="text-right">Prix d'achat</TableHead>
                   <TableHead className="text-right">Prix de vente</TableHead>
                   <TableHead className="text-center">Stock</TableHead>
@@ -823,12 +823,12 @@ export default function ProductsPage() {
                         <span className="font-mono">{product.stock}</span>
                       </Badge>
                       {product.isPublishedOnStore !== false ? (
-                        <div className="flex items-center justify-center mt-1 text-xs text-blue-600 bg-blue-50 w-fit mx-auto px-2 py-0.5 rounded-full gap-1" title="Publié sur la boutique">
+                        <div className="flex items-center justify-center mt-1 text-xs text-blue-600 bg-blue-50 w-fit mx-auto px-2 py-0.5 rounded-full gap-1" title="PubliÃ© sur la boutique">
                           <StoreIcon size={10} />
                           En ligne
                         </div>
                       ) : (
-                        <div className="flex items-center justify-center mt-1 text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#112240] w-fit mx-auto px-2 py-0.5 rounded-full gap-1" title="Non publié">
+                        <div className="flex items-center justify-center mt-1 text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#112240] w-fit mx-auto px-2 py-0.5 rounded-full gap-1" title="Non publiÃ©">
                           <StoreIcon size={10} />
                           Hors ligne
                         </div>
@@ -862,7 +862,7 @@ export default function ProductsPage() {
                 {paginatedProducts.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={7} className="h-32 text-center text-slate-500 dark:text-slate-400">
-                      Aucun produit ne correspond à votre recherche.
+                      Aucun produit ne correspond Ã  votre recherche.
                     </TableCell>
                   </TableRow>
                 )}
@@ -874,7 +874,7 @@ export default function ProductsPage() {
           {totalPages > 1 && (
             <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 dark:border-[#152a4d] bg-slate-50 dark:bg-[#06101e]/50">
               <span className="text-sm text-slate-500 dark:text-slate-400">
-                Affichage de {((currentPage - 1) * itemsPerPage) + 1} à {Math.min(currentPage * itemsPerPage, filteredProducts.length)} sur {filteredProducts.length} produits
+                Affichage de {((currentPage - 1) * itemsPerPage) + 1} Ã  {Math.min(currentPage * itemsPerPage, filteredProducts.length)} sur {filteredProducts.length} produits
               </span>
               <div className="flex gap-1">
                 <Button 
@@ -928,12 +928,12 @@ export default function ProductsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5 md:col-span-2">
                   <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Nom du produit *</label>
-                  <input 
+                  <input autoComplete="off" 
                     type="text" 
                     value={currentProduct.name || ""}
                     onChange={(e) => setCurrentProduct({...currentProduct, name: e.target.value})}
                     className="w-full p-2.5 border border-slate-200 dark:border-[#1c3a66] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 dark:bg-[#06101e]"
-                    placeholder="Ex: Riz parfumé"
+                    placeholder="Ex: Riz parfumÃ©"
                   />
                 </div>
 
@@ -952,7 +952,7 @@ export default function ProductsPage() {
                         ) : (
                           <Sparkles size={14} />
                         )}
-                        Améliorer via IA
+                        AmÃ©liorer via IA
                       </button>
                     )}
                   </div>
@@ -961,7 +961,7 @@ export default function ProductsPage() {
                     onChange={(e) => setCurrentProduct({...currentProduct, description: e.target.value})}
                     rows={4}
                     className="w-full p-3 border border-slate-200 dark:border-[#1c3a66] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-300 bg-slate-50 dark:bg-[#06101e] resize-none transition-all"
-                    placeholder="Ex: Sac de 5kg de riz très parfumé..."
+                    placeholder="Ex: Sac de 5kg de riz trÃ¨s parfumÃ©..."
                   />
                 </div>
 
@@ -974,7 +974,7 @@ export default function ProductsPage() {
                         disabled={isImprovingImage}
                         type="button"
                         className="flex items-center gap-1.5 text-xs font-semibold text-amber-600 bg-amber-50 hover:bg-amber-100 px-2.5 py-1 rounded-full transition-colors disabled:opacity-50"
-                        title="Détourage et amélioration Studio (Fonctionnalité Premium)"
+                        title="DÃ©tourage et amÃ©lioration Studio (FonctionnalitÃ© Premium)"
                       >
                         {isImprovingImage ? (
                           <Loader2 size={14} className="animate-spin" />
@@ -998,7 +998,7 @@ export default function ProductsPage() {
                         <label className="cursor-pointer flex-1 inline-flex items-center justify-center px-3 py-2 bg-white dark:bg-[#0a192f] border border-slate-200 dark:border-[#1c3a66] text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 rounded-lg shadow-sm hover:bg-slate-50 dark:bg-[#06101e] hover:border-slate-300 dark:border-[#244b82] transition-all">
                           <Upload size={15} className="mr-1.5 text-slate-500 dark:text-slate-400" />
                           Ajouter une image
-                          <input 
+                          <input autoComplete="off" 
                             type="file" 
                             accept="image/*"
                             className="hidden"
@@ -1009,14 +1009,14 @@ export default function ProductsPage() {
                           />
                         </label>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Formats supportés : JPG, PNG, WEBP.</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Formats supportÃ©s : JPG, PNG, WEBP.</p>
                     </div>
                   </div>
                 </div>
 
                 {currentProduct.imageUrl && (
                   <div className="space-y-1.5 md:col-span-2 pt-2 border-t border-slate-100 dark:border-[#152a4d]">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Images supplémentaires (jusqu'à 3)</label>
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Images supplÃ©mentaires (jusqu'Ã  3)</label>
                     <div className="flex items-center gap-4 flex-wrap">
                       {Array.isArray(currentProduct.galleryUrls) && currentProduct.galleryUrls.map((url, idx) => (
                         <div key={idx} className="h-16 w-16 rounded-xl border border-slate-200 dark:border-[#1c3a66] bg-slate-50 dark:bg-[#06101e] relative group overflow-visible">
@@ -1055,7 +1055,7 @@ export default function ProductsPage() {
                       {(!Array.isArray(currentProduct.galleryUrls) || currentProduct.galleryUrls.length < 3) && (
                         <label className="cursor-pointer h-16 w-16 rounded-xl border-2 border-dashed border-slate-300 dark:border-[#244b82] bg-slate-50 dark:bg-[#06101e] flex items-center justify-center text-slate-400 hover:text-blue-500 hover:border-blue-300 transition-colors relative">
                           <Plus size={20} />
-                          <input 
+                          <input autoComplete="off" 
                             type="file" 
                             accept="image/*"
                             className="hidden"
@@ -1105,7 +1105,7 @@ export default function ProductsPage() {
                 
                 <div className="space-y-1.5">
                   <label className="text-sm font-medium text-slate-700 dark:text-slate-200">SKU / Code *</label>
-                  <input 
+                  <input autoComplete="off" 
                     type="text" 
                     value={currentProduct.sku || ""}
                     onChange={(e) => setCurrentProduct({...currentProduct, sku: e.target.value})}
@@ -1114,20 +1114,20 @@ export default function ProductsPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Catégorie</label>
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-200">CatÃ©gorie</label>
                   <CustomSelect 
                     options={categoryOptions}
                     value={currentProduct.category || ""}
                     onChange={(val) => setCurrentProduct({...currentProduct, category: val})}
-                    placeholder="Sélectionnez une catégorie"
-                    searchPlaceholder="Rechercher ou créer une catégorie..."
+                    placeholder="SÃ©lectionnez une catÃ©gorie"
+                    searchPlaceholder="Rechercher ou crÃ©er une catÃ©gorie..."
                     allowCreate={true}
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Prix d'achat</label>
-                  <input 
+                  <input autoComplete="off" 
                     type="number"
                     min="0"
                     placeholder="0"
@@ -1144,7 +1144,7 @@ export default function ProductsPage() {
 
                 <div className="space-y-1.5">
                   <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Prix de vente *</label>
-                  <input 
+                  <input autoComplete="off" 
                     type="number"
                     min="0"
                     placeholder="0"
@@ -1161,7 +1161,7 @@ export default function ProductsPage() {
 
                 <div className="space-y-1.5 md:col-span-1">
                   <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Stock initial *</label>
-                  <input 
+                  <input autoComplete="off" 
                     type="number"
                     min="0"
                     placeholder="0"
@@ -1177,7 +1177,7 @@ export default function ProductsPage() {
                 </div>
                 <div className="space-y-1.5 md:col-span-1">
                   <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Seuil d'alerte</label>
-                  <input 
+                  <input autoComplete="off" 
                     type="number"
                     min="1"
                     placeholder="5"
@@ -1195,7 +1195,7 @@ export default function ProductsPage() {
                 <div className="space-y-1.5 md:col-span-2 pt-2 border-t border-slate-100 dark:border-[#152a4d]">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <div className="relative">
-                      <input 
+                      <input autoComplete="off" 
                         type="checkbox" 
                         className="sr-only peer"
                         checked={currentProduct.isPublishedOnStore !== false} // default to true if undefined
@@ -1207,7 +1207,7 @@ export default function ProductsPage() {
                       <span className="text-sm font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
                         <StoreIcon size={14} className="text-blue-600" /> Afficher sur ma Boutique en Ligne
                       </span>
-                      <span className="text-xs text-slate-500 dark:text-slate-400">Si activé, ce produit sera visible par vos clients sur votre lien public.</span>
+                      <span className="text-xs text-slate-500 dark:text-slate-400">Si activÃ©, ce produit sera visible par vos clients sur votre lien public.</span>
                     </div>
                   </label>
                 </div>
@@ -1226,7 +1226,7 @@ export default function ProductsPage() {
                         </div>
                       </div>
                       <div className="relative">
-                        <input 
+                        <input autoComplete="off" 
                           type="checkbox" 
                           className="sr-only peer"
                           checked={currentProduct.promotionalPrice !== undefined && currentProduct.promotionalPrice !== null}
@@ -1238,7 +1238,7 @@ export default function ProductsPage() {
                     {currentProduct.promotionalPrice !== undefined && currentProduct.promotionalPrice !== null && (
                       <div className="mt-4 pt-4 border-t border-slate-100 dark:border-[#152a4d]">
                         <label className="text-sm font-medium text-slate-700 dark:text-slate-200">Nouveau prix promotionnel</label>
-                        <input 
+                        <input autoComplete="off" 
                           type="number"
                           min="0"
                           value={currentProduct.promotionalPrice ?? ""}
@@ -1264,11 +1264,11 @@ export default function ProductsPage() {
                         </div>
                         <div className="flex flex-col">
                           <span className="text-sm font-semibold text-slate-900 dark:text-white">Offres en pack</span>
-                          <span className="text-xs text-slate-500 dark:text-slate-400">Proposez des packs à prix réduit pour encourager les achats en quantité.</span>
+                          <span className="text-xs text-slate-500 dark:text-slate-400">Proposez des packs Ã  prix rÃ©duit pour encourager les achats en quantitÃ©.</span>
                         </div>
                       </div>
                       <div className="relative">
-                        <input 
+                        <input autoComplete="off" 
                           type="checkbox" 
                           className="sr-only peer"
                           checked={Array.isArray(currentProduct.packOffers) && currentProduct.packOffers.length > 0}
@@ -1282,9 +1282,9 @@ export default function ProductsPage() {
                         {currentProduct.packOffers.map((pack, idx) => (
                           <div key={idx} className="flex gap-2 items-center">
                             <div className="flex-1">
-                              <input 
+                              <input autoComplete="off" 
                                 type="number" 
-                                placeholder="Quantité" 
+                                placeholder="QuantitÃ©" 
                                 value={pack.quantity ?? ""} 
                                 onFocus={(e) => {
                                   if (pack.quantity === 0 || e.target.value === "0") {
@@ -1302,7 +1302,7 @@ export default function ProductsPage() {
                               />
                             </div>
                             <div className="flex-1">
-                              <input 
+                              <input autoComplete="off" 
                                 type="number" 
                                 placeholder="Prix total" 
                                 value={pack.price ?? ""} 
@@ -1360,7 +1360,7 @@ export default function ProductsPage() {
                         </div>
                       </div>
                       <div className="relative">
-                        <input 
+                        <input autoComplete="off" 
                           type="checkbox" 
                           className="sr-only peer"
                           checked={Array.isArray(currentProduct.options) && currentProduct.options.length > 0}
@@ -1374,7 +1374,7 @@ export default function ProductsPage() {
                         {currentProduct.options.map((opt, idx) => (
                           <div key={idx} className="space-y-2 p-3 bg-slate-50 dark:bg-[#06101e] rounded-lg border border-slate-100 dark:border-[#152a4d]">
                             <div className="flex gap-2">
-                              <input 
+                              <input autoComplete="off" 
                                 type="text" 
                                 placeholder="Nom (ex: Taille)" 
                                 value={opt.name || ""} 
@@ -1395,9 +1395,9 @@ export default function ProductsPage() {
                                 <Trash2 size={16} />
                               </button>
                             </div>
-                            <input 
+                            <input autoComplete="off" 
                               type="text" 
-                              placeholder="Valeurs séparées par des virgules (ex: S, M, L)" 
+                              placeholder="Valeurs sÃ©parÃ©es par des virgules (ex: S, M, L)" 
                               value={Array.isArray(opt?.values) ? opt.values.join(", ") : ""} 
                               onChange={(e) => {
                                 const newOpts = [...(currentProduct.options || [])];
@@ -1443,7 +1443,7 @@ export default function ProductsPage() {
       {isImportModalOpen && (
         <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-slate-900/50 backdrop-blur-sm p-2 pt-12 sm:p-4 sm:pt-4 overflow-hidden">
           <div className="bg-white dark:bg-[#0a192f] flex flex-col rounded-2xl shadow-xl border border-slate-200 dark:border-[#1c3a66] w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[85vh] sm:max-h-[90vh]">
-            {/* Entête */}
+            {/* EntÃªte */}
             <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-[#152a4d] flex items-center justify-between bg-slate-50 dark:bg-[#06101e]/50 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0b213f]">
@@ -1463,11 +1463,11 @@ export default function ProductsPage() {
             </div>
 
             <div className="p-4 sm:p-6 space-y-5 overflow-y-auto custom-scrollbar flex-1">
-              {/* Étape 1 : Modèle CSV */}
+              {/* Ã‰tape 1 : ModÃ¨le CSV */}
               <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h4 className="font-semibold text-amber-900 text-sm">Besoin d'un format prêt à remplir ?</h4>
-                  <p className="text-xs text-amber-700 mt-0.5">Téléchargez notre fichier modèle pré-formaté compatible Excel & Google Sheets.</p>
+                  <h4 className="font-semibold text-amber-900 text-sm">Besoin d'un format prÃªt Ã  remplir ?</h4>
+                  <p className="text-xs text-amber-700 mt-0.5">TÃ©lÃ©chargez notre fichier modÃ¨le prÃ©-formatÃ© compatible Excel & Google Sheets.</p>
                 </div>
                 <Button 
                   onClick={downloadCSVTemplate}
@@ -1476,17 +1476,17 @@ export default function ProductsPage() {
                   className="bg-white dark:bg-[#0a192f] hover:bg-amber-100 text-amber-900 border-amber-300 shadow-sm shrink-0 flex items-center gap-1.5"
                 >
                   <Download size={14} />
-                  <span>Télécharger le modèle</span>
+                  <span>TÃ©lÃ©charger le modÃ¨le</span>
                 </Button>
               </div>
 
-              {/* Étape 2 : Zone d'upload */}
+              {/* Ã‰tape 2 : Zone d'upload */}
               <div>
                 <label className="block text-sm font-semibold text-slate-800 dark:text-slate-100 mb-2">
-                  Sélectionnez votre fichier CSV
+                  SÃ©lectionnez votre fichier CSV
                 </label>
                 <div className="border-2 border-dashed border-slate-200 dark:border-[#1c3a66] hover:border-blue-400 rounded-2xl p-6 text-center transition-colors bg-slate-50 dark:bg-[#06101e]/50 hover:bg-blue-50/30 relative">
-                  <input 
+                  <input autoComplete="off" 
                     type="file" 
                     accept=".csv,text/csv" 
                     onChange={handleCSVFileChange}
@@ -1499,12 +1499,12 @@ export default function ProductsPage() {
                     {importFile ? (
                       <div>
                         <p className="text-sm font-bold text-slate-900 dark:text-white">{importFile.name}</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{(importFile.size / 1024).toFixed(1)} Ko • Cliquez pour remplacer</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{(importFile.size / 1024).toFixed(1)} Ko â€¢ Cliquez pour remplacer</p>
                       </div>
                     ) : (
                       <div>
-                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">Glissez-déposez votre fichier ici, ou <span className="text-blue-600 underline">parcourir</span></p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Format supporté : .CSV encodé en UTF-8 (séparateur virgule ou point-virgule)</p>
+                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">Glissez-dÃ©posez votre fichier ici, ou <span className="text-blue-600 underline">parcourir</span></p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Format supportÃ© : .CSV encodÃ© en UTF-8 (sÃ©parateur virgule ou point-virgule)</p>
                       </div>
                     )}
                   </div>
@@ -1519,23 +1519,23 @@ export default function ProductsPage() {
                 </div>
               )}
 
-              {/* Succès */}
+              {/* SuccÃ¨s */}
               {importSuccessCount !== null && (
                 <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-sm text-emerald-800 font-semibold">
                   <CheckCircle2 size={18} className="shrink-0 text-emerald-600" />
-                  <span>{importSuccessCount} produits importés avec succès dans votre catalogue !</span>
+                  <span>{importSuccessCount} produits importÃ©s avec succÃ¨s dans votre catalogue !</span>
                 </div>
               )}
 
-              {/* Prévisualisation des données */}
+              {/* PrÃ©visualisation des donnÃ©es */}
               {parsedProducts.length > 0 && !importSuccessCount && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
                       <CheckCircle2 size={14} className="text-emerald-600" />
-                      {parsedProducts.length} produit{parsedProducts.length > 1 ? "s" : ""} détecté{parsedProducts.length > 1 ? "s" : ""}
+                      {parsedProducts.length} produit{parsedProducts.length > 1 ? "s" : ""} dÃ©tectÃ©{parsedProducts.length > 1 ? "s" : ""}
                     </span>
-                    <span className="text-[11px] text-slate-400">Aperçu des 5 premiers articles</span>
+                    <span className="text-[11px] text-slate-400">AperÃ§u des 5 premiers articles</span>
                   </div>
 
                   <div className="border border-slate-200 dark:border-[#1c3a66] rounded-xl overflow-hidden max-h-48 overflow-y-auto text-xs">
@@ -1544,7 +1544,7 @@ export default function ProductsPage() {
                         <tr>
                           <th className="p-2">SKU</th>
                           <th className="p-2">Nom</th>
-                          <th className="p-2">Catégorie</th>
+                          <th className="p-2">CatÃ©gorie</th>
                           <th className="p-2 text-right">Prix vente</th>
                           <th className="p-2 text-center">Stock</th>
                         </tr>
@@ -1613,7 +1613,7 @@ export default function ProductsPage() {
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleDelete}
         title="Supprimer le produit"
-        message="Êtes-vous sûr de vouloir supprimer ce produit du catalogue ? Cette action est irréversible."
+        message="ÃŠtes-vous sÃ»r de vouloir supprimer ce produit du catalogue ? Cette action est irrÃ©versible."
       />
     </div>
   );
