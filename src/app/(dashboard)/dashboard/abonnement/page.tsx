@@ -6,7 +6,7 @@ import { CreditCard, CheckCircle2, ShieldCheck, Zap } from "lucide-react";
 
 export default function SubscriptionPage() {
   const { currentUser } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
   // Forcer à "expired" si on est ici avec un abonnement qui a expiré selon la date, 
   // mais que currentUser n'est pas encore mis à jour.
@@ -38,7 +38,7 @@ export default function SubscriptionPage() {
   }
 
   const handleSubscribe = async (amount: number, planName: string) => {
-    setLoading(true);
+    setLoadingPlan(planName);
     try {
       const response = await fetch("/api/billing/saspay/checkout", {
         method: "POST",
@@ -62,7 +62,7 @@ export default function SubscriptionPage() {
       }
     } catch (error: any) {
       alert(error.message);
-      setLoading(false);
+      setLoadingPlan(null);
     }
   };
 
@@ -148,11 +148,11 @@ export default function SubscriptionPage() {
           <div className="p-8 pt-0 mt-auto">
             <button
               onClick={() => handleSubscribe(5000, "Pro")}
-              disabled={loading}
+              disabled={loadingPlan !== null}
               className="w-full py-4 px-6 rounded-xl text-slate-700 dark:text-slate-200 font-medium bg-slate-100 dark:bg-[#112240] hover:bg-slate-200 border border-slate-300 dark:border-[#244b82] transition-all flex items-center justify-center gap-2 disabled:opacity-70"
             >
               <CreditCard className="w-5 h-5" />
-              Choisir Forfait Pro
+              {loadingPlan === "Pro" ? "Génération..." : "Choisir Forfait Pro"}
             </button>
           </div>
         </div>
@@ -197,11 +197,11 @@ export default function SubscriptionPage() {
           <div className="p-8 pt-0 mt-auto">
             <button
               onClick={() => handleSubscribe(8000, "Business")}
-              disabled={loading}
+              disabled={loadingPlan !== null}
               className="w-full py-4 px-6 rounded-xl text-white font-medium bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-70"
             >
               <CreditCard className="w-5 h-5" />
-              {loading ? "Génération..." : "Payer 8 000 FCFA"}
+              {loadingPlan === "Business" ? "Génération..." : "Payer 8 000 FCFA"}
             </button>
             <p className="text-xs text-center text-slate-400 mt-4">
               Paiement 100% sécurisé via Mobile Money
