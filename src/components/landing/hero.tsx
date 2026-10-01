@@ -30,7 +30,7 @@ export function Hero() {
         </div>
 
         {/* 2. Top Centered Payment Notification Badge */}
-        <div className="hidden md:flex items-center gap-2.5 absolute top-20 right-[24%] transform rotate-3 bg-white  backdrop-blur-md border border-amber-200/90 rounded-full py-1.5 px-3.5 shadow-lg shadow-slate-900/5 animate-float-slow pointer-events-auto">
+        <div className="hidden md:flex items-center gap-2.5 absolute top-20 right-[24%] transform rotate-3 bg-white  sm:backdrop-blur-md border border-amber-200/90 rounded-full py-1.5 px-3.5 shadow-lg shadow-slate-900/5 animate-float-slow pointer-events-auto">
           <div className="w-7 h-7 rounded-full bg-orange-500 text-white flex items-center justify-center font-black text-xs shadow-md shadow-orange-500/30 tracking-tighter border border-white">OM</div>
           <div className="text-xs font-semibold text-slate-800  flex items-center gap-1.5">
             <span className="text-orange-500 font-bold uppercase text-[10px] tracking-wider">Orange Money</span>
@@ -41,7 +41,7 @@ export function Hero() {
 
         {/* 3. Top Right Floating WhatsApp Order Capsule */}
         <div className="hidden lg:flex flex-col gap-3 items-end absolute right-[5%] top-28 transform rotate-6 pointer-events-auto animate-float-med">
-          <div className="bg-white  backdrop-blur-sm border border-[#0f9d58]/40 rounded-2xl p-2.5 shadow-xl flex items-center gap-2.5">
+          <div className="bg-white  sm:backdrop-blur-sm border border-[#0f9d58]/40 rounded-2xl p-2.5 shadow-xl flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-[#0f9d58] text-white flex items-center justify-center shadow-md shadow-[#0f9d58]/30">
               <MessageCircle className="w-5 h-5 fill-current" />
             </div>

@@ -193,13 +193,13 @@ function LoginForm() {
 
         {/* Error / Success Messages */}
         {error && (
-          <div className="mb-6 p-3.5 bg-red-50/80 backdrop-blur-sm text-red-600 text-sm font-medium rounded-xl flex items-start border border-red-100">
+          <div className="mb-6 p-3.5 bg-red-50/80 sm:backdrop-blur-sm text-red-600 text-sm font-medium rounded-xl flex items-start border border-red-100">
             <AlertCircle size={18} className="mr-2 mt-0.5 shrink-0" />
             <span>{error}</span>
           </div>
         )}
         {success && (
-          <div className="mb-6 p-3.5 bg-green-50/80 backdrop-blur-sm text-green-700 text-sm font-medium rounded-xl flex items-start border border-green-200">
+          <div className="mb-6 p-3.5 bg-green-50/80 sm:backdrop-blur-sm text-green-700 text-sm font-medium rounded-xl flex items-start border border-green-200">
             <svg className="w-5 h-5 mr-2 shrink-0 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
             </svg>
@@ -250,7 +250,7 @@ function LoginForm() {
                 <div className="w-full border-t border-slate-200 dark:border-[#1c3a66]/80"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-3 bg-slate-50 dark:bg-[#06101e]/50 backdrop-blur-md text-slate-500 dark:text-slate-400 font-medium rounded-full text-xs">ou continuer avec</span>
+                <span className="px-3 bg-slate-50 dark:bg-[#06101e]/50 sm:backdrop-blur-md text-slate-500 dark:text-slate-400 font-medium rounded-full text-xs">ou continuer avec</span>
               </div>
             </div>
 
@@ -331,7 +331,7 @@ function LoginForm() {
                   <div className="w-full border-t border-slate-200 dark:border-[#1c3a66]/80"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-3 bg-slate-50 dark:bg-[#06101e]/50 backdrop-blur-md text-slate-500 dark:text-slate-400 font-medium rounded-full text-xs">ou s'inscrire avec</span>
+                  <span className="px-3 bg-slate-50 dark:bg-[#06101e]/50 sm:backdrop-blur-md text-slate-500 dark:text-slate-400 font-medium rounded-full text-xs">ou s'inscrire avec</span>
                 </div>
               </div>
 

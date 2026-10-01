@@ -156,7 +156,7 @@ function SettingsContent() {
       />
       
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 sm:backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white dark:bg-[#0a192f] rounded-2xl p-6 max-w-md w-full shadow-2xl animate-in fade-in zoom-in-95">
             <h3 className="text-xl font-bold text-red-600 mb-2">Zone de Danger Absolu</h3>
             <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">

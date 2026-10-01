@@ -914,7 +914,7 @@ export default function ProductsPage() {
       
       {/* Modal Ajouter/Modifier Produit */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-slate-900/40 backdrop-blur-sm transition-opacity p-2 pt-12 sm:p-4 sm:pt-4 overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-slate-900/40 sm:backdrop-blur-sm transition-opacity p-2 pt-12 sm:p-4 sm:pt-4 overflow-hidden">
           <div className="bg-white dark:bg-[#0a192f] flex flex-col rounded-xl shadow-lg w-full max-w-lg overflow-hidden border border-slate-200 dark:border-[#1c3a66] transform scale-100 animate-in fade-in zoom-in-95 duration-200 max-h-[85vh] sm:max-h-[90vh]">
             <div className="flex justify-between items-center p-4 sm:p-5 border-b border-slate-100 dark:border-[#152a4d] shrink-0">
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">
@@ -1442,7 +1442,7 @@ export default function ProductsPage() {
 
       {/* Modal d'importation CSV */}
       {isImportModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-slate-900/50 backdrop-blur-sm p-2 pt-12 sm:p-4 sm:pt-4 overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-slate-900/50 sm:backdrop-blur-sm p-2 pt-12 sm:p-4 sm:pt-4 overflow-hidden">
           <div className="bg-white dark:bg-[#0a192f] flex flex-col rounded-2xl shadow-xl border border-slate-200 dark:border-[#1c3a66] w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[85vh] sm:max-h-[90vh]">
             {/* Entête */}
             <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-[#152a4d] flex items-center justify-between bg-slate-50 dark:bg-[#06101e]/50 shrink-0">

@@ -365,7 +365,7 @@ export default function ClientsPage() {
       
       {/* Modal Ajouter/Modifier Client */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm transition-opacity">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 sm:backdrop-blur-sm transition-opacity">
           <div className="bg-white dark:bg-[#0a192f] rounded-xl shadow-lg w-full max-w-md mx-4 overflow-hidden border border-slate-200 dark:border-[#1c3a66] transform scale-100 animate-in fade-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center p-5 border-b border-slate-100 dark:border-[#152a4d]">
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">

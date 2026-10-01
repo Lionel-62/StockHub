@@ -19,7 +19,7 @@ export function SuccessModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 sm:backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white dark:bg-[#0a192f] rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-300">
         <div className="p-8 text-center flex flex-col items-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6 shadow-sm border border-green-200">

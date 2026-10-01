@@ -218,7 +218,7 @@ export default function PointOfSalePage() {
                 >
                   {/* Stock Badge */}
                   <div className="absolute top-2 right-2 z-10">
-                    <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold shadow-sm backdrop-blur-sm border", product.stock <= 5 ? "bg-red-50 text-red-600 border-red-100" : "bg-white dark:bg-[#0a192f]/90 text-slate-800 dark:text-slate-100 border-slate-100 dark:border-[#152a4d]")}>
+                    <span className={cn("inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold shadow-sm sm:backdrop-blur-sm border", product.stock <= 5 ? "bg-red-50 text-red-600 border-red-100" : "bg-white dark:bg-[#0a192f]/90 text-slate-800 dark:text-slate-100 border-slate-100 dark:border-[#152a4d]")}>
                       <span className="font-mono">{product.stock}</span>
                     </span>
                   </div>
@@ -308,7 +308,7 @@ export default function PointOfSalePage() {
       {/* Mobile Cart Overlay */}
       {isMobileCartOpen && (
         <div 
-          className="lg:hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[55] transition-opacity"
+          className="lg:hidden fixed inset-0 bg-slate-900/50 sm:backdrop-blur-sm z-[55] transition-opacity"
           onClick={() => setIsMobileCartOpen(false)}
         />
       )}

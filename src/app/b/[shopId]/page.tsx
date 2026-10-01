@@ -72,7 +72,7 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
         )}
 
         <div className={cn(
-          "absolute top-2 right-2 px-2.5 py-1 rounded-lg text-xs font-bold shadow-sm backdrop-blur-sm border",
+          "absolute top-2 right-2 px-2.5 py-1 rounded-lg text-xs font-bold shadow-sm sm:backdrop-blur-sm border",
           product.stock <= 5 
             ? "bg-red-500/90 text-white border-red-400 animate-pulse" 
             : "bg-white dark:bg-[#0a192f]/90 text-slate-700 dark:text-slate-200 border-white/50"
@@ -158,13 +158,13 @@ function ShopProductCard({ product, cart, formatCurrency, updateQuantity, handle
             <>
               <button 
                 onClick={(e) => { e.stopPropagation(); setCurrentImageIdx(prev => prev === 0 ? images.length - 1 : prev - 1); }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white dark:bg-[#0a192f]/10 hover:bg-white dark:bg-[#0a192f]/20 text-white rounded-full transition-colors z-50 backdrop-blur-sm"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white dark:bg-[#0a192f]/10 hover:bg-white dark:bg-[#0a192f]/20 text-white rounded-full transition-colors z-50 sm:backdrop-blur-sm"
               >
                 <ChevronLeft size={32} />
               </button>
               <button 
                 onClick={(e) => { e.stopPropagation(); setCurrentImageIdx(prev => (prev + 1) % images.length); }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white dark:bg-[#0a192f]/10 hover:bg-white dark:bg-[#0a192f]/20 text-white rounded-full transition-colors z-50 backdrop-blur-sm"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white dark:bg-[#0a192f]/10 hover:bg-white dark:bg-[#0a192f]/20 text-white rounded-full transition-colors z-50 sm:backdrop-blur-sm"
               >
                 <ChevronRight size={32} />
               </button>
@@ -542,22 +542,22 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
         <div className="absolute -top-32 -right-32 w-[30rem] h-[30rem] bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none"></div>
         
         {/* Floating Emoji Cards */}
-        <div className="hidden md:flex absolute top-[15%] left-[8%] w-20 h-20 rounded-2xl bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-4xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_6s_ease-in-out_infinite] rotate-12">
+        <div className="hidden md:flex absolute top-[15%] left-[8%] w-20 h-20 rounded-2xl bg-white/10 dark:bg-white/5 sm:backdrop-blur-lg border border-white/20 items-center justify-center text-4xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_6s_ease-in-out_infinite] rotate-12">
           🛍️
         </div>
-        <div className="absolute top-[10%] right-[10%] md:right-[20%] w-10 h-10 md:w-16 md:h-16 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 flex items-center justify-center text-xl md:text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_5s_ease-in-out_infinite_reverse] -rotate-12">
+        <div className="absolute top-[10%] right-[10%] md:right-[20%] w-10 h-10 md:w-16 md:h-16 rounded-full bg-white/10 dark:bg-white/5 sm:backdrop-blur-lg border border-white/20 flex items-center justify-center text-xl md:text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_5s_ease-in-out_infinite_reverse] -rotate-12">
           🎁
         </div>
-        <div className="hidden lg:flex absolute top-[40%] right-[5%] w-24 h-24 rounded-3xl bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-5xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_7s_ease-in-out_infinite] -rotate-6">
+        <div className="hidden lg:flex absolute top-[40%] right-[5%] w-24 h-24 rounded-3xl bg-white/10 dark:bg-white/5 sm:backdrop-blur-lg border border-white/20 items-center justify-center text-5xl shadow-[0_15px_35px_rgba(0,0,0,0.2)] animate-[bounce_7s_ease-in-out_infinite] -rotate-6">
           🛒
         </div>
-        <div className="absolute bottom-[20%] left-[10%] md:left-[25%] w-10 h-10 md:w-16 md:h-16 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 flex items-center justify-center text-xl md:text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_4s_ease-in-out_infinite] rotate-45">
+        <div className="absolute bottom-[20%] left-[10%] md:left-[25%] w-10 h-10 md:w-16 md:h-16 rounded-full bg-white/10 dark:bg-white/5 sm:backdrop-blur-lg border border-white/20 flex items-center justify-center text-xl md:text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_4s_ease-in-out_infinite] rotate-45">
           ✨
         </div>
-        <div className="hidden md:flex absolute bottom-[10%] right-[15%] w-16 h-16 rounded-2xl bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_8s_ease-in-out_infinite] rotate-12">
+        <div className="hidden md:flex absolute bottom-[10%] right-[15%] w-16 h-16 rounded-2xl bg-white/10 dark:bg-white/5 sm:backdrop-blur-lg border border-white/20 items-center justify-center text-3xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[bounce_8s_ease-in-out_infinite] rotate-12">
           💎
         </div>
-        <div className="hidden lg:flex absolute top-[60%] left-[5%] w-14 h-14 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-lg border border-white/20 items-center justify-center text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_5s_ease-in-out_infinite_reverse] -rotate-45">
+        <div className="hidden lg:flex absolute top-[60%] left-[5%] w-14 h-14 rounded-full bg-white/10 dark:bg-white/5 sm:backdrop-blur-lg border border-white/20 items-center justify-center text-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] animate-[pulse_5s_ease-in-out_infinite_reverse] -rotate-45">
           👟
         </div>
         
@@ -672,7 +672,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
       {isCartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end">
           <div 
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" 
+            className="absolute inset-0 bg-slate-900/40 sm:backdrop-blur-sm" 
             onClick={() => setIsCartOpen(false)}
           />
           <div className="relative w-full max-w-md bg-white dark:bg-[#0a192f] h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
@@ -868,7 +868,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
 
       {/* Auth Modal */}
       {showAuthModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 sm:backdrop-blur-sm p-4">
           <div className="bg-white dark:bg-[#0a192f] rounded-2xl p-6 max-w-sm w-full shadow-xl animate-in fade-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-bold text-xl text-slate-900 dark:text-white">
@@ -949,7 +949,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
 
       {/* Profile Modal */}
       {showProfileModal && loggedInCustomer && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 sm:backdrop-blur-sm p-4">
           <div className="bg-white dark:bg-[#0a192f] rounded-2xl p-6 max-w-sm w-full shadow-xl animate-in fade-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-bold text-xl text-slate-900 dark:text-white">Mon Profil</h3>
@@ -998,7 +998,7 @@ function ShopContent({ shopUuid }: { shopUuid: string }) {
 
       {/* Options Selection Modal */}
       {selectedProductForOptions && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 sm:backdrop-blur-sm p-4">
           <div className="bg-white dark:bg-[#0a192f] rounded-2xl p-6 max-w-sm w-full shadow-xl animate-in fade-in zoom-in-95 duration-200">
             <div className="flex justify-between items-center mb-4 border-b border-slate-100 dark:border-[#152a4d] pb-4">
               <h3 className="font-bold text-lg text-slate-900 dark:text-white">Choisir les options</h3>

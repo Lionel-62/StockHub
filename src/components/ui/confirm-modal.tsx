@@ -28,7 +28,7 @@ export function ConfirmModal({
   return (
     <>
       <div 
-        className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] transition-opacity" 
+        className="fixed inset-0 bg-slate-900/50 sm:backdrop-blur-sm z-[100] transition-opacity" 
         onClick={onClose}
       />
       <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-[101] p-4">
