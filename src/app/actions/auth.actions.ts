@@ -229,7 +229,7 @@ export async function createShopAction(userId: string, shopName: string, categor
     const supabase = createAdminClient();
     
     // Check shop limits based on subscription plan
-    const { data: profile } = await supabase
+    const { data: subProfile } = await supabase
       .from('profiles')
       .select('subscription_plan, subscription_status')
       .eq('id', userId)
@@ -241,14 +241,14 @@ export async function createShopAction(userId: string, shopName: string, categor
       .eq('owner_id', userId);
 
     if (count !== null) {
-      if ((profile?.subscription_status === 'trial' || profile?.subscription_plan === 'free' || profile?.subscription_plan === 'pro') && count >= 1) {
+      if ((subProfile?.subscription_status === 'trial' || subProfile?.subscription_plan === 'free' || subProfile?.subscription_plan === 'pro') && count >= 1) {
         return { 
           success: false, 
           error: "Limite atteinte : Votre plan actuel vous limite à 1 seule boutique. Veuillez passer au Plan Business pour gérer plusieurs points de vente." 
         };
       }
       
-      if (profile?.subscription_plan === 'business' && count >= 5) {
+      if (subProfile?.subscription_plan === 'business' && count >= 5) {
         return { 
           success: false, 
           error: "Limite atteinte : Le Plan Business permet de gérer jusqu'à 5 boutiques (multi-points de vente)." 
